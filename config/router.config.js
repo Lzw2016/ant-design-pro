@@ -17,6 +17,7 @@ export default [
   // app
   {
     path: '/',
+    // component: '../layouts/TopAndSideLayout',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [

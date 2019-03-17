@@ -7,6 +7,7 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
+import { LayoutConfig } from '../utils/constant';
 
 const { Header } = Layout;
 
@@ -38,7 +39,7 @@ class HeaderView extends Component {
     if (isMobile || !fixedHeader || layout === 'topmenu') {
       return '100%';
     }
-    return collapsed ? 'calc(100% - 80px)' : 'calc(100% - 256px)';
+    return collapsed ? 'calc(100% - 80px)' : `calc(100% - ${LayoutConfig.siderMenuWidth}px)`;
   };
 
   handleNoticeClear = type => {

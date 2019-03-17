@@ -1,5 +1,7 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import { BaiduTranslateMD5 } from '@/utils/BaiduTranslateMD5';
+import { BaiduTranslate } from '@/utils/constant';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -123,4 +125,19 @@ export async function queryNotices(params = {}) {
 
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
+}
+
+/**
+ * Baidu翻译 http://api.fanyi.baidu.com/api/trans/product/apidoc#languageList
+ * @param {*} from 待翻译语言类型
+ * @param {*} to 目标语言类型
+ * @param {*} q  待翻译内容
+ */
+export async function translateBaidu(from = 'auto', to, q) {
+  const appid = BaiduTranslate.appid;
+  const key = BaiduTranslate.key;
+  const salt = (new Date).getTime();
+  const sign = BaiduTranslateMD5(appid + q + salt + key);
+  const param = { appid, salt, sign, from, to, q };
+  return request(`/baidu/api/trans/vip/translate?${stringify(param)}`)
 }

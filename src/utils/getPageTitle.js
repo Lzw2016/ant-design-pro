@@ -2,7 +2,8 @@ import { formatMessage } from 'umi/locale';
 import pathToRegexp from 'path-to-regexp';
 import isEqual from 'lodash/isEqual';
 import memoizeOne from 'memoize-one';
-import { menu, title } from '../defaultSettings';
+// import { menu, title } from '../defaultSettings';
+import { SystemInfo } from './constant';
 
 export const matchParamsPath = (pathname, breadcrumbNameMap) => {
   const pathKey = Object.keys(breadcrumbNameMap).find(key => pathToRegexp(key).test(pathname));
@@ -12,16 +13,16 @@ export const matchParamsPath = (pathname, breadcrumbNameMap) => {
 const getPageTitle = (pathname, breadcrumbNameMap) => {
   const currRouterData = matchParamsPath(pathname, breadcrumbNameMap);
   if (!currRouterData) {
-    return title;
+    return SystemInfo.name;
   }
-  const pageName = menu.disableLocal
+  const pageName = SystemInfo.menu.disableLocal
     ? currRouterData.name
     : formatMessage({
-        id: currRouterData.locale || currRouterData.name,
-        defaultMessage: currRouterData.name,
-      });
+      id: currRouterData.locale || currRouterData.name,
+      defaultMessage: currRouterData.name,
+    });
 
-  return `${pageName} - ${title}`;
+    return `${pageName} - ${SystemInfo.name}`;
 };
 
 export default memoizeOne(getPageTitle, isEqual);

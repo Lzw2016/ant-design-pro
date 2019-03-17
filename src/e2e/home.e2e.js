@@ -1,3 +1,5 @@
+import { SystemInfo } from '../utils/constant';
+
 const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 
 describe('Homepage', () => {
@@ -10,6 +12,6 @@ describe('Homepage', () => {
       timeout: 5000,
     });
     const text = await page.evaluate(() => document.getElementsByTagName('h1')[0].innerText);
-    expect(text).toContain('Ant Design Pro');
+    expect(text).toContain(SystemInfo.name);
   });
 });

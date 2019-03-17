@@ -4,6 +4,7 @@ import { Menu, Icon } from 'antd';
 import classNames from 'classnames';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { SystemInfo } from '../../utils/constant';
 
 export default class SelectLang extends PureComponent {
   changeLang = ({ key }) => {
@@ -13,27 +14,14 @@ export default class SelectLang extends PureComponent {
   render() {
     const { className } = this.props;
     const selectedLang = getLocale();
-    const locales = ['zh-CN', 'zh-TW', 'en-US', 'pt-BR'];
-    const languageLabels = {
-      'zh-CN': '简体中文',
-      'zh-TW': '繁体中文',
-      'en-US': 'English',
-      'pt-BR': 'Português',
-    };
-    const languageIcons = {
-      'zh-CN': '🇨🇳',
-      'zh-TW': '🇭🇰',
-      'en-US': '🇬🇧',
-      'pt-BR': '🇧🇷',
-    };
     const langMenu = (
       <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={this.changeLang}>
-        {locales.map(locale => (
-          <Menu.Item key={locale}>
-            <span role="img" aria-label={languageLabels[locale]}>
-              {languageIcons[locale]}
+        {SystemInfo.languages.map(locale => (
+          <Menu.Item key={locale.key}>
+            <span role="img" aria-label={locale.label}>
+              {locale.lang}
             </span>{' '}
-            {languageLabels[locale]}
+            {locale.label}
           </Menu.Item>
         ))}
       </Menu>
