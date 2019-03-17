@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import HeaderDropdown from '../HeaderDropdown';
 import List from './NoticeList';
 import styles from './index.less';
+import NoticeSvg from '../../assets/notice.svg';
 
 const { TabPane } = Tabs;
 
@@ -24,7 +25,7 @@ export default class NoticeIcon extends PureComponent {
       clear: 'Clear',
       viewMore: 'More',
     },
-    emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg',
+    emptyImage: NoticeSvg,
   };
 
   state = {

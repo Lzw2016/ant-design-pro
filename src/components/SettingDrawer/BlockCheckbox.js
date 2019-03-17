@@ -7,7 +7,7 @@ const BlockChecbox = ({ value, onChange, list }) => (
     {list.map(item => (
       <Tooltip title={item.title} key={item.key}>
         <div className={style.item} onClick={() => onChange(item.key)}>
-          <img src={item.url} alt={item.key} />
+          <img src={item.svg ? item.svg : item.url} alt={item.key} />
           <div
             className={style.selectIcon}
             style={{

@@ -7,6 +7,10 @@ import omit from 'omit.js';
 import styles from './index.less';
 import ThemeColor from './ThemeColor';
 import BlockCheckbox from './BlockCheckbox';
+import SideMenuSvg from '../../assets/sidemenu.svg';
+import TopMenuSvg from '../../assets/topmenu.svg';
+import DarkSvg from '../../assets/dark.svg';
+import LightSvg from '../../assets/light.svg';
 
 const { Option } = Select;
 
@@ -157,12 +161,12 @@ class SettingDrawer extends PureComponent {
               list={[
                 {
                   key: 'dark',
-                  url: 'https://gw.alipayobjects.com/zos/rmsportal/LCkqqYNmvBEbokSDscrm.svg',
+                  svg: DarkSvg,
                   title: formatMessage({ id: 'app.setting.pagestyle.dark' }),
                 },
                 {
                   key: 'light',
-                  url: 'https://gw.alipayobjects.com/zos/rmsportal/jpRkZQMyYRryryPNtyIC.svg',
+                  svg: LightSvg,
                   title: formatMessage({ id: 'app.setting.pagestyle.light' }),
                 },
               ]}
@@ -184,12 +188,12 @@ class SettingDrawer extends PureComponent {
               list={[
                 {
                   key: 'sidemenu',
-                  url: 'https://gw.alipayobjects.com/zos/rmsportal/JopDzEhOqwOjeNTXkoje.svg',
+                  svg: SideMenuSvg,
                   title: formatMessage({ id: 'app.setting.sidemenu' }),
                 },
                 {
                   key: 'topmenu',
-                  url: 'https://gw.alipayobjects.com/zos/rmsportal/KDNDBbriJhLwuqMoxcAr.svg',
+                  svg: TopMenuSvg,
                   title: formatMessage({ id: 'app.setting.topmenu' }),
                 },
               ]}

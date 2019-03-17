@@ -8,6 +8,9 @@ import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
+import NoticeSvg from '../../assets/notice.svg';
+import MessageSvg from '../../assets/message.svg';
+import ToDoListSvg from '../../assets/to-do-list.svg';
 
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
@@ -152,7 +155,7 @@ export default class GlobalHeaderRight extends PureComponent {
             list={noticeData.notification}
             title="notification"
             emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+            emptyImage={NoticeSvg}
             showViewMore
           />
           <NoticeIcon.Tab
@@ -160,7 +163,7 @@ export default class GlobalHeaderRight extends PureComponent {
             list={noticeData.message}
             title="message"
             emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+            emptyImage={MessageSvg}
             showViewMore
           />
           <NoticeIcon.Tab
@@ -168,7 +171,7 @@ export default class GlobalHeaderRight extends PureComponent {
             list={noticeData.event}
             title="event"
             emptyText={formatMessage({ id: 'component.globalHeader.event.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
+            emptyImage={ToDoListSvg}
             showViewMore
           />
         </NoticeIcon>

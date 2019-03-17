@@ -6,11 +6,12 @@ import Bind from 'lodash-decorators/bind';
 import classNames from 'classnames';
 import autoHeight from '../autoHeight';
 import styles from './index.less';
+import imgUrl from '../../../assets/TagCloud.png';
 
 /* eslint no-underscore-dangle: 0 */
 /* eslint no-param-reassign: 0 */
 
-const imgUrl = 'https://gw.alipayobjects.com/zos/rmsportal/gWyeGLCdFFRavBGIDzWk.png';
+// const imgUrl = 'https://gw.alipayobjects.com/zos/rmsportal/gWyeGLCdFFRavBGIDzWk.png';
 
 @autoHeight()
 class TagCloud extends Component {
