@@ -1,7 +1,6 @@
 import React from 'react';
-// import { Icon } from 'antd';
-// import BizIcon from '@components/BizIcon';
-import BizIcon from '../../components/BizIcon';
+import { Icon } from 'antd';
+import IconFont from '@/components/IconFont';
 
 /**
  * Allow menu.js config icon as string or ReactNode
@@ -12,11 +11,14 @@ import BizIcon from '../../components/BizIcon';
  * @param {*} stylesIcon  styles.icon
  */
 const getIcon = (icon, stylesIcon) => {
-  if (typeof icon === 'string' && /^https?:\/\//.test(icon)) {
-    return <img src={icon} alt="icon" className={stylesIcon} />;
-  }
   if (typeof icon === 'string') {
-    return <BizIcon type={icon} />;
+    if (icon.startsWith('https://') || icon.startsWith('http://')) {
+      return <img src={icon} alt="icon" className={stylesIcon} />;
+    }
+    if (icon.startsWith('icon-')) {
+      return <IconFont type={icon} />;
+    }
+    return <Icon type={icon} />;
   }
   return icon;
 };

@@ -11,6 +11,7 @@ const SystemInfo = {
   description: 'Welcome To xxx MGR',
   // 系统菜单配置
   menu: {
+    // 禁用菜单国际化
     disableLocal: false,
   },
   // 系统权限存储key
@@ -54,7 +55,7 @@ const LayoutConfig = {
     }
   },
   // 是否隐藏页脚
-  hiddenFooter: true,
+  hiddenFooter: false,
   // 页脚连接
   copyrightLinks: [
     { key: 'help', title: '帮助', href: '', blankTarget: true },
@@ -74,13 +75,13 @@ const LoginConfig = {
   // 启用帐号登录(帐号密码)
   enableAccountLogin: true,
   // 启用手机号登录(手机号码验证码)
-  enableTelephoneLogin: false,
+  enableTelephoneLogin: true,
   // 启用忘记密码
-  enableForgotPassword: false,
+  enableForgotPassword: true,
   // 启用用户注册
-  enableRegistered: false,
+  enableRegistered: true,
   // 启用Auth2三方登录
-  enableAuth2Login: false,
+  enableAuth2Login: true,
 }
 
 // HTTP 状态码错误说明

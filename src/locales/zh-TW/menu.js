@@ -31,7 +31,6 @@ export default {
   'menu.account': '個人頁',
   'menu.account.center': '個人中心',
   'menu.account.settings': '個人設置',
-  'menu.account.trigger': '觸發報錯',
   'menu.account.logout': '退出登錄',
   'menu.exception': '异常页',
   'menu.exception.not-permission': '403',
