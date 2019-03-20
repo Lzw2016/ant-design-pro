@@ -49,6 +49,7 @@ export default class PageHeader extends PureComponent {
             avatar={{ size: 'large', shape: 'circle' }}
           >
             {hiddenBreadcrumb ? null : <BreadcrumbView {...this.props} />}
+            {(logo || title ||  action || content || extraContent) && (
             <div className={styles.detail}>
               {logo && <div className={styles.logo}>{logo}</div>}
               <div className={styles.main}>
@@ -61,7 +62,7 @@ export default class PageHeader extends PureComponent {
                   {extraContent && <div className={styles.extraContent}>{extraContent}</div>}
                 </div>
               </div>
-            </div>
+            </div>)}
             {tabList && tabList.length ? (
               <Tabs
                 className={styles.tabs}
