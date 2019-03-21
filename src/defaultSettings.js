@@ -6,10 +6,10 @@ module.exports = {
   fixedHeader: false, // sticky header
   autoHideHeader: false, // auto hide header
   fixSiderbar: false, // sticky siderbar
-  menu: {
-    disableLocal: false,
-  },
-  title: 'Ant Design Pro',
+  // menu: {
+  //   disableLocal: false,
+  // },
+  // title: 'Ant Design Pro',
   pwa: true,
   // your iconfont Symbol Scrip Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js

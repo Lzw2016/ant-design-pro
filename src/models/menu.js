@@ -2,9 +2,11 @@ import memoizeOne from 'memoize-one';
 import isEqual from 'lodash/isEqual';
 import { formatMessage } from 'umi/locale';
 import Authorized from '@/utils/Authorized';
-import { menu } from '../defaultSettings';
+// import { menu } from '../defaultSettings';
+import { SystemInfo } from '@/utils/constant';
 
 const { check } = Authorized;
+const { menu } = SystemInfo;
 
 // Conversion router to menu.
 function formatter(data, parentAuthority, parentName) {

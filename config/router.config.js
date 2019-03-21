@@ -35,6 +35,19 @@ export default [
             icon: 'smile',
             component: './Demo/DemoTest',
           },
+          {
+            path: '/demo/test2',
+            name: 'test2',
+            icon: 'smile',
+            routes: [
+              {
+                path: '/demo/test2/test',
+                name: 'test',
+                icon: 'smile',
+                component: './Demo/DemoTest',
+              },
+            ],
+          },
         ],
       },
       // 多语言翻译开发工具

@@ -5,7 +5,7 @@ import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
 
-const { pwa, primaryColor } = defaultSettings;
+const { pwa, primaryColor, defaultLocale, enableBaseNavigator } = defaultSettings;
 const { APP_TYPE, TEST } = process.env;
 
 const plugins = [
@@ -18,8 +18,8 @@ const plugins = [
       },
       locale: {
         enable: true, // default false
-        default: 'zh-CN', // default zh-CN
-        baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+        default: defaultLocale, // default zh-CN
+        baseNavigator: enableBaseNavigator, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',

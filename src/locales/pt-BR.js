@@ -1,4 +1,5 @@
 import exception from './pt-BR/exception';
+import form from './pt-BR/form';
 import globalHeader from './pt-BR/globalHeader';
 import login from './pt-BR/login';
 import menu from './pt-BR/menu';
@@ -17,6 +18,7 @@ export default {
   'app.forms.basic.description':
     'Páginas de formulário são usadas para coletar e verificar as informações dos usuários e formulários básicos são comuns nos cenários onde existem alguns formatos de informações.',
   ...exception,
+  ...form,
   ...globalHeader,
   ...login,
   ...menu,

@@ -1,4 +1,5 @@
 import exception from './zh-CN/exception';
+import form from './zh-CN/form';
 import globalHeader from './zh-CN/globalHeader';
 import login from './zh-CN/login';
 import menu from './zh-CN/menu';
@@ -18,6 +19,7 @@ export default {
   'app.forms.basic.description':
     '表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。',
   ...exception,
+  ...form,
   ...globalHeader,
   ...login,
   ...menu,
