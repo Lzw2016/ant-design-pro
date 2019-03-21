@@ -29,7 +29,9 @@ export function patchRoutes(routes) {
   window.g_routes = routes;
 }
 
+// 授权?? 查看 umi 文档
 export function render(oldRender) {
+  // debugger
   fetch('/api/auth_routes')
     .then(res => res.json())
     .then(

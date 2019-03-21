@@ -4,114 +4,32 @@ import { BaiduTranslateMD5 } from '@/utils/BaiduTranslateMD5';
 import { BaiduTranslate } from '@/utils/constant';
 
 export async function queryProjectNotice() {
-  return request('/api/project/notice');
-}
-
-export async function queryActivities() {
-  return request('/api/activities');
-}
-
-export async function queryRule(params) {
-  return request(`/api/rule?${stringify(params)}`);
-}
-
-export async function removeRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'delete',
+  // return request('/api/project/notice');
+  return [
+    {
+      id: 'xxx1',
+      title: 'Alipay',
+      logo: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+      description: '那是一种内在的东西，他们到达不了，也无法触及的',
+      updatedAt: new Date(),
+      member: '科学搬砖组',
+      href: '',
+      memberLink: '',
     },
-  });
+  ];
 }
 
-export async function addRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'post',
-    },
-  });
-}
-
-export async function updateRule(params = {}) {
-  return request(`/api/rule?${stringify(params.query)}`, {
-    method: 'POST',
-    body: {
-      ...params.body,
-      method: 'update',
-    },
-  });
-}
-
-export async function fakeSubmitForm(params) {
-  return request('/api/forms', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-export async function fakeChartData() {
-  return request('/api/fake_chart_data');
-}
-
-export async function queryTags() {
-  return request('/api/tags');
-}
-
-export async function queryBasicProfile(id) {
-  return request(`/api/profile/basic?id=${id}`);
-}
-
-export async function queryAdvancedProfile() {
-  return request('/api/profile/advanced');
-}
-
-export async function queryFakeList(params) {
-  return request(`/api/fake_list?${stringify(params)}`);
-}
-
-export async function removeFakeList(params) {
-  const { count = 5, ...restParams } = params;
-  return request(`/api/fake_list?count=${count}`, {
-    method: 'POST',
-    body: {
-      ...restParams,
-      method: 'delete',
-    },
-  });
-}
-
-export async function addFakeList(params) {
-  const { count = 5, ...restParams } = params;
-  return request(`/api/fake_list?count=${count}`, {
-    method: 'POST',
-    body: {
-      ...restParams,
-      method: 'post',
-    },
-  });
-}
-
-export async function updateFakeList(params) {
-  const { count = 5, ...restParams } = params;
-  return request(`/api/fake_list?count=${count}`, {
-    method: 'POST',
-    body: {
-      ...restParams,
-      method: 'update',
-    },
-  });
-}
-
+// 用户登录
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
-    body: params,
-  });
+  // return request('/api/login/account', {
+  //   method: 'POST',
+  //   body: params,
+  // });
+  console.log("fakeAccountLogin", params);
+  return { status: "ok", type: "account", currentAuthority: "admin" };
 }
 
+// 用户注册
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',
@@ -119,12 +37,44 @@ export async function fakeRegister(params) {
   });
 }
 
+// 查询通知
 export async function queryNotices(params = {}) {
-  return request(`/api/notices?${stringify(params)}`);
+  // return request(`/api/notices?${stringify(params)}`);
+  console.log("queryNotices", params);
+  return [
+    {
+      id: "000000003",
+      avatar: "https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png",
+      title: "这种模板可以区分多种通知类型",
+      datetime: "2017-08-07",
+      read: true,
+      type: "notification",
+    },
+    {
+      id: "000000006",
+      avatar: "https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg",
+      title: "曲丽丽 评论了你",
+      description: "描述信息描述信息描述信息",
+      datetime: "2017-08-07",
+      type: "message",
+      clickClose: true
+    },
+    {
+      id: "000000011",
+      title: "信息安全考试",
+      description: "指派竹尔于 2017-01-09 前完成更新并发布",
+      extra: "已耗时 8 天",
+      status: "doing",
+      type: "event"
+    },
+  ];
 }
 
+// 查询验证码
 export async function getFakeCaptcha(mobile) {
-  return request(`/api/captcha?mobile=${mobile}`);
+  // return request(`/api/captcha?mobile=${mobile}`);
+  console.log("getFakeCaptcha", mobile);
+  return "captcha-xxx";
 }
 
 /**
