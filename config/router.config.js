@@ -12,6 +12,9 @@ export default [
         name: 'register.result',
         component: './User/RegisterResult',
       },
+      {
+        component: '404',
+      },
     ],
   },
   // app
@@ -21,7 +24,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -87,6 +90,29 @@ export default [
             name: 'advancedform',
             authority: ['admin'],
             component: './Forms/AdvancedForm',
+          },
+        ],
+      },
+      //  editor
+      {
+        name: 'editor',
+        icon: 'highlight',
+        path: '/editor',
+        routes: [
+          {
+            path: '/editor/flow',
+            name: 'flow',
+            component: './Editor/GGEditor/Flow',
+          },
+          {
+            path: '/editor/mind',
+            name: 'mind',
+            component: './Editor/GGEditor/Mind',
+          },
+          {
+            path: '/editor/koni',
+            name: 'koni',
+            component: './Editor/GGEditor/Koni',
           },
         ],
       },
