@@ -12,6 +12,9 @@ export default [
         name: 'register.result',
         component: './User/RegisterResult',
       },
+      {
+        component: '404',
+      },
     ],
   },
   // app
@@ -61,6 +64,29 @@ export default [
             name: 'baidu',
             icon: 'icon-fanyi',
             component: './Translate/Baidu',
+          },
+        ],
+      },
+      //  editor
+      {
+        name: 'editor',
+        icon: 'highlight',
+        path: '/editor',
+        routes: [
+          {
+            path: '/editor/flow',
+            name: 'flow',
+            component: './Editor/GGEditor/Flow',
+          },
+          {
+            path: '/editor/mind',
+            name: 'mind',
+            component: './Editor/GGEditor/Mind',
+          },
+          {
+            path: '/editor/koni',
+            name: 'koni',
+            component: './Editor/GGEditor/Koni',
           },
         ],
       },

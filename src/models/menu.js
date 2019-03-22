@@ -20,7 +20,7 @@ function formatter(data, parentAuthority, parentName) {
       }
 
       let locale = 'menu';
-      if (parentName) {
+      if (parentName && parentName !== '/') {
         locale = `${parentName}.${item.name}`;
       } else {
         locale = `menu.${item.name}`;
@@ -111,8 +111,8 @@ export default {
 
   effects: {
     *getMenuData({ payload }, { put }) {
-      const { routes, authority } = payload;
-      const originalMenuData = memoizeOneFormatter(routes, authority);
+      const { routes, authority, path } = payload;
+      const originalMenuData = memoizeOneFormatter(routes, authority, path);
       const menuData = filterMenuData(originalMenuData);
       const breadcrumbNameMap = memoizeOneGetBreadcrumbNameMap(originalMenuData);
       yield put({

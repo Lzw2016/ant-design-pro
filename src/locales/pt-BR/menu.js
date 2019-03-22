@@ -37,4 +37,8 @@ export default {
   'menu.account.center': 'Central da Conta',
   'menu.account.settings': 'Configurar Conta',
   'menu.account.logout': 'Sair',
+  'menu.editor': 'Editor',
+  'menu.editor.flow': 'Flow Editor',
+  'menu.editor.mind': 'Mind Editor',
+  'menu.editor.koni': 'Koni Editor',
 };

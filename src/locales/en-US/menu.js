@@ -37,4 +37,8 @@ export default {
   'menu.account.center': 'Account Center',
   'menu.account.settings': 'Account Settings',
   'menu.account.logout': 'Logout',
+  'menu.editor': 'Editor',
+  'menu.editor.flow': 'Flow Editor',
+  'menu.editor.mind': 'Mind Editor',
+  'menu.editor.koni': 'Koni Editor',
 };
