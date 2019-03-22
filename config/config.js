@@ -75,13 +75,18 @@ export default {
   theme: {
     'primary-color': primaryColor,
   },
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  proxy: {
+    '/baidu': {
+      target: 'http://api.fanyi.baidu.com/',
+      changeOrigin: true,
+      pathRewrite: { '^/baidu': '' },
+    },
+    '/api': {
+      target: 'http://127.0.0.1:8080/',
+      changeOrigin: true,
+      pathRewrite: { '^/': '' },
+    },
+  },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
     javascriptEnabled: true,

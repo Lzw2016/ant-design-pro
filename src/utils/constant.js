@@ -139,8 +139,8 @@ const CryptoConfig = {
 
 // 百度翻译配置
 const BaiduTranslate = {
-  appid: '20190104000254481',
-  key: 'FP3FQIYZNhGbhSe1EtX7',
+  appid: '201901040002544810',
+  key: 'FP3FQIYZNhGbhSe1EtX70',
 }
 
 export { SystemInfo, LayoutConfig, LoginConfig, CodeMessage, ModelInitState, CryptoConfig, BaiduTranslate };
