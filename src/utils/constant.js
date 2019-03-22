@@ -1,7 +1,7 @@
 // 全局常量
 import React, { Fragment } from 'react';
 import { Icon } from 'antd';
-import { formatMessage } from 'umi/locale';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 
 // 系统信息
 const SystemInfo = {
@@ -31,7 +31,7 @@ const LayoutConfig = {
   // 全局页头
   globalHeader: {
     // 是否启用全局搜索
-    enableHeaderSearch: false,
+    enableHeaderSearch: true,
     // 默认搜索提示关键字
     searchList: () => [
       formatMessage({ id: 'component.globalHeader.search.example1' }),
@@ -39,7 +39,7 @@ const LayoutConfig = {
       formatMessage({ id: 'component.globalHeader.search.example3' }),
     ],
     // 是否启用帮助文档
-    enableHelpDocument: false,
+    enableHelpDocument: true,
     // 帮助文档地址
     helpDocumentHref: 'https://pro.ant.design/docs/getting-started',
     // 帮助文档打卡方式
@@ -58,14 +58,14 @@ const LayoutConfig = {
   hiddenFooter: false,
   // 页脚连接
   copyrightLinks: [
-    { key: 'help', title: '帮助', href: '', blankTarget: true },
-    { key: 'privacy', title: '隐私', href: '', blankTarget: true },
-    { key: 'terms', title: '条款', href: '', blankTarget: true },
+    { key: 'help', title: formatMessage({ id: 'common.layout.user.link.help' }), href: '', blankTarget: true },
+    { key: 'privacy', title: formatMessage({ id: 'common.layout.user.link.privacy' }), href: '', blankTarget: true },
+    { key: 'terms', title: formatMessage({ id: 'common.layout.user.link.terms' }), href: '', blankTarget: true },
   ],
   // 页脚版权
   copyright: (
     <Fragment>
-      Copyright <Icon type="copyright" /> 2017 Pankord 粤ICP备17063548号 OW20180806
+      Copyright <Icon type="copyright" /> <FormattedMessage id="common.layout.copyright" />
     </Fragment>
   ),
 };
@@ -87,21 +87,21 @@ const LoginConfig = {
 // HTTP 状态码错误说明
 const CodeMessage = status => {
   const errorMsg = {
-    200: formatMessage({ id: 'request.error.message.200' }),
-    201: formatMessage({ id: 'request.error.message.201' }),
-    202: formatMessage({ id: 'request.error.message.202' }),
-    204: formatMessage({ id: 'request.error.message.204' }),
-    400: formatMessage({ id: 'request.error.message.400' }),
-    401: formatMessage({ id: 'request.error.message.401' }),
-    403: formatMessage({ id: 'request.error.message.403' }),
-    404: formatMessage({ id: 'request.error.message.404' }),
-    406: formatMessage({ id: 'request.error.message.406' }),
-    410: formatMessage({ id: 'request.error.message.410' }),
-    422: formatMessage({ id: 'request.error.message.422' }),
-    500: formatMessage({ id: 'request.error.message.500' }),
-    502: formatMessage({ id: 'request.error.message.502' }),
-    503: formatMessage({ id: 'request.error.message.503' }),
-    504: formatMessage({ id: 'request.error.message.504' }),
+    200: formatMessage({ id: 'common.request.error.message.200' }),
+    201: formatMessage({ id: 'common.request.error.message.201' }),
+    202: formatMessage({ id: 'common.request.error.message.202' }),
+    204: formatMessage({ id: 'common.request.error.message.204' }),
+    400: formatMessage({ id: 'common.request.error.message.400' }),
+    401: formatMessage({ id: 'common.request.error.message.401' }),
+    403: formatMessage({ id: 'common.request.error.message.403' }),
+    404: formatMessage({ id: 'common.request.error.message.404' }),
+    406: formatMessage({ id: 'common.request.error.message.406' }),
+    410: formatMessage({ id: 'common.request.error.message.410' }),
+    422: formatMessage({ id: 'common.request.error.message.422' }),
+    500: formatMessage({ id: 'common.request.error.message.500' }),
+    502: formatMessage({ id: 'common.request.error.message.502' }),
+    503: formatMessage({ id: 'common.request.error.message.503' }),
+    504: formatMessage({ id: 'common.request.error.message.504' }),
   };
   return errorMsg[status];
 };
@@ -118,7 +118,7 @@ const ModelInitState = {
     pageSizeOptions: ['10', '30', '50', '100'],
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: total => formatMessage({ id: 'pagination.showTotal' }, { total }),
+    showTotal: total => formatMessage({ id: 'common.pagination.showTotal' }, { total }),
     current: 1,
     pageSize: 10,
     total: 0,
