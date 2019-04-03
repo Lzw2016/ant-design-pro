@@ -93,29 +93,6 @@ export default [
           },
         ],
       },
-      //  editor
-      {
-        name: 'editor',
-        icon: 'highlight',
-        path: '/editor',
-        routes: [
-          {
-            path: '/editor/flow',
-            name: 'flow',
-            component: './Editor/GGEditor/Flow',
-          },
-          {
-            path: '/editor/mind',
-            name: 'mind',
-            component: './Editor/GGEditor/Mind',
-          },
-          {
-            path: '/editor/koni',
-            name: 'koni',
-            component: './Editor/GGEditor/Koni',
-          },
-        ],
-      },
       // list
       {
         path: '/list',
@@ -287,6 +264,29 @@ export default [
                 component: './Account/Settings/NotificationView',
               },
             ],
+          },
+        ],
+      },
+      //  editor
+      {
+        name: 'editor',
+        icon: 'highlight',
+        path: '/editor',
+        routes: [
+          {
+            path: '/editor/flow',
+            name: 'flow',
+            component: './Editor/GGEditor/Flow',
+          },
+          {
+            path: '/editor/mind',
+            name: 'mind',
+            component: './Editor/GGEditor/Mind',
+          },
+          {
+            path: '/editor/koni',
+            name: 'koni',
+            component: './Editor/GGEditor/Koni',
           },
         ],
       },

@@ -7,8 +7,10 @@ import { FlowToolbar } from '../components/EditorToolbar';
 import { FlowItemPanel } from '../components/EditorItemPanel';
 import { FlowDetailPanel } from '../components/EditorDetailPanel';
 import styles from './index.less';
-import { FormattedMessage } from 'umi/locale';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+
+GGEditor.setTrackable(false);
 
 const FlowPage = () => {
   return (
