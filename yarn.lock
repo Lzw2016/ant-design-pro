@@ -2664,9 +2664,9 @@ antd@3.x:
     shallowequal "^1.1.0"
     warning "~4.0.2"
 
-antd@^3.13.6:
+antd@^3.16.1:
   version "3.16.1"
-  resolved "http://registry.npm.taobao.org/antd/download/antd-3.16.1.tgz#1d253931fc33e960f22025bef2d5c1548116ec6c"
+  resolved "http://registry.npm.taobao.org/antd/download/antd-3.16.1.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fantd%2Fdownload%2Fantd-3.16.1.tgz#1d253931fc33e960f22025bef2d5c1548116ec6c"
   integrity sha1-HSU5Mfwz6WDyICW+8tXBVIEW7Gw=
   dependencies:
     "@ant-design/icons" "~1.2.0"

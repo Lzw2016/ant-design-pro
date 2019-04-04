@@ -137,7 +137,7 @@ export default class BaseMenu extends PureComponent {
     if (!selectedKeys.length && openKeys) {
       selectedKeys = [openKeys[openKeys.length - 1]];
     }
-    let props = {};
+    let props = { openKeys: [] }; // 这里的修复会带来"菜单收缩之后无法显示子菜单"的问题
     if (openKeys && !collapsed) {
       props = {
         openKeys: openKeys.length === 0 ? [...selectedKeys] : openKeys,
@@ -147,6 +147,7 @@ export default class BaseMenu extends PureComponent {
     const cls = classNames(className, {
       'top-nav-menu': mode === 'horizontal',
     });
+    // console.log("菜单展开收起闪动", collapsed, " | openKeys", props.openKeys, " | selectedKeys", selectedKeys);
     return (
       <Menu
         key="Menu"
@@ -156,6 +157,7 @@ export default class BaseMenu extends PureComponent {
         selectedKeys={selectedKeys}
         style={style}
         className={cls}
+        // inlineCollapsed={collapsed}
         {...props}
       >
         {this.getNavMenuItems(menuData)}
