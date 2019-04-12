@@ -137,7 +137,7 @@ export default class BaseMenu extends PureComponent {
     if (!selectedKeys.length && openKeys) {
       selectedKeys = [openKeys[openKeys.length - 1]];
     }
-    let props = { openKeys: [] }; // 这里的修复会带来"菜单收缩之后无法显示子菜单"的问题
+    let props = {};
     if (openKeys && !collapsed) {
       props = {
         openKeys: openKeys.length === 0 ? [...selectedKeys] : openKeys,
