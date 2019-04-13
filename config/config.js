@@ -59,6 +59,8 @@ if (APP_TYPE === 'site') {
 }
 
 export default {
+  hash: true,
+  history: 'hash',
   // add for transfer to umi
   plugins,
   define: {
