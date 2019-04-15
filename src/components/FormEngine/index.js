@@ -1,24 +1,31 @@
 import React, { PureComponent } from 'react';
+import { Row, Col, Form, Button } from 'antd';
 // import classNames from 'classnames';
-// import { Button } from 'antd';
 // import styles from './index.less';
 
+@Form.create()
 class FormEngine extends PureComponent {
-  static defaultProps = {
-    backText: 'back to home',
-    redirect: '/',
-  };
+  // static defaultProps = {
+  //   backText: 'back to home',
+  //   redirect: '/',
+  // };
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {};
+  // }
 
   render() {
     return (
-      <div>
-        FormEngine
-      </div>
+      <Form layout="vertical" onSubmit={this.handleSubmit} hideRequiredMark>
+        <div>
+          <Row>
+            <Col>
+              123
+            </Col>
+          </Row>
+        </div>
+      </Form>
     );
   }
 }

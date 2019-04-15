@@ -42,6 +42,7 @@ module.exports = {
     'react/jsx-boolean-value': 0,
     'react/sort-comp': 0,
     'camelcase': 0,
+    'react/prefer-stateless-function': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url', 'object-assign'],

@@ -7,14 +7,8 @@ export default [
       { path: '/user', redirect: '/user/login' },
       { path: '/user/login', name: 'login', component: './User/Login' },
       { path: '/user/register', name: 'register', component: './User/Register' },
-      {
-        path: '/user/register-result',
-        name: 'register.result',
-        component: './User/RegisterResult',
-      },
-      {
-        component: '404',
-      },
+      { path: '/user/register-result', name: 'register.result', component: './User/RegisterResult' },
+      { component: '404' },
     ],
   },
   // app
@@ -32,23 +26,21 @@ export default [
         name: 'demo',
         icon: 'bars',
         routes: [
-          {
-            path: '/demo/test',
-            name: 'test',
-            icon: 'smile',
-            component: './Demo/DemoTest',
-          },
+          { path: '/demo/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
           {
             path: '/demo/test2',
             name: 'test2',
             icon: 'smile',
             routes: [
-              {
-                path: '/demo/test2/test',
-                name: 'test',
-                icon: 'smile',
-                component: './Demo/DemoTest',
-              },
+              { path: '/demo/test2/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
+            ],
+          },
+          {
+            path: '/demo/FormEngine',
+            name: 'FormEngine',
+            icon: 'form',
+            routes: [
+              { path: '/demo/FormEngine/demo1', name: 'Demo1', component: './Demo/FormEngine/Demo1' },
             ],
           },
         ],
@@ -59,12 +51,7 @@ export default [
         name: 'translate',
         icon: 'icon-transform',
         routes: [
-          {
-            path: '/translate/baidu',
-            name: 'baidu',
-            icon: 'icon-fanyi',
-            component: './Translate/Baidu',
-          },
+          { path: '/translate/baidu', name: 'baidu', icon: 'icon-fanyi', component: './Translate/Baidu' },
         ],
       },
       //  editor
@@ -73,21 +60,9 @@ export default [
         icon: 'highlight',
         path: '/editor',
         routes: [
-          {
-            path: '/editor/flow',
-            name: 'flow',
-            component: './Editor/GGEditor/Flow',
-          },
-          {
-            path: '/editor/mind',
-            name: 'mind',
-            component: './Editor/GGEditor/Mind',
-          },
-          {
-            path: '/editor/koni',
-            name: 'koni',
-            component: './Editor/GGEditor/Koni',
-          },
+          { path: '/editor/flow', name: 'flow', component: './Editor/GGEditor/Flow' },
+          { path: '/editor/mind', name: 'mind', component: './Editor/GGEditor/Mind' },
+          { path: '/editor/koni', name: 'koni', component: './Editor/GGEditor/Koni' },
         ],
       },
       // 个人帐号中心
@@ -102,22 +77,10 @@ export default [
             name: 'center',
             component: './Account/Center/Center',
             routes: [
-              {
-                path: '/account/center',
-                redirect: '/account/center/articles',
-              },
-              {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
-              },
-              {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
-              },
-              {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
-              },
+              { path: '/account/center', redirect: '/account/center/articles' },
+              { path: '/account/center/articles', component: './Account/Center/Articles' },
+              { path: '/account/center/applications', component: './Account/Center/Applications' },
+              { path: '/account/center/projects', component: './Account/Center/Projects' },
             ],
           },
           {
@@ -125,26 +88,11 @@ export default [
             name: 'settings',
             component: './Account/Settings/Info',
             routes: [
-              {
-                path: '/account/settings',
-                redirect: '/account/settings/base',
-              },
-              {
-                path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
-              },
-              {
-                path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
-              },
-              {
-                path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
-              },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
+              { path: '/account/settings', redirect: '/account/settings/base' },
+              { path: '/account/settings/base', component: './Account/Settings/BaseView' },
+              { path: '/account/settings/security', component: './Account/Settings/SecurityView' },
+              { path: '/account/settings/binding', component: './Account/Settings/BindingView' },
+              { path: '/account/settings/notification', component: './Account/Settings/NotificationView' },
             ],
           },
         ],
@@ -156,27 +104,13 @@ export default [
         path: '/exception',
         hideInMenu: true,
         routes: [
-          {
-            path: '/exception/403',
-            name: 'not-permission',
-            component: './Exception/403',
-          },
-          {
-            path: '/exception/404',
-            name: 'not-find',
-            component: './Exception/404',
-          },
-          {
-            path: '/exception/500',
-            name: 'server-error',
-            component: './Exception/500',
-          },
+          { path: '/exception/403', name: 'not-permission', component: './Exception/403' },
+          { path: '/exception/404', name: 'not-find', component: './Exception/404' },
+          { path: '/exception/500', name: 'server-error', component: './Exception/500' },
         ],
       },
       // 其他路由 - 404
-      {
-        component: './Exception/404',
-      },
+      { component: './Exception/404' },
     ],
   },
 ];
