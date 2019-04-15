@@ -77,7 +77,7 @@ const request = extend({
   // 全局请求头
   headers: {},
   // 全局url前缀
-  prefix: '',
+  prefix: lodash.trim(PROXY_PREFIX).length > 0 ? PROXY_PREFIX : '',
 });
 
 // 请求拦截器，更改url或选项

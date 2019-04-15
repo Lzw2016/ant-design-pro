@@ -10,6 +10,14 @@
     ant-design-palettes "^1.1.3"
     babel-runtime "^6.26.0"
 
+"@ant-design/icons-react@~1.1.5":
+  version "1.1.5"
+  resolved "http://registry.npm.taobao.org/@ant-design/icons-react/download/@ant-design/icons-react-1.1.5.tgz#1b03da8dcced2a4bb982ef7b25c1d24014c35a68"
+  integrity sha1-GwPajcztKku5gu97JcHSQBTDWmg=
+  dependencies:
+    ant-design-palettes "^1.1.3"
+    babel-runtime "^6.26.0"
+
 "@ant-design/icons@~1.2.0":
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/@ant-design/icons/download/@ant-design/icons-1.2.1.tgz#8e19301b1433ec67d6bbd0e892782e2ade561ff9"
@@ -2664,13 +2672,13 @@ antd@3.x:
     shallowequal "^1.1.0"
     warning "~4.0.2"
 
-antd@^3.16.2:
-  version "3.16.2"
-  resolved "http://registry.npm.taobao.org/antd/download/antd-3.16.2.tgz#a3b4a844a6de82e6c87c96f88dda2317f4d89075"
-  integrity sha1-o7SoRKbegubIfJb4jdojF/TYkHU=
+antd@^3.16.3:
+  version "3.16.3"
+  resolved "http://registry.npm.taobao.org/antd/download/antd-3.16.3.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fantd%2Fdownload%2Fantd-3.16.3.tgz#66ecdbd96a31e2a4d239106a106b17629beaa141"
+  integrity sha1-Zuzb2Wox4qTSORBqEGsXYpvqoUE=
   dependencies:
     "@ant-design/icons" "~1.2.0"
-    "@ant-design/icons-react" "~1.1.2"
+    "@ant-design/icons-react" "~1.1.5"
     "@types/react-slick" "^0.23.3"
     array-tree-filter "^2.1.0"
     babel-runtime "6.x"
@@ -15528,12 +15536,13 @@ stylelint-config-prettier@^5.0.0:
   resolved "http://registry.npm.taobao.org/stylelint-config-prettier/download/stylelint-config-prettier-5.0.0.tgz#e7339da065dac8129ca821e234abddcef950b7f8"
   integrity sha1-5zOdoGXayBKcqCHiNKvdzvlQt/g=
 
-stylelint-config-rational-order@^0.0.4:
-  version "0.0.4"
-  resolved "http://registry.npm.taobao.org/stylelint-config-rational-order/download/stylelint-config-rational-order-0.0.4.tgz#c3cda86fcaddeb81272a6e1e6aea86e0677c7c2d"
-  integrity sha1-w82ob8rd64EnKm4eauqG4Gd8fC0=
+stylelint-config-rational-order@^0.1.0:
+  version "0.1.0"
+  resolved "http://registry.npm.taobao.org/stylelint-config-rational-order/download/stylelint-config-rational-order-0.1.0.tgz#ac0c2ef0cd45b05e979340fde25b3c6dcde093f7"
+  integrity sha1-rAwu8M1FsF6Xk0D94ls8bc3gk/c=
   dependencies:
-    stylelint-order "^2.0.0"
+    stylelint "^9.10.1"
+    stylelint-order "^2.2.1"
 
 stylelint-config-recommended@^2.1.0:
   version "2.1.0"
@@ -15558,6 +15567,15 @@ stylelint-order@^2.0.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/stylelint-order/download/stylelint-order-2.1.0.tgz#fc64625c26b93755773bd67c1203381194aded04"
   integrity sha1-/GRiXCa5N1V3O9Z8EgM4EZSt7QQ=
+  dependencies:
+    lodash "^4.17.10"
+    postcss "^7.0.2"
+    postcss-sorting "^4.1.0"
+
+stylelint-order@^2.2.1:
+  version "2.2.1"
+  resolved "http://registry.npm.taobao.org/stylelint-order/download/stylelint-order-2.2.1.tgz#cd2d4a0d81d91c705f1d275a58487e5ad5aa5828"
+  integrity sha1-zS1KDYHZHHBfHSdaWEh+WtWqWCg=
   dependencies:
     lodash "^4.17.10"
     postcss "^7.0.2"

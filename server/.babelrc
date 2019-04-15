@@ -1,0 +1,11 @@
+{
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "transform-async-to-generator",
+    "transform-async-to-module-method",
+    "transform-regenerator",
+    "transform-runtime"
+  ]
+}
