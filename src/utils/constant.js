@@ -58,9 +58,9 @@ const LayoutConfig = {
   hiddenFooter: false,
   // 页脚连接
   copyrightLinks: [
-    { key: 'help', title: formatMessage({ id: 'common.layout.user.link.help' }), href: '', blankTarget: true },
-    { key: 'privacy', title: formatMessage({ id: 'common.layout.user.link.privacy' }), href: '', blankTarget: true },
-    { key: 'terms', title: formatMessage({ id: 'common.layout.user.link.terms' }), href: '', blankTarget: true },
+    { key: 'help', title: () => formatMessage({ id: 'common.layout.user.link.help' }), href: '', blankTarget: true },
+    { key: 'privacy', title: () => formatMessage({ id: 'common.layout.user.link.privacy' }), href: '', blankTarget: true },
+    { key: 'terms', title: () => formatMessage({ id: 'common.layout.user.link.terms' }), href: '', blankTarget: true },
   ],
   // 页脚版权
   copyright: (

@@ -3,7 +3,10 @@ import pathToRegexp from 'path-to-regexp';
 import Link from 'umi/link';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { urlToList } from '../_utils/pathTools';
-import { menu } from '../../defaultSettings';
+// import { menu } from '../../defaultSettings';
+import { SystemInfo } from '@/utils/constant';
+
+const { menu } = SystemInfo;
 
 // 渲染Breadcrumb 子节点
 // Render the Breadcrumb child node

@@ -15,7 +15,7 @@ const GlobalFooter = ({ className, links, copyright }) => {
               target={link.blankTarget ? '_blank' : '_self'}
               href={link.href}
             >
-              {link.title}
+              {(link.title && link.title instanceof Function) ? link.title() : link.title}
             </a>
           ))}
         </div>
