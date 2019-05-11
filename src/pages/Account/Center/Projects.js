@@ -5,8 +5,8 @@ import { connect } from 'dva';
 import AvatarList from '@/components/AvatarList';
 import stylesProjects from './Projects.less';
 
-@connect(({ list }) => ({
-  list,
+@connect(() => ({
+  list: { list: [] },
 }))
 class Center extends PureComponent {
   render() {

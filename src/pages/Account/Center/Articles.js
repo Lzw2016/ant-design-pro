@@ -4,8 +4,8 @@ import { connect } from 'dva';
 import ArticleListContent from '@/components/ArticleListContent';
 import styles from './Articles.less';
 
-@connect(({ list }) => ({
-  list,
+@connect(() => ({
+  list: { list: [] },
 }))
 class Center extends PureComponent {
   render() {
