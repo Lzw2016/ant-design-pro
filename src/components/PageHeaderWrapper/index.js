@@ -55,16 +55,7 @@ const PageHeaderWrapper = ({
           return (
             <PageHeader
               wide={contentWidth === 'Fixed'}
-              title={
-                <Title
-                  level={4}
-                  style={{
-                    marginBottom: 0,
-                  }}
-                >
-                  {title}
-                </Title>
-              }
+              title={title ? <Title level={4} style={{ marginBottom: 0 }}>{title}</Title> : ""}
               key="pageheader"
               {...restProps}
               breadcrumb={
@@ -79,15 +70,19 @@ const PageHeaderWrapper = ({
               linkElement={Link}
               footer={renderFooter(restProps)}
             >
-              <div className={styles.detail}>
-                {logo && <div className={styles.logo}>{logo}</div>}
-                <div className={styles.main}>
-                  <div className={styles.row}>
-                    {content && <div className={styles.content}>{content}</div>}
-                    {extraContent && <div className={styles.extraContent}>{extraContent}</div>}
+              {
+                (title || logo || content || extraContent) ?
+                  <div className={styles.detail}>
+                    {logo && <div className={styles.logo}>{logo}</div>}
+                    <div className={styles.main}>
+                      <div className={styles.row}>
+                        {content && <div className={styles.content}>{content}</div>}
+                        {extraContent && <div className={styles.extraContent}>{extraContent}</div>}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                 : ""
+              }
             </PageHeader>
           );
         }}
