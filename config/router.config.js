@@ -27,6 +27,7 @@ export default [
         icon: 'bars',
         routes: [
           { path: '/demo/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
+          { path: '/demo/excel', name: 'excel-import', icon: 'file-excel', component: './Demo/ExcelImport' },
           {
             path: '/demo/test2',
             name: 'test2',

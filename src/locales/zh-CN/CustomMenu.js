@@ -1,6 +1,7 @@
 export default {
   "menu.demo": "示例Demo",
   "menu.demo.test": "测试",
+  "menu.demo.excel-import": "Excel导入",
   "menu.demo.test2": "测试多级菜单",
   "menu.demo.test2.test": "三级菜单",
 
