@@ -12,12 +12,30 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 }))
 class DemoTest extends PureComponent {
 
+  state = {
+    excelImportData: [],
+  }
+
+  onConfirmImport = (data) => {
+    console.log("onConfirmImport -> ", data)
+    this.setState({ excelImportData: data });
+  }
+
   render() {
+    const { excelImportData } = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <Button type="primary">Excel导入</Button>
-          <ExcelImport />
+          <ExcelImport
+            uploadUrl="/api/excel/import"
+            templateFileUrl="/api/excel-templates/客户打标签-Excel导入模版.xlsx"
+            onConfirmImport={this.onConfirmImport}
+          >
+            <Button type="primary">Excel导入</Button>
+          </ExcelImport>
+          <div>
+            {excelImportData.length}
+          </div>
         </Card>
       </PageHeaderWrapper>
     );
