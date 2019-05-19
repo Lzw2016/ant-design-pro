@@ -28,6 +28,7 @@ export default [
         routes: [
           { path: '/demo/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
           { path: '/demo/excel', name: 'excel-import', icon: 'file-excel', component: './Demo/ExcelImport' },
+          { path: '/demo/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
           {
             path: '/demo/test2',
             name: 'test2',

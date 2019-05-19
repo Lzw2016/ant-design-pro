@@ -18,6 +18,7 @@ class DemoTest extends PureComponent {
   }
 
   onConfirmImport = (data) => {
+    // eslint-disable-next-line no-console
     console.log("onConfirmImport -> ", data)
     this.setState({ excelImportData: data });
   }

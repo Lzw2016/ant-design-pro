@@ -44,6 +44,7 @@ module.exports = {
     'react/sort-comp': 0,
     'camelcase': 0,
     'react/prefer-stateless-function': 0,
+    'react/no-array-index-key': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url', 'object-assign'],
