@@ -152,6 +152,7 @@ class ExcelImport extends PureComponent {
   getModalContent = ({
     uploadUrl,
     templateFileUrl,
+    templateFileName,
     onConfirmImport,
     excelMaxRow,
     uploadExcelAlert,
@@ -260,7 +261,7 @@ class ExcelImport extends PureComponent {
               <ul>
                 <li>请下载Excel模版，填写数据后上传到系统</li>
                 <li>一次最多能导入<span style={{ color: "red" }}>{excelMaxRow}</span>条数据，超过<span style={{ color: "red" }}>{excelMaxRow}</span>条的请分批上传</li>
-                <li>下载Excel导入模版请点击<a onClick={() => this.downloadTemplate(templateFileUrl)}>这里</a>下载</li>
+                <li>下载Excel导入模版请点击<a onClick={() => this.downloadTemplate(templateFileUrl, templateFileName)}>这里</a>下载</li>
               </ul>
             )}
           />
@@ -272,9 +273,13 @@ class ExcelImport extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   // 下载导入模版
-  downloadTemplate = (templateFileUrl) => {
+  downloadTemplate = (templateFileUrl, templateFileName) => {
     // window.open(templateFileUrl);
-    openDownloadDialog(templateFileUrl)
+    if (templateFileName) {
+      openDownloadDialog(templateFileUrl, templateFileName);
+    } else {
+      openDownloadDialog(templateFileUrl);
+    }
   }
 
   // 上传之前文件校验
@@ -427,6 +432,7 @@ class ExcelImport extends PureComponent {
     const {
       uploadUrl,              // Excel导入URL地址
       templateFileUrl,        // Excel导入模版下载地址
+      templateFileName,       // Excel导入模版文件名称
       fileMaxSizeByMB,        // 导入Excel文件最大大小，默认10MB
       onConfirmImport,        // 导入数据成功回写事件
       modalTitle,             // 对话框标题
@@ -461,6 +467,7 @@ class ExcelImport extends PureComponent {
             this.getModalContent({
               uploadUrl,
               templateFileUrl,
+              templateFileName,
               onConfirmImport,
               excelMaxRow,
               uploadExcelAlert,
