@@ -60,23 +60,27 @@ class DetailForm extends PureComponent {
     } else {
       tableDefaultStyle.width = "100%";
     }
-    // 计算列宽度
-    const widthStr = `${tableDefaultStyle.width}`.toLowerCase();
-    let labelWidth = `${100 / columnCount * labelWidthPercent}%`;
-    let dataWidth = `${100 / columnCount * (1 - labelWidthPercent)}%`;
-    let lastLabelWidth = `${100 / columnCount * labelWidthPercent}%`;
-    let lastDataWidth = `${100 / columnCount * (1 - labelWidthPercent)}%`;
-    if (lodash.isFinite(tableDefaultStyle.width) || widthStr.endsWith("px")) {
-      let width;
+    // 计算列宽度 Math.floor
+    let allWidth = `${tableDefaultStyle.width}`.toLowerCase();                                                  // 总宽度
+    const labelWidthNum = (100 / columnCount * labelWidthPercent);                                              // label宽度
+    const dataWidthNum = (100 / columnCount * (1 - labelWidthPercent));                                         // value宽度
+    const lastLabelWidthNum = ((100 - (labelWidthNum + dataWidthNum) * (columnCount - 1)) * labelWidthPercent); // 最后一个label宽度
+    const lastDataWidthNum = 100 - (labelWidthNum + dataWidthNum) * (columnCount - 1) - lastLabelWidthNum;      // 最后一个value宽度
+    let labelWidth = `${labelWidthNum}%`;
+    let dataWidth = `${dataWidthNum}%`;
+    let lastLabelWidth = `${lastLabelWidthNum}%`;
+    let lastDataWidth = `${lastDataWidthNum}%`;
+    // 总宽度 是绝对宽度
+    if (lodash.isFinite(tableDefaultStyle.width) || allWidth.endsWith("px")) {
       if (lodash.isFinite(tableDefaultStyle.width)) {
-        width = tableDefaultStyle.width;
+        allWidth = tableDefaultStyle.width;
       } else {
-        width = lodash.toFinite(widthStr.substr(0, widthStr.length - 2));
+        allWidth = lodash.toFinite(allWidth.substr(0, allWidth.length - 2));
       }
-      const columnWidth = Math.floor(width / columnCount);
+      const columnWidth = Math.floor(allWidth / columnCount);
       labelWidth = columnWidth * labelWidthPercent;
       dataWidth = columnWidth - labelWidth;
-      const lastColumnWidth = width - (columnWidth * (columnCount - 1));
+      const lastColumnWidth = allWidth - (columnWidth * (columnCount - 1));
       lastLabelWidth = lastColumnWidth * labelWidthPercent;
       // 减去边框宽度 1px
       lastDataWidth = lastColumnWidth - lastLabelWidth - 1;
@@ -118,27 +122,70 @@ class DetailForm extends PureComponent {
       }
       columnIndex++;
       // 生成行列
-      let labelTd;
-      let valueTd;
+      let labelTdStyle;
+      let valueTdStyle;
       const labelTmp = label[key] || "";
       const dataTransformTmp = dataTransform[key];
       if (columnIndex === columnCount) {
         // 最后一列
-        labelTd = this.getLabelTd({ ...labelDefaultStyle, width: lastLabelWidth, ...tdStyle, ...labelStyle }, labelSuffix, labelTmp, value, key, data);
-        if (labelTd === false) return; // 当前行隐藏
-        valueTd = this.getValueTd({ ...dataDefaultStyle, width: lastDataWidth, ...tdStyle, ...dataStyle }, dataTransformTmp, value, key, data);
-        if (valueTd === false) return; // 当前行隐藏
+        labelTdStyle = { ...labelDefaultStyle, width: lastLabelWidth, ...tdStyle, ...labelStyle };
+        valueTdStyle = { ...dataDefaultStyle, width: lastDataWidth, ...tdStyle, ...dataStyle };
       } else {
         // 不是最后一列
-        labelTd = this.getLabelTd({ ...labelDefaultStyle, ...tdStyle, ...labelStyle }, labelSuffix, labelTmp, value, key, data);
-        if (labelTd === false) return; // 当前行隐藏
-        valueTd = this.getValueTd({ ...dataDefaultStyle, ...tdStyle, ...dataStyle }, dataTransformTmp, value, key, data);
-        if (valueTd === false) return; // 当前行隐藏
+        labelTdStyle = { ...labelDefaultStyle, ...tdStyle, ...labelStyle };
+        valueTdStyle = { ...dataDefaultStyle, ...tdStyle, ...dataStyle };
       }
+      const labelTd = this.getLabelTd(labelTdStyle, labelSuffix, labelTmp, value, key, data);
+      if (labelTd === false) return; // 当前行隐藏
+      const valueTd = this.getValueTd(valueTdStyle, dataTransformTmp, value, key, data, count => {
+        const colSpan = {};
+        const columnIndexTmp = columnIndex - 1 + count;
+        if (columnIndexTmp >= columnCount) {
+          // 最后一列
+          let countTmp = count;
+          if (columnIndexTmp > columnCount) countTmp = columnCount - columnIndex + 1;
+
+          if (lodash.isFinite(allWidth)) {
+            colSpan.width = dataWidth + (lastLabelWidth + lastDataWidth) + (labelWidth + dataWidth) * (countTmp - 2);
+          } else {
+            colSpan.width = `${dataWidthNum + (lastLabelWidthNum + lastDataWidthNum) + (labelWidthNum + dataWidthNum) * (countTmp - 2)}%`;
+          }
+        } else {
+          // 不是最后一列
+          // eslint-disable-next-line no-lonely-if
+          if (lodash.isFinite(allWidth)) {
+            colSpan.width = dataWidth + (labelWidth + dataWidth) * (count - 1);
+          } else {
+            colSpan.width = `${dataWidthNum + (labelWidthNum + dataWidthNum) * (count - 1)}%`;
+          }
+        }
+        columnIndex = columnIndexTmp;
+        return colSpan;
+      });
+      if (valueTd === false) return; // 当前行隐藏
       // 加入 label 和 value
       tr.push(labelTd);
       tr.push(valueTd);
     });
+    // 补充行尾空白
+    if (columnIndex > 0 && columnIndex < columnCount) {
+      // 计算宽度
+      let fillingWidth;
+      if (lodash.isFinite(allWidth)) {
+        fillingWidth = allWidth - (labelWidth + dataWidth) * columnIndex - 1;
+      } else {
+        fillingWidth = `${100 - (labelWidthNum + dataWidthNum) * columnIndex}%`;
+      }
+      tr.push(
+        <td
+          key="table-filling"
+          style={{ ...dataDefaultStyle, ...tdStyle, ...dataStyle, width: fillingWidth, textAlign: "center" }}
+        >
+          -
+        </td>
+      );
+    }
+    // 加入最后一行
     trArray.push(tr);
     // console.log(trArray);
     return (
@@ -162,9 +209,7 @@ class DetailForm extends PureComponent {
    *
    * 不需要渲染返回 false
    */
-  getValueTd = (style, dataTransformTmp, value, key, data) => {
-    // name: "array | ReactNode | (value, key, data) => (string | ReactNode)",
-    // name: { transform: "array | ReactNode | (value, key, data) => (string | ReactNode)", style: "object", hidden: "boolean" },
+  getValueTd = (style, dataTransformTmp, value, key, data, callColSpan) => {
     if (dataTransformTmp === undefined || dataTransformTmp === null) {
       return <td key={`${key}-value`} style={style}>{value}</td>
     }
@@ -179,22 +224,28 @@ class DetailForm extends PureComponent {
       return <td key={`${key}-value`} style={style}>{dataTransformTmp(value, key, data)}</td>
     }
     if (dataTransformTmpType === TypeEnum.object) {
-      const { transform: internalTransform, style: internalStyle, hidden } = dataTransformTmp;
+      const { transform: internalTransform, style: internalStyle, columnCount, hidden } = dataTransformTmp;
       // 隐藏
       if (hidden === true) return false;
+      // 处理跨列宽度样式
+      let colSpan = {};
+      if (varTypeOf(columnCount) === TypeEnum.number && columnCount > 1 && callColSpan instanceof Function) {
+        colSpan = callColSpan(columnCount);
+        // console.log(colSpan);
+      }
       // 渲染
       if (internalTransform === null || internalTransform === undefined) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle }}>{value}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{value}</td>
       }
       const internalTransformType = varTypeOf(internalTransform);
       if (internalTransformType === TypeEnum.array) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle }}>{Mapper(internalTransform, value)}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{Mapper(internalTransform, value)}</td>
       }
       if (internalTransformType === TypeEnum.reactNode) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle }}>{internalTransform}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform}</td>
       }
       if (internalTransformType === TypeEnum.function) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle }}>{internalTransform(value, key, data)}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform(value, key, data)}</td>
       }
     }
     throw Error(`[${key}]：dataTransform配置错误`);
@@ -262,7 +313,20 @@ class DetailForm extends PureComponent {
           title ?
             (title instanceof Function) ?
               title(data)
-              : <div style={{ border: `1px solid ${this.border}`, borderBottom: 0, padding: "8px 8px", fontWeight: "bold", borderRadius: "4px 4px 0 0" }}>{title}</div>
+              : (
+                <div
+                  style={{
+                    border: `1px solid ${this.border}`,
+                    borderBottom: 0,
+                    padding: "8px 8px",
+                    fontWeight: "bold",
+                    borderRadius: "4px 4px 0 0",
+                    fontSize: 16,
+                  }}
+                >
+                  {title}
+                </div>
+              )
             : ''
         }
         {/* 详情表格 */}
@@ -287,7 +351,20 @@ class DetailForm extends PureComponent {
           footer ?
             (footer instanceof Function) ?
               footer(data)
-              : <div style={{ border: `1px solid ${this.border}`, borderTop: 0, padding: "8px 8px", fontWeight: "bold", borderRadius: "0 0 4px 4px" }}>{footer}</div>
+              : (
+                <div
+                  style={{
+                    border: `1px solid ${this.border}`,
+                    borderTop: 0,
+                    padding: "8px 8px",
+                    fontWeight: "bold",
+                    borderRadius: "0 0 4px 4px",
+                    fontSize: 16,
+                  }}
+                >
+                  {footer}
+                </div>
+              )
             : ''
         }
       </div>
