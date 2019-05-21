@@ -11,7 +11,7 @@ class RemoteSelectInput extends PureComponent {
   constructor(props) {
     super(props);
     this.lastFetchId = 0;
-    this.fetchUser = debounce(this.fetchUser, 500);
+    this.fetchUser = debounce(this.fetchUser, 200);
     this.fetchUser("");
   }
 
@@ -23,30 +23,38 @@ class RemoteSelectInput extends PureComponent {
 
   fetchUser = value => {
     // console.log('fetching user', value);
-    this.lastFetchId += 1;
-    const fetchId = this.lastFetchId;
+    // this.lastFetchId += 1;
+    // const fetchId = this.lastFetchId;
     this.setState({ data: [], fetching: true });
-    fetch(`/api/remote/input/object?num=10&key=${value}`)
-      .then(response => response.json())
-      .then(body => {
-        if (fetchId !== this.lastFetchId) {
-          // for fetch callback order
-          return;
-        }
-        this.setState({ data: body, fetching: false });
-      });
+    setTimeout(() => {
+      const body = [];
+      for (let i = 1; i <= 10; i++) {
+        body.push({ column1: `${value}-column1-${i}`, column2: `${value}-column2-${i}` })
+      }
+      setTimeout(() => this.setState({ data: body, fetching: false }), 200);
+    }, 20);
+    // fetch(`/api/remote/input/object?num=10&key=${value}`)
+    //   .then(response => response.json())
+    //   .then(body => {
+    //     if (fetchId !== this.lastFetchId) {
+    //       // for fetch callback order
+    //       return;
+    //     }
+    //     this.setState({ data: body, fetching: false });
+    //   });
   };
 
   handleChange = value => {
     this.setState({
       value,
-      data: [],
+      // data: [],
       fetching: false,
     });
   };
 
   render() {
     const { fetching, data, value } = this.state;
+    // console.log("data", data);
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
@@ -57,9 +65,9 @@ class RemoteSelectInput extends PureComponent {
             labelInValue
             value={value}
             placeholder="Select users"
-            notFoundContent={fetching ? <Spin delay={300} size="small" /> : null}
+            notFoundContent={fetching ? <Spin delay={0} size="small" /> : null}
             filterOption={false}
-            showSearch
+            showSearch={true}
             onSearch={this.fetchUser}
             onChange={this.handleChange}
             style={{ width: 350 }}
