@@ -29,7 +29,7 @@ export default [
           { path: '/demo/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
           { path: '/demo/excel', name: 'excel-import', icon: 'file-excel', component: './Demo/ExcelImport' },
           { path: '/demo/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
-          { path: '/demo/remote-select-input', name: 'remote-select-input', icon: 'table', component: './Demo/RemoteSelectInput' },
+          { path: '/demo/remote-select-input', name: 'remote-select-input', icon: 'table', component: './Demo/RemoteSelect' },
           {
             path: '/demo/test2',
             name: 'test2',

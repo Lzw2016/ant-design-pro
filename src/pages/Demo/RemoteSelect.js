@@ -73,7 +73,7 @@ class RemoteSelectInput extends PureComponent {
             style={{ width: 350 }}
           >
             {data.map(d => (
-              <Select.Option key={d.column1}>{d.column1}</Select.Option>
+              <Select.Option key={d.column1} title="XXX">{d.column1}</Select.Option>
             ))}
           </Select>
         </Card>
