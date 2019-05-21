@@ -2703,10 +2703,10 @@ antd@3.x:
     shallowequal "^1.1.0"
     warning "~4.0.2"
 
-antd@^3.18.1:
-  version "3.18.1"
-  resolved "https://registry.npm.taobao.org/antd/download/antd-3.18.1.tgz#14c8a4c506427cff3c1b3b5ece6ee7f1e83cea42"
-  integrity sha1-FMikxQZCfP88Gztezm7n8eg86kI=
+antd@^3.18.2:
+  version "3.18.2"
+  resolved "https://registry.npm.taobao.org/antd/download/antd-3.18.2.tgz#10d5c1685e0ba782565eb45508e9a34b4aadb180"
+  integrity sha1-ENXBaF4Lp4JWXrRVCOmjS0qtsYA=
   dependencies:
     "@ant-design/create-react-context" "^0.2.4"
     "@ant-design/icons" "~2.0.0"
@@ -2725,7 +2725,7 @@ antd@^3.18.1:
     prop-types "^15.6.2"
     raf "^3.4.0"
     rc-animate "^2.5.4"
-    rc-calendar "~9.12.1"
+    rc-calendar "~9.13.3"
     rc-cascader "~0.17.0"
     rc-checkbox "~2.1.5"
     rc-collapse "~1.11.1"
@@ -13093,10 +13093,10 @@ rc-calendar@~9.10.3:
     rc-util "^4.1.1"
     react-lifecycles-compat "^3.0.4"
 
-rc-calendar@~9.12.1:
-  version "9.12.3"
-  resolved "http://registry.npm.taobao.org/rc-calendar/download/rc-calendar-9.12.3.tgz#4a49bdadde5db7475d39a48587aec5d9ca95c5cb"
-  integrity sha1-Skm9rd5dt0ddOaSFh67F2cqVxcs=
+rc-calendar@~9.13.3:
+  version "9.13.4"
+  resolved "https://registry.npm.taobao.org/rc-calendar/download/rc-calendar-9.13.4.tgz#6ad89c1b9fbf814422bfda09405053592cd52592"
+  integrity sha1-aticG5+/gUQiv9oJQFBTWSzVJZI=
   dependencies:
     babel-runtime "6.x"
     classnames "2.x"
