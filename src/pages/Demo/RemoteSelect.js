@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Card, Select, Spin } from 'antd';
+import { Card, Select, Spin, Empty } from 'antd';
 import debounce from 'lodash/debounce';
 // import RemoteSelectInput from '@/components/RemoteSelectInput'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './Log.less'
 
-class RemoteSelectInput extends PureComponent {
+class DemoTest extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -28,8 +28,10 @@ class RemoteSelectInput extends PureComponent {
     this.setState({ data: [], fetching: true });
     setTimeout(() => {
       const body = [];
-      for (let i = 1; i <= 10; i++) {
-        body.push({ column1: `${value}-column1-${i}`, column2: `${value}-column2-${i}` })
+      if (value !== '11') {
+        for (let i = 1; i <= 10; i++) {
+          body.push({ column1: `${value}-column1-${i}`, column2: `${value}-column2-${i}` })
+        }
       }
       setTimeout(() => this.setState({ data: body, fetching: false }), 200);
     }, 20);
@@ -65,7 +67,7 @@ class RemoteSelectInput extends PureComponent {
             labelInValue
             value={value}
             placeholder="Select users"
-            notFoundContent={fetching ? <Spin delay={0} size="small" /> : null}
+            notFoundContent={fetching ? <Spin delay={0} size="small" /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
             filterOption={false}
             showSearch={true}
             onSearch={this.fetchUser}
@@ -82,4 +84,4 @@ class RemoteSelectInput extends PureComponent {
   }
 }
 
-export default RemoteSelectInput;
+export default DemoTest;
