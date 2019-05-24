@@ -62,11 +62,14 @@ class ExcelImport extends PureComponent {
   }
 
   // 对话框宽度
-  getModalWidth = (defaultWidth) => {
+  getModalWidth = ({ uploadWidth, successfulWidth, failureWidth }) => {
     const { uploadResponseData: { excelImportState } } = this.state;
-    let width = 480;
-    if (defaultWidth) width = defaultWidth;
-    if (excelImportState.success === false) width = "70%";
+    let width = uploadWidth || 480;
+    if (excelImportState.success === true) {
+      width = successfulWidth || 480;
+    } else if (excelImportState.success === false) {
+      width = failureWidth || "70%";
+    }
     return width;
   }
 
@@ -158,15 +161,24 @@ class ExcelImport extends PureComponent {
     uploadExcelAlert,
     successedAlert,
     failedAlert,
+    uploadContent,
+    successfulContent,
+    failureContent,
     uploadProps
   }) => {
     const { fileList, uploadResponseData } = this.state;
     const { excelImportState, failRows, heads } = uploadResponseData;
     if (excelImportState.success === false) {
       // 展示上传错误结果
+      if (failureContent) {
+        if (failureContent instanceof Function) {
+          return failureContent(uploadResponseData, fileList, this.downloadErrorData);
+        }
+        return failureContent;
+      }
       return (
         <Fragment>
-          {failedAlert ? (failedAlert instanceof Function) ? failedAlert(uploadResponseData) : failedAlert : (
+          {failedAlert ? (failedAlert instanceof Function) ? failedAlert(uploadResponseData, fileList, this.downloadErrorData) : failedAlert : (
             <Alert
               type="error"
               message="存在导入失败数据，详情如下："
@@ -219,9 +231,15 @@ class ExcelImport extends PureComponent {
     }
     if (excelImportState.success === true) {
       // 上传成功提示
+      if (successfulContent) {
+        if (successfulContent instanceof Function) {
+          return successfulContent(uploadResponseData, fileList);
+        }
+        return successfulContent;
+      }
       return (
         <Fragment>
-          {successedAlert ? (successedAlert instanceof Function) ? successedAlert(uploadResponseData) : successedAlert : (
+          {successedAlert ? (successedAlert instanceof Function) ? successedAlert(uploadResponseData, fileList) : successedAlert : (
             <Alert
               type="info"
               message="导入数据成功："
@@ -238,6 +256,12 @@ class ExcelImport extends PureComponent {
     }
     // 选择上传Excel
     // console.log("选择上传Excel - | ", fileList.length, fileList);
+    if (uploadContent) {
+      if (uploadContent instanceof Function) {
+        return uploadContent(excelMaxRow);
+      }
+      return uploadContent;
+    }
     return (
       <Fragment>
         <Upload
@@ -252,7 +276,7 @@ class ExcelImport extends PureComponent {
         >
           <Button type="primary" icon="cloud-upload" disabled={fileList.length >= 1}>上传Excel</Button>
         </Upload>
-        {uploadExcelAlert || (
+        {uploadExcelAlert ? (uploadExcelAlert instanceof Function) ? uploadExcelAlert(excelMaxRow) : uploadExcelAlert : (
           <Alert
             style={{ marginTop: 15 }}
             type="info"
@@ -434,13 +458,18 @@ class ExcelImport extends PureComponent {
       templateFileUrl,        // Excel导入模版下载地址
       templateFileName,       // Excel导入模版文件名称
       fileMaxSizeByMB,        // 导入Excel文件最大大小，默认10MB
+      excelMaxRow = 2000,     // Excel最大导入行数提示
       onConfirmImport,        // 导入数据成功回写事件
       modalTitle,             // 对话框标题
-      defaultWidth,           // 默认宽度
-      excelMaxRow = 2000,     // Excel最大导入行数提示
-      uploadExcelAlert,       // 上传Excel文件时的提示
-      successedAlert,         // 上传Excel文件成功的提示，可以是一个 string | ReactNode | (uploadResponseData) => (string|ReactNode)
-      failedAlert,            // 上传Excel文件失败的提示，可以是一个 string | ReactNode | (uploadResponseData) => (string|ReactNode)
+      uploadWidth,            // 文件上传对话框宽度
+      successfulWidth,        // 上传成功对话框宽度
+      failureWidth,           // 上传失败对话框宽度
+      uploadExcelAlert,       // 选择上传Excel文件的提示，可以是一个 string | ReactNode | (excelMaxRow) => (string|ReactNode)
+      successedAlert,         // 上传Excel文件成功的提示，可以是一个 string | ReactNode | (uploadResponseData, fileList) => (string|ReactNode)
+      failedAlert,            // 上传Excel文件失败的提示，可以是一个 string | ReactNode | (uploadResponseData, fileList, downloadErrorData) => (string|ReactNode)
+      uploadContent,          // 文件上传对话框内容，可以是一个 string | ReactNode | (excelMaxRow) => (string|ReactNode)
+      successfulContent,      // 上传成功对话框内容，可以是一个 string | ReactNode | (uploadResponseData, fileList) => (string|ReactNode)
+      failureContent,         // 上传失败对话框内容，可以是一个 string | ReactNode | (uploadResponseData, fileList, downloadErrorData) => (string|ReactNode)
       modalProps = {},        // Modal组件自定义属性
       uploadProps = {},       // upload组件自定义属性
       children,               // 子组件
@@ -454,7 +483,7 @@ class ExcelImport extends PureComponent {
         <Modal
           maskClosable={false}
           visible={visible}
-          width={this.getModalWidth(defaultWidth)}
+          width={this.getModalWidth({ uploadWidth, successfulWidth, failureWidth })}
           footer={null}
           withCredentials={true}
           title={this.getModalTitle(modalTitle, excelImportState)}
@@ -473,6 +502,9 @@ class ExcelImport extends PureComponent {
               uploadExcelAlert,
               successedAlert,
               failedAlert,
+              uploadContent,
+              successfulContent,
+              failureContent,
               uploadProps
             })
           }
