@@ -1,85 +1,73 @@
 import React, { PureComponent } from 'react';
-import { Card, Select, Spin, Empty } from 'antd';
-import debounce from 'lodash/debounce';
+import { Card, Select, Spin, Empty, Icon, Row, Col } from 'antd';
+// import debounce from 'lodash/debounce';
 // import RemoteSelectInput from '@/components/RemoteSelectInput'
+import RemoteSelect from '@/components/RemoteSelect'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './Log.less'
 
 class DemoTest extends PureComponent {
 
-  constructor(props) {
-    super(props);
-    this.lastFetchId = 0;
-    this.fetchUser = debounce(this.fetchUser, 200);
-    this.fetchUser("");
-  }
-
   state = {
-    data: [],
-    value: [],
-    fetching: false,
-  };
 
-  fetchUser = value => {
-    // console.log('fetching user', value);
-    // this.lastFetchId += 1;
-    // const fetchId = this.lastFetchId;
-    this.setState({ data: [], fetching: true });
-    setTimeout(() => {
-      const body = [];
-      if (value !== '11') {
-        for (let i = 1; i <= 10; i++) {
-          body.push({ column1: `${value}-column1-${i}`, column2: `${value}-column2-${i}` })
-        }
-      }
-      setTimeout(() => this.setState({ data: body, fetching: false }), 200);
-    }, 20);
-    // fetch(`/api/remote/input/object?num=10&key=${value}`)
-    //   .then(response => response.json())
-    //   .then(body => {
-    //     if (fetchId !== this.lastFetchId) {
-    //       // for fetch callback order
-    //       return;
-    //     }
-    //     this.setState({ data: body, fetching: false });
-    //   });
-  };
-
-  handleChange = value => {
-    console.log("handleChange | ", value);
-    this.setState({
-      value,
-      // data: [],
-      // fetching: false,
-    });
   };
 
   render() {
-    const { fetching, data, value } = this.state;
     // console.log("data", data);
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <Select
-            // mode="multiple"
-            // mode="tags"
-            allowClear={true}
-            labelInValue
-            value={value}
-            placeholder="Select users"
-            // notFoundContent={fetching ? <Spin delay={0} size="small" /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-            notFoundContent={fetching ? <Spin delay={0} size="small" /> : <span style={{ color: "#f5222d" }}>查询失败</span>}
-            filterOption={false}
-            showSearch={true}
-            onSearch={this.fetchUser}
-            onChange={this.handleChange}
-            style={{ width: 350 }}
-          >
-            {data.map(d => (
-              <Select.Option key={d.column1} title="XXX">{d.column1}</Select.Option>
-            ))}
-          </Select>
+          <Row gutter={16}>
+            <Col span={6}>
+              <RemoteSelect
+                defaultLoadData={true}
+                url="/api/remote/input/object"
+                searchParamName="key"
+                requestInterceptor={({ url, options }) => {
+                  console.log("---->", url, options);
+                }}
+                requestError={err => {
+                  console.log("---->", err)
+                }}
+                responseFilter={(resData, response) => {
+                  console.log("---->", resData, response);
+                }}
+                dataValueKey="column1"
+                dataLabelKey="column2"
+                selectProps={{
+                  placeholder: "输入关键字搜索",
+                }}
+              />
+            </Col>
+            <Col span={6}>
+              <RemoteSelect
+                defaultLoadData={true}
+                url="/api/remote/input/string"
+                searchParamName="key"
+                searchQueryString={{ num: 3 }}
+                requestOptions={{ method: "get" }}
+                requestInterceptor={({ url, options }) => {
+                  console.log("---->", url, options);
+                }}
+                requestError={err => {
+                  console.log("---->", err)
+                }}
+                responseFilter={(resData, response) => {
+                  console.log("---->", resData, response);
+                }}
+              />
+            </Col>
+            <Col span={6}>
+              <RemoteSelect
+                defaultLoadData={["111", "222", "333", "444", "555", "666"]}
+                selectProps={{
+
+                }}
+              />
+            </Col>
+            <Col span={6}>4</Col>
+          </Row>
         </Card>
       </PageHeaderWrapper>
     );
