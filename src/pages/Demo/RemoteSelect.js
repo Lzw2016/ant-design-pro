@@ -47,10 +47,11 @@ class DemoTest extends PureComponent {
   };
 
   handleChange = value => {
+    console.log("handleChange | ", value);
     this.setState({
       value,
       // data: [],
-      fetching: false,
+      // fetching: false,
     });
   };
 
@@ -67,7 +68,8 @@ class DemoTest extends PureComponent {
             labelInValue
             value={value}
             placeholder="Select users"
-            notFoundContent={fetching ? <Spin delay={0} size="small" /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            // notFoundContent={fetching ? <Spin delay={0} size="small" /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            notFoundContent={fetching ? <Spin delay={0} size="small" /> : <span style={{ color: "#f5222d" }}>查询失败</span>}
             filterOption={false}
             showSearch={true}
             onSearch={this.fetchUser}
