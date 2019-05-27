@@ -83,7 +83,7 @@ class DemoTest extends PureComponent {
               <RemoteSelect
                 defaultLoadData={["#1890ff", "#52c41a", "#faad14", "#f5222d", "RED", "#000"]}
                 render={(key, value, label, item) => <span style={{ color: item }}>{item}</span>}
-                onChange={value => console.log("---->", value)}
+                onChange={(value, option, item) => console.log("---->", value, option, item)}
               />
             </Col>
           </Row>

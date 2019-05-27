@@ -134,8 +134,9 @@ class RemoteSelect extends PureComponent {
         showSearch={true}
         filterOption={false}
         labelInValue={true}
-        onChange={(valueChange) => {
-          this.handleChange(valueChange, value, onChange);
+        onChange={(valueChange, option) => {
+          // console.log("option --> ", option);
+          this.handleChange(valueChange, option, value, onChange);
         }}
         onSearch={searchText => {
           // console.log("onSearch --> ", searchText);
@@ -157,7 +158,7 @@ class RemoteSelect extends PureComponent {
         {arrayData.map(item => {
           if (varTypeOf(item) === TypeEnum.string) {
             return (
-              <Select.Option key={item} value={item}>
+              <Select.Option key={item} value={item} data-option={item}>
                 {render && (render instanceof Function) ? render(item, item, item, item) : item}
               </Select.Option>
             )
@@ -165,7 +166,7 @@ class RemoteSelect extends PureComponent {
           let tmpDataKey = dataKey;
           if (!tmpDataKey) tmpDataKey = dataValueKey;
           return (
-            <Select.Option key={item[tmpDataKey]} value={item[dataValueKey]}>
+            <Select.Option key={item[tmpDataKey]} value={item[dataValueKey]} data-option={item}>
               {render && (render instanceof Function) ? render(item[tmpDataKey], item[dataValueKey], item[dataLabelKey], item) : item[dataLabelKey]}
             </Select.Option>
           )
@@ -177,7 +178,7 @@ class RemoteSelect extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   // 选择数据
-  handleChange = (valueChange, valueProp, onChange) => {
+  handleChange = (valueChange, option, valueProp, onChange) => {
     // console.log("handleChange -> ", value);
     this.useDefaultValue = false;
     const newState = {};
@@ -191,7 +192,7 @@ class RemoteSelect extends PureComponent {
       flag = true;
     }
     if (flag) this.setState(newState);
-    if (onChange instanceof Function) onChange(valueChange);
+    if (onChange instanceof Function) onChange(valueChange, option, option.props["data-option"]);
   }
 
   // 请求服务端数据
