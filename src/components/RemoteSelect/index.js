@@ -12,10 +12,13 @@ class RemoteSelect extends PureComponent {
   // 构造器
   constructor(props) {
     super(props);
-    const { requestDelay } = props;
+    const { requestDelay = 350, defaultValue } = props;
     // 最后一次查询请求次数
     this.lastFetchCount = 0;
-    this.fetchData = lodash.debounce(this.fetchData, requestDelay || 200);
+    this.useDefaultValue = defaultValue !== undefined;
+    this.fetchData = lodash.debounce(this.fetchData, requestDelay || 350);
+    this.state = { defaultValue };
+    // console.log("constructor -> ", defaultValue);
   }
 
   // 加载完成
@@ -60,16 +63,17 @@ class RemoteSelect extends PureComponent {
     fetching: false,
     // 请求存在错误
     fetchHasError: false,
-    // 当前选中值
-    value: undefined,
     // 上传数据结果
     responseData: undefined,
+    // 控件内部值
+    innerValue: undefined,
   }
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
   // 单选搜索选择输入框
   getSelect = ({
+    value,
     defaultLoadData,
     url,
     searchParamName,
@@ -85,13 +89,24 @@ class RemoteSelect extends PureComponent {
     dataLabelKey,
     render,
 
+    onChange,
+    onSearch,
+
     selectStyle,
     selectProps,
   }) => {
-    const { fetching, fetchHasError, value, responseData } = this.state;
+    const { useDefaultValue } = this;
+    const { fetching, fetchHasError, responseData, innerValue, defaultValue } = this.state;
+    // console.log("getSelect -> ", defaultValue);
+    const valueProp = {};
+    if (useDefaultValue) {
+      valueProp.defaultValue = defaultValue;
+    } else {
+      valueProp.value = (value === undefined ? innerValue : value);
+    }
+    // 获取选项数组
     let arrayData = [];
     if (varTypeOf(defaultLoadData) !== TypeEnum.boolean) {
-      console.log(defaultLoadData);
       if (varTypeOf(defaultLoadData) !== TypeEnum.array) {
         throw Error("defaultLoadData不是数组");
       }
@@ -110,18 +125,18 @@ class RemoteSelect extends PureComponent {
       <Select
         allowClear={true}
         placeholder="请输入关键字搜索"
-        value={value}
         notFoundContent={
           fetching ? <Spin delay={0} size="small" />
             : fetchHasError === true ? <span style={{ color: "#f5222d" }}><Icon type="warning" style={{ marginRight: 8 }} />查询失败</span>
               : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         }
-        filterOption={false}
+        {...valueProp}
         showSearch={true}
-        // onSelect={(labelValue, option) => {
-        //   console.log("onSelect --> ", labelValue, " | ", option);
-        // }}
-        onChange={this.handleChange}
+        filterOption={false}
+        labelInValue={true}
+        onChange={(valueChange) => {
+          this.handleChange(valueChange, value, onChange);
+        }}
         onSearch={searchText => {
           // console.log("onSearch --> ", searchText);
           this.fetchData({
@@ -134,10 +149,10 @@ class RemoteSelect extends PureComponent {
             requestError,
             responseFilter,
           });
+          if (onSearch instanceof Function) onSearch(searchText);
         }}
         style={{ width: 260, ...selectStyle }}
         {...selectProps}
-        labelInValue={true}
       >
         {arrayData.map(item => {
           if (varTypeOf(item) === TypeEnum.string) {
@@ -162,13 +177,21 @@ class RemoteSelect extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   // 选择数据
-  handleChange = (value) => {
-    let { responseData } = this.state;
-    // console.log("handleChange -> ", value, responseData);
-    if (varTypeOf(value) === TypeEnum.undefined) {
-      responseData = undefined;
+  handleChange = (valueChange, valueProp, onChange) => {
+    // console.log("handleChange -> ", value);
+    this.useDefaultValue = false;
+    const newState = {};
+    let flag = false;
+    if (varTypeOf(valueChange) === TypeEnum.undefined) {
+      newState.responseData = undefined;
+      flag = true;
     }
-    this.setState({ value, responseData });
+    if (valueProp === undefined) {
+      newState.innerValue = valueChange;
+      flag = true;
+    }
+    if (flag) this.setState(newState);
+    if (onChange instanceof Function) onChange(valueChange);
   }
 
   // 请求服务端数据
@@ -237,12 +260,14 @@ class RemoteSelect extends PureComponent {
 
   render() {
     const {
+      defaultValue,               // 默认值
+      value,                      // 输入值(可控属性)
       defaultLoadData = false,    // 是否初始化就加载数据
       url,                        // 加载远程数据请求地址
       searchParamName = "search", // 搜索请求参数名
       searchQueryString = {},     // 搜索请求扩展的QueryString
       requestOptions,             // 请求参数选项(fetch Options参数)
-      requestDelay = 200,         // 每次请求延时时间(防止一个时间内多次请求)
+      requestDelay = 350,         // 每次请求延时时间(防止一个时间内多次请求)
       requestInterceptor,         // 发送请求之前的拦截
       requestError,               // 请求失败处理
       responseFilter,             // 响应数据拦截
@@ -251,6 +276,9 @@ class RemoteSelect extends PureComponent {
       dataValueKey = "value",     // 数据值属性名称
       dataLabelKey = "label",     // 数据标题属性名
       render,                     // 自定义渲染数据 (key, value, label, item) => (String | RactNode)
+
+      onChange,                   // 选中 option，或 input 的 value 变化（combobox 模式下）时，调用此函数
+      onSearch,                   // 文本框值变化时回调
 
       selectStyle = {},           // Select控件style
       selectProps = {},           // Select控件属性
@@ -263,6 +291,8 @@ class RemoteSelect extends PureComponent {
       <Fragment>
         {
           this.getSelect({
+            defaultValue,
+            value,
             defaultLoadData,
             url,
             searchParamName,
@@ -278,6 +308,9 @@ class RemoteSelect extends PureComponent {
             dataValueKey,
             dataLabelKey,
             render,
+
+            onChange,
+            onSearch,
 
             selectStyle,
             selectProps,
