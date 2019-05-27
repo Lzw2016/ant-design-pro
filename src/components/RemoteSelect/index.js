@@ -234,6 +234,16 @@ class RemoteSelect extends PureComponent {
       .then(response => {
         if (fetchCount < this.lastFetchCount) return {};
         let resData = response.json();
+        if (response.status < 200 || response.status >= 400) {
+          const { message, error } = resData;
+          // error: "业务异常"
+          // exception: "org.clever.common.exception.BusinessException"
+          // message: "测试异常"
+          // path: "/api/remote/input/object"
+          // status: 400
+          // timestamp: "2019-05-27 17:21:29"
+          throw Error(message || error || `响应状态码: ${response.status}`);
+        }
         // 请求数据过滤处理
         if (responseFilter instanceof Function) {
           const tmp = responseFilter(resData, response);
