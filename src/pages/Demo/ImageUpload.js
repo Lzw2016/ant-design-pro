@@ -17,8 +17,14 @@ class DemoTest extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Row gutter={16}>
-            <Col span={6}>
-              <ImageUpload />
+            <Col span={12}>
+              <ImageUpload
+                uploadUrl="/api/file/upload"
+                extFormData={{ fileSource: "test" }}
+                fileMaxSizeByMB={0.2}
+                uploadProps={{
+                }}
+              />
             </Col>
           </Row>
         </Card>

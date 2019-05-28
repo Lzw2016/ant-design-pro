@@ -157,6 +157,7 @@ class ExcelImport extends PureComponent {
     templateFileUrl,
     templateFileName,
     onConfirmImport,
+    fileMaxSizeByMB,
     excelMaxRow,
     uploadExcelAlert,
     successedAlert,
@@ -270,7 +271,7 @@ class ExcelImport extends PureComponent {
           accept=".xsl,.xlsx"
           action={uploadUrl}
           fileList={fileList}
-          beforeUpload={this.beforeUpload}
+          beforeUpload={(fileParam, fileListParam) => this.beforeUpload(fileParam, fileListParam, fileMaxSizeByMB)}
           onChange={this.uploadChange}
           {...uploadProps}
         >
@@ -307,12 +308,12 @@ class ExcelImport extends PureComponent {
   }
 
   // 上传之前文件校验
-  beforeUpload = (file, fileMaxSizeByMB) => {
+  beforeUpload = (fileParam, fileListParam, fileMaxSizeByMB) => {
     let fileMaxSize = 10;
     if (fileMaxSizeByMB) {
       fileMaxSize = fileMaxSizeByMB;
     }
-    if ((file.size / 1024 / 1024) > fileMaxSize) {
+    if ((fileParam.size / 1024 / 1024) > fileMaxSize) {
       message.warning(`导入Excel文件大小不能超过${fileMaxSize}MB`);
       return false;
     }
@@ -488,7 +489,6 @@ class ExcelImport extends PureComponent {
           withCredentials={true}
           title={this.getModalTitle(modalTitle, excelImportState)}
           fileList={fileList}
-          beforeUpload={file => this.beforeUpload(file, fileMaxSizeByMB)}
           onCancel={this.hideModal}
           {...modalProps}
         >
@@ -498,6 +498,7 @@ class ExcelImport extends PureComponent {
               templateFileUrl,
               templateFileName,
               onConfirmImport,
+              fileMaxSizeByMB,
               excelMaxRow,
               uploadExcelAlert,
               successedAlert,
