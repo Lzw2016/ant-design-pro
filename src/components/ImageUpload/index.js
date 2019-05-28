@@ -36,7 +36,7 @@ class ImageUpload extends PureComponent {
     previewContent: undefined,
     // 预览上传文件名称或者描述文本
     previewAlt: undefined,
-    // 文件列表 {}
+    // 上传文件列表
     fileList: [
       // uid: 'uid',        // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
       // name: 'xx.png'     // 文件名
@@ -46,17 +46,7 @@ class ImageUpload extends PureComponent {
       // url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
       // thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     ],
-
   }
-
-  handleCancel = () => this.setState({ previewVisible: false });
-
-
-
-  handleChange = ({ fileList }) => this.setState({ fileList });
-
-
-
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
@@ -81,22 +71,22 @@ class ImageUpload extends PureComponent {
       <Upload
         accept={accept}
         action={uploadUrl}
-        directory={false}
+        // directory={false}
         beforeUpload={(fileParam, fileListParam) => this.beforeUpload(fileParam, fileListParam, fileMaxSizeByMB, beforeUpload)}
         // customRequest={}
         data={extFormData}
         fileList={fileList}
         listType="picture-card" // text picture picture-card
-        multiple={false}
+        // multiple={false}
         name={fileFormName}
+        // previewFile={fileParam => this.handlePreviewFile(fileParam)}
         showUploadList={{ showPreviewIcon: true, showRemoveIcon: true }}
-        withCredentials={true}
-        openFileDialogOnClick={true}
-        // onChange
-        // onPreview
+        // withCredentials={true}
+        // openFileDialogOnClick={true}
         // onRemove
 
         onPreview={fileParam => this.handlePreview(fileParam, onPreview)}
+        // onChange={changeParam => this.handleChange(changeParam)}
         onChange={this.handleChange}
 
         {...uploadProps}
@@ -124,7 +114,10 @@ class ImageUpload extends PureComponent {
 
   // 上传之前文件校验
   beforeUpload = (fileParam, fileListParam, fileMaxSizeByMB, beforeUpload) => {
-    // console.log("beforeUpload --> ", fileParam, "|", fileListParam, "|", fileMaxSizeByMB);
+    // console.log("beforeUpload file -->", fileParam);
+    // console.log("beforeUpload fileList -->", fileListParam);
+    // console.log("beforeUpload fileMaxSizeByMB -->", fileMaxSizeByMB);
+    // console.log("------------------------------------------------------------");
     // 文件大小控制
     let fileMaxSize = 10;
     if (fileMaxSizeByMB) fileMaxSize = fileMaxSizeByMB;
@@ -139,27 +132,73 @@ class ImageUpload extends PureComponent {
 
   // 文件预览
   handlePreview = async (fileParam, onPreview) => {
+    // console.log("handlePreview -->", fileParam);
     if (!fileParam.url && !fileParam.preview) {
       // eslint-disable-next-line no-param-reassign
       fileParam.preview = await this.getFileBase64(fileParam.originFileObj);
     }
     this.setState({ previewContent: fileParam.url || fileParam.preview, previewVisible: true });
     if (onPreview instanceof Function) onPreview(fileParam);
-  };
+  }
 
   // 读取文件 Base64
   getFileBase64 = (file) => {
-    console.log("getFileBase64 -->", file);
+    // console.log("getFileBase64 -->", file);
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => {
-        console.log("getFileBase64 | onerror -->", error);
+        // console.log("getFileBase64 | onerror -->", error);
         return reject(error);
       }
     });
   }
+
+  // 文件发生变化
+  handleChange = ({ file, fileList: newFileListParam, event }) => {
+    console.log("handleChange file -->", file);
+    console.log("handleChange fileList -->", newFileListParam);
+    console.log("handleChange event -->", event);
+    console.log("------------------------------------------------------------");
+    const { fileList } = this.state;
+    // uid name status
+    const newFileList = [];
+    // 文件状态 uploading done error removed
+    switch (file.status) {
+      case "uploading":
+        // 上传中
+        newFileList.push(file);
+        break;
+      case "done":
+        // 上传完成
+        newFileList.push(file);
+        break;
+      case "error":
+        // 上传失败
+        break;
+      case "removed":
+        // 被删除
+        break;
+      default:
+    }
+    fileList.forEach(tmpFile => {
+      if (file.uid === tmpFile.uid) {
+        console.log("handleChange file.uid === tmpFile.uid -->", file);
+      }
+    });
+    console.log("handleChange newFileList -->", newFileList);
+    this.setState({ fileList: newFileList });
+  }
+
+  // // 预览文件逻辑
+  // handlePreviewFile = (fileParam) => {
+  //   console.log("handlePreviewFile -->", fileParam);
+  //   return new Promise((resolve, reject) => {
+  //     resolve("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png");
+  //     // reject(error);
+  //   });
+  // }
 
   render() {
     const {
@@ -225,7 +264,7 @@ class ImageUpload extends PureComponent {
           mask={true}
           maskClosable={true}
           footer={null}
-          onCancel={this.handleCancel}
+          onCancel={() => this.setState({ previewVisible: false })}
           {...modalProps}
         >
           <img alt={previewAlt || "文件预览"} src={previewContent} style={{ width: '100%' }} />

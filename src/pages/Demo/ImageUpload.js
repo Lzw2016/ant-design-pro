@@ -22,8 +22,19 @@ class DemoTest extends PureComponent {
                 uploadUrl="/api/file/upload"
                 extFormData={{ fileSource: "test" }}
                 fileMaxSizeByMB={0.2}
-                uploadProps={{
-                }}
+                fileMaxCount={3}
+                // uploadProps={{
+                // }}
+              />
+            </Col>
+            <Col span={12}>
+              <ImageUpload
+                uploadUrl="/api/file/upload"
+                extFormData={{ fileSource: "test" }}
+                fileMaxSizeByMB={2}
+                fileMaxCount={3}
+                // uploadProps={{
+                // }}
               />
             </Col>
           </Row>
