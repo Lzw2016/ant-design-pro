@@ -23,6 +23,8 @@ class DemoTest extends PureComponent {
                 extFormData={{ fileSource: "test" }}
                 fileMaxSizeByMB={0.2}
                 fileMaxCount={3}
+                fileUrlJsonPath="$.successList[0].readUrl"
+                previewUrlPrefix="/api/file"
                 // uploadProps={{
                 // }}
               />
@@ -33,6 +35,8 @@ class DemoTest extends PureComponent {
                 extFormData={{ fileSource: "test" }}
                 fileMaxSizeByMB={2}
                 fileMaxCount={3}
+                fileUrlJsonPath="$.successList[0].readUrl"
+                previewUrlPrefix="/api/file"
                 // uploadProps={{
                 // }}
               />

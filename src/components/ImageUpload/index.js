@@ -1,5 +1,6 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Modal, Upload, Icon, message } from 'antd';
+import jsonpath from "jsonpath";
 // import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
 // import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
@@ -57,16 +58,22 @@ class ImageUpload extends PureComponent {
     extFormData,
     fileMaxSizeByMB,
     fileMaxCount,
+    fileUrlJsonPath,
     previewUrlPrefix,
+    getPreviewUrl,
     beforeUpload,
     onPreview,
+    onUploading,
+    onUploadDone,
+    onUploadError,
+    onUploadRemoved,
+    onChange,
 
     uploadProps,
 
     children,
   }) => {
     const { fileList } = this.state;
-
     return (
       <Upload
         accept={accept}
@@ -79,16 +86,31 @@ class ImageUpload extends PureComponent {
         listType="picture-card" // text picture picture-card
         // multiple={false}
         name={fileFormName}
-        // previewFile={fileParam => this.handlePreviewFile(fileParam)}
         showUploadList={{ showPreviewIcon: true, showRemoveIcon: true }}
         // withCredentials={true}
         // openFileDialogOnClick={true}
-        // onRemove
-
-        onPreview={fileParam => this.handlePreview(fileParam, onPreview)}
-        // onChange={changeParam => this.handleChange(changeParam)}
-        onChange={this.handleChange}
-
+        onPreview={fileParam =>
+          this.handlePreview(
+            fileParam,
+            fileUrlJsonPath,
+            previewUrlPrefix,
+            getPreviewUrl,
+            onPreview
+          )
+        }
+        onChange={changeParam =>
+          this.handleChange(
+            changeParam,
+            fileUrlJsonPath,
+            previewUrlPrefix,
+            getPreviewUrl,
+            onUploading,
+            onUploadDone,
+            onUploadError,
+            onUploadRemoved,
+            onChange
+          )
+        }
         {...uploadProps}
       >
         {
@@ -131,14 +153,20 @@ class ImageUpload extends PureComponent {
   }
 
   // 文件预览
-  handlePreview = async (fileParam, onPreview) => {
+  handlePreview = async (
+    fileParam,
+    fileUrlJsonPath,
+    previewUrlPrefix,
+    getPreviewUrl,
+    onPreview
+  ) => {
     // console.log("handlePreview -->", fileParam);
-    if (!fileParam.url && !fileParam.preview) {
-      // eslint-disable-next-line no-param-reassign
-      fileParam.preview = await this.getFileBase64(fileParam.originFileObj);
+    const file = this.getFileUrl({ fileParam, fileUrlJsonPath, previewUrlPrefix, getPreviewUrl });
+    if (!file.url && !file.preview) {
+      file.preview = await this.getFileBase64(file.originFileObj);
     }
-    this.setState({ previewContent: fileParam.url || fileParam.preview, previewVisible: true });
-    if (onPreview instanceof Function) onPreview(fileParam);
+    this.setState({ previewContent: file.url || file.preview, previewAlt: file.name, previewVisible: true });
+    if (onPreview instanceof Function) onPreview(file);
   }
 
   // 读取文件 Base64
@@ -155,50 +183,76 @@ class ImageUpload extends PureComponent {
     });
   }
 
+  // 获取文件 URL路径
+  getFileUrl = ({
+    fileParam,
+    fileUrlJsonPath,
+    previewUrlPrefix,
+    getPreviewUrl,
+  }) => {
+    const file = fileParam;
+    if (!file.url && file.response && getPreviewUrl instanceof Function) {
+      file.url = getPreviewUrl(file, file.response);
+    }
+    if (!file.url && file.response && fileUrlJsonPath) {
+      file.url = jsonpath.query(file.response, fileUrlJsonPath);
+      if (previewUrlPrefix) file.url = previewUrlPrefix + file.url;
+    }
+    // console.log("getFileUrl file -->", file, " | ", fileUrlJsonPath);
+    return file;
+  }
+
   // 文件发生变化
-  handleChange = ({ file, fileList: newFileListParam, event }) => {
-    console.log("handleChange file -->", file);
-    console.log("handleChange fileList -->", newFileListParam);
-    console.log("handleChange event -->", event);
-    console.log("------------------------------------------------------------");
-    const { fileList } = this.state;
+  handleChange = (
+    changeParam,
+    fileUrlJsonPath,
+    previewUrlPrefix,
+    getPreviewUrl,
+    onUploading,
+    onUploadDone,
+    onUploadError,
+    onUploadRemoved,
+    onChange
+  ) => {
+    let { file } = changeParam;
+    file = this.getFileUrl({ fileParam: file, fileUrlJsonPath, previewUrlPrefix, getPreviewUrl });
+    // const { fileList: newFileList, event } = changeParam;
+    // console.log("handleChange file -->", file);
+    // console.log("handleChange fileList -->", newFileList);
+    // console.log("handleChange event -->", event);
+    // console.log("------------------------------------------------------------");
+    let { fileList } = this.state;
+    fileList = fileList.filter(tmpFile => tmpFile.uid !== file.uid);
     // uid name status
-    const newFileList = [];
-    // 文件状态 uploading done error removed
     switch (file.status) {
       case "uploading":
         // 上传中
-        newFileList.push(file);
+        fileList.push(file);
+        if (onUploading instanceof Function) onUploading(changeParam);
         break;
       case "done":
         // 上传完成
-        newFileList.push(file);
+        fileList.push(file);
+        if (onUploadDone instanceof Function) onUploadDone(changeParam);
         break;
       case "error":
         // 上传失败
+        fileList.push(file);
+        if (onUploadError instanceof Function) onUploadError(changeParam);
         break;
       case "removed":
         // 被删除
+        if (onUploadRemoved instanceof Function) onUploadRemoved(changeParam);
         break;
       default:
+        if (file.percent !== undefined) {
+          fileList.push(file);
+        }
     }
-    fileList.forEach(tmpFile => {
-      if (file.uid === tmpFile.uid) {
-        console.log("handleChange file.uid === tmpFile.uid -->", file);
-      }
-    });
-    console.log("handleChange newFileList -->", newFileList);
-    this.setState({ fileList: newFileList });
+    // console.log("handleChange fileList -->", fileList);
+    this.setState({ fileList: [...fileList] });
+    if (onChange instanceof Function) onChange(changeParam);
   }
-
-  // // 预览文件逻辑
-  // handlePreviewFile = (fileParam) => {
-  //   console.log("handlePreviewFile -->", fileParam);
-  //   return new Promise((resolve, reject) => {
-  //     resolve("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png");
-  //     // reject(error);
-  //   });
-  // }
 
   render() {
     const {
@@ -208,33 +262,20 @@ class ImageUpload extends PureComponent {
       extFormData = {},             // 除了上传文件数据额外需要提交的表单数据
       fileMaxSizeByMB = 10,         // 上传文件的最大大小，默认: 10MB
       fileMaxCount = 1,             // 上传文件数量限制，默认: 1
+      fileUrlJsonPath,              // 从上传文件响应数据中读取文件url数据的JsonPath
       previewUrlPrefix,             // 文件预览地址前缀
-
+      getPreviewUrl,                // 文件预览地址前缀 (file, response) => (String)
       beforeUpload,                 // 上传文件之前的钩子(功能同，antd的Upload组件beforeUpload配置)
       onPreview,                    // 点击文件链接或预览图标时的回调(功能同，antd的Upload组件onPreview配置)
-
+      onUploading,                  // 文件正在上传事件 ({ file, fileList, event }) => ()
+      onUploadDone,                 // 文件上传完成事件 ({ file, fileList, event }) => ()
+      onUploadError,                // 文件上传错误事件 ({ file, fileList, event }) => ()
+      onUploadRemoved,              // 文件上传删除事件 ({ file, fileList, event }) => ()
+      onChange,                     // 上传文件改变时的状态(功能同，antd的Upload组件onChange配置)
       wrapStyle = {},               // 组件最外层样式
       uploadProps = {},             // 上传组件Upload的属性
       modalProps = {},              // 文件预览对话框属性
-
       children,                     // 子组件
-
-      // defaultValue,               // 默认值
-      // value,                      // 输入值(可控属性)
-      // defaultLoadData = false,    // 是否初始化就加载数据
-      // url,                        // 加载远程数据请求地址
-      // searchParamName = "search", // 搜索请求参数名
-      // searchQueryString = {},     // 搜索请求扩展的QueryString
-      // requestOptions,             // 请求参数选项(fetch Options参数)
-      // requestDelay = 350,         // 每次请求延时时间(防止一个时间内多次请求)
-      // requestInterceptor,         // 发送请求之前的拦截
-      // requestError,               // 请求失败处理
-      // responseFilter,             // 响应数据拦截
-      // dataArrayKey,               // 响应数据中选项数组的名称(如果直接返回响应数组不需要此值)
-      // dataKey,                    // 数据主键(可以使用dataValueKey属性配置)
-      // dataValueKey = "value",     // 数据值属性名称
-      // dataLabelKey = "label",     // 数据标题属性名
-      // render,                     // 自定义渲染数据 (key, value, label, item) => (String | RactNode)
     } = this.props;
     const { previewVisible, previewContent, previewAlt } = this.state;
     if (children) {
@@ -250,9 +291,16 @@ class ImageUpload extends PureComponent {
             extFormData,
             fileMaxSizeByMB,
             fileMaxCount,
+            fileUrlJsonPath,
             previewUrlPrefix,
+            getPreviewUrl,
             beforeUpload,
             onPreview,
+            onUploading,
+            onUploadDone,
+            onUploadError,
+            onUploadRemoved,
+            onChange,
 
             uploadProps,
 
