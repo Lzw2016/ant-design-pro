@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
-import { Modal, Upload, Icon, message } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { Modal, Upload, Icon, message, Alert } from 'antd';
 import jsonpath from "jsonpath";
-// import lodash from 'lodash';
+import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
-// import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
+import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
 // import classNames from 'classnames';
 // import styles from './Log.less'
 
@@ -58,6 +58,9 @@ class ImageUpload extends PureComponent {
     extFormData,
     fileMaxSizeByMB,
     fileMaxCount,
+    widthMaxPixel,
+    highMaxPixel,
+    aspectRatioArray,
     fileUrlJsonPath,
     previewUrlPrefix,
     getPreviewUrl,
@@ -68,9 +71,7 @@ class ImageUpload extends PureComponent {
     onUploadError,
     onUploadRemoved,
     onChange,
-
     uploadProps,
-
     children,
   }) => {
     const { fileList } = this.state;
@@ -79,7 +80,17 @@ class ImageUpload extends PureComponent {
         accept={accept}
         action={uploadUrl}
         // directory={false}
-        beforeUpload={(fileParam, fileListParam) => this.beforeUpload(fileParam, fileListParam, fileMaxSizeByMB, beforeUpload)}
+        beforeUpload={(fileParam, fileListParam) =>
+          this.beforeUpload(
+            fileParam,
+            fileListParam,
+            fileMaxSizeByMB,
+            beforeUpload,
+            widthMaxPixel,
+            highMaxPixel,
+            aspectRatioArray,
+          )
+        }
         // customRequest={}
         data={extFormData}
         fileList={fileList}
@@ -132,10 +143,51 @@ class ImageUpload extends PureComponent {
     )
   }
 
+  // 上传文件提示
+  getAlert = ({
+    fileMaxSizeByMB,
+    fileMaxCount,
+    widthMaxPixel,
+    highMaxPixel,
+    aspectRatioArray,
+    alertStyle,
+  }) => {
+    const alerts = [];
+    alerts.push(`上传图片不能超过${fileMaxSizeByMB}MB`);
+    alerts.push(`最多只能上传${fileMaxCount}张图片`);
+    if (widthMaxPixel && highMaxPixel) {
+      alerts.push(`支持最大分辨率${widthMaxPixel}(宽) × ${highMaxPixel}(高)`);
+    }
+    if (aspectRatioArray && aspectRatioArray.length > 0) {
+      const tmp = aspectRatioArray.map((item, index, arr) => `${item.w}(宽) : ${item.h}(高)${index < (arr.length - 1) ? "、 " : ""}`);
+      alerts.push(`图片宽高比必须是: ${tmp.join("")}`);
+    }
+    return (
+      <Alert
+        style={{ padding: "6px 0 6px 12px", width: 245, ...alertStyle }}
+        type="info"
+        // message="提示:"
+        description={(
+          <div style={{ fontSize: 12 }}>
+            {alerts.map((alert, index) => <div key={index}><strong>{index + 1}.</strong>{alert}</div>)}
+          </div>
+        )}
+      />
+    )
+  }
+
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   // 上传之前文件校验
-  beforeUpload = (fileParam, fileListParam, fileMaxSizeByMB, beforeUpload) => {
+  beforeUpload = (
+    fileParam,
+    fileListParam,
+    fileMaxSizeByMB,
+    beforeUpload,
+    widthMaxPixel,
+    highMaxPixel,
+    aspectRatioArray,
+  ) => {
     // console.log("beforeUpload file -->", fileParam);
     // console.log("beforeUpload fileList -->", fileListParam);
     // console.log("beforeUpload fileMaxSizeByMB -->", fileMaxSizeByMB);
@@ -195,8 +247,10 @@ class ImageUpload extends PureComponent {
       file.url = getPreviewUrl(file, file.response);
     }
     if (!file.url && file.response && fileUrlJsonPath) {
-      file.url = jsonpath.query(file.response, fileUrlJsonPath);
-      if (previewUrlPrefix) file.url = previewUrlPrefix + file.url;
+      const url = jsonpath.query(file.response, fileUrlJsonPath);
+      if (previewUrlPrefix && varTypeOf(file.url) === TypeEnum.string && lodash.trim(file.url).length > 0) {
+        file.url = previewUrlPrefix + url;
+      }
     }
     // console.log("getFileUrl file -->", file, " | ", fileUrlJsonPath);
     return file;
@@ -257,11 +311,14 @@ class ImageUpload extends PureComponent {
   render() {
     const {
       uploadUrl,                    // 上传请求地址
-      accept,                       // 支持上传的文件后缀
+      accept,                       // 支持上传的文件后缀, 如: ".bmp,.jpg,.jpeg,.png,.gif,.svg,.ico"
       fileFormName = "file",        // 上传文件数据表单字段名
       extFormData = {},             // 除了上传文件数据额外需要提交的表单数据
       fileMaxSizeByMB = 10,         // 上传文件的最大大小，默认: 10MB
       fileMaxCount = 1,             // 上传文件数量限制，默认: 1
+      widthMaxPixel,                // 宽度最大像素
+      highMaxPixel,                 // 高度最大像素
+      aspectRatioArray = [],        // 图片宽高比例，如: [{ w: 16, h: 9 }, { w: 4, h: 3 }, { w: 5, h: 3 }]
       fileUrlJsonPath,              // 从上传文件响应数据中读取文件url数据的JsonPath
       previewUrlPrefix,             // 文件预览地址前缀
       getPreviewUrl,                // 文件预览地址前缀 (file, response) => (String)
@@ -272,7 +329,9 @@ class ImageUpload extends PureComponent {
       onUploadError,                // 文件上传错误事件 ({ file, fileList, event }) => ()
       onUploadRemoved,              // 文件上传删除事件 ({ file, fileList, event }) => ()
       onChange,                     // 上传文件改变时的状态(功能同，antd的Upload组件onChange配置)
+      showAlert = true,             // 是否显示件上传提示信息Alert
       wrapStyle = {},               // 组件最外层样式
+      alertStyle = {},              // 文件上传提示信息Alert组件样式
       uploadProps = {},             // 上传组件Upload的属性
       modalProps = {},              // 文件预览对话框属性
       children,                     // 子组件
@@ -291,6 +350,9 @@ class ImageUpload extends PureComponent {
             extFormData,
             fileMaxSizeByMB,
             fileMaxCount,
+            widthMaxPixel,
+            highMaxPixel,
+            aspectRatioArray,
             fileUrlJsonPath,
             previewUrlPrefix,
             getPreviewUrl,
@@ -301,11 +363,21 @@ class ImageUpload extends PureComponent {
             onUploadError,
             onUploadRemoved,
             onChange,
-
             uploadProps,
-
             children,
           })
+        }
+        {
+          showAlert === true ?
+            this.getAlert({
+              fileMaxSizeByMB,
+              fileMaxCount,
+              widthMaxPixel,
+              highMaxPixel,
+              aspectRatioArray,
+              alertStyle,
+            }) :
+            null
         }
         <Modal
           visible={previewVisible}

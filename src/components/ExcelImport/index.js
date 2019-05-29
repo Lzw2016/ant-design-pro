@@ -268,7 +268,7 @@ class ExcelImport extends PureComponent {
         <Upload
           name="file"
           multiple={false}
-          accept=".xsl,.xlsx"
+          accept=".xls,.xlsx"
           action={uploadUrl}
           fileList={fileList}
           beforeUpload={(fileParam, fileListParam) => this.beforeUpload(fileParam, fileListParam, fileMaxSizeByMB)}

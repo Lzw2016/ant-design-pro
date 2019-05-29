@@ -25,8 +25,8 @@ class DemoTest extends PureComponent {
                 fileMaxCount={3}
                 fileUrlJsonPath="$.successList[0].readUrl"
                 previewUrlPrefix="/api/file"
-                // uploadProps={{
-                // }}
+              // uploadProps={{
+              // }}
               />
             </Col>
             <Col span={12}>
@@ -37,8 +37,11 @@ class DemoTest extends PureComponent {
                 fileMaxCount={3}
                 fileUrlJsonPath="$.successList[0].readUrl"
                 previewUrlPrefix="/api/file"
-                // uploadProps={{
-                // }}
+                widthMaxPixel={1920}
+                highMaxPixel={1200}
+                aspectRatioArray={[{ w: 16, h: 9 }]}
+              // uploadProps={{
+              // }}
               />
             </Col>
           </Row>
