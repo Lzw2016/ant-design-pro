@@ -1,11 +1,11 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Modal, Upload, Icon, message, Alert } from 'antd';
 import jsonpath from "jsonpath";
 import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
 import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
 // import classNames from 'classnames';
-// import styles from './Log.less'
+import styles from './index.less'
 
 class ImageUpload extends PureComponent {
 
@@ -71,6 +71,7 @@ class ImageUpload extends PureComponent {
     onUploadError,
     onUploadRemoved,
     onChange,
+    uploadWrapClassName,
     uploadProps,
     children,
   }) => {
@@ -122,6 +123,7 @@ class ImageUpload extends PureComponent {
             onChange
           )
         }
+        className={uploadWrapClassName || styles.upload}
         {...uploadProps}
       >
         {
@@ -153,8 +155,13 @@ class ImageUpload extends PureComponent {
     alertStyle,
   }) => {
     const alerts = [];
-    alerts.push(`上传图片不能超过${fileMaxSizeByMB}MB`);
-    alerts.push(`最多只能上传${fileMaxCount}张图片`);
+    if (fileMaxCount && fileMaxCount > 1 && fileMaxSizeByMB) {
+      alerts.push(`最多只能上传${fileMaxCount}张图片,每张不能超过${fileMaxSizeByMB}MB`);
+    } else if (fileMaxCount && fileMaxCount > 1) {
+      alerts.push(`最多只能上传${fileMaxCount}张图片`);
+    } else if (fileMaxSizeByMB) {
+      alerts.push(`上传图片文件大小不能超过${fileMaxSizeByMB}MB`);
+    }
     if (widthMaxPixel && highMaxPixel) {
       alerts.push(`支持最大分辨率${widthMaxPixel}(宽) × ${highMaxPixel}(高)`);
     }
@@ -164,9 +171,10 @@ class ImageUpload extends PureComponent {
     }
     return (
       <Alert
-        style={{ padding: "6px 0 6px 12px", width: 245, ...alertStyle }}
+        style={{ padding: "6px 0 6px 12px", marginBottom: 8, width: 260, display: "inline-block", ...alertStyle }}
+        className={styles.alert}
         type="info"
-        // message="提示:"
+        message="提示:"
         description={(
           <div style={{ fontSize: 12 }}>
             {alerts.map((alert, index) => <div key={index}><strong>{index + 1}.</strong>{alert}</div>)}
@@ -192,15 +200,57 @@ class ImageUpload extends PureComponent {
     // console.log("beforeUpload fileList -->", fileListParam);
     // console.log("beforeUpload fileMaxSizeByMB -->", fileMaxSizeByMB);
     // console.log("------------------------------------------------------------");
+    if (beforeUpload instanceof Function) return beforeUpload(fileParam, fileListParam);
     // 文件大小控制
     let fileMaxSize = 10;
     if (fileMaxSizeByMB) fileMaxSize = fileMaxSizeByMB;
     if ((fileParam.size / 1024 / 1024) > fileMaxSize) {
-      message.warning(`上传文件大小不能超过${fileMaxSize}MB`);
+      message.warning(`上传文件[${fileParam.name}]大小已经超过${fileMaxSize}MB`);
       return false;
     }
-    // TODO 图片规格控制(宽高比、像素、尺寸)
-    if (beforeUpload instanceof Function) return beforeUpload(fileParam, fileListParam);
+    // 图片规格控制(宽高比、像素、尺寸)
+    if ((widthMaxPixel && highMaxPixel) || (aspectRatioArray && aspectRatioArray.length > 0)) {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(fileParam);
+        fileReader.onload = (e) => {
+          const image = new Image();
+          image.src = e.target.result;
+          image.onload = () => {
+            // console.log("图片：", image.width, image.height);
+            let msg = null;
+            if (!msg && (widthMaxPixel || highMaxPixel)) {
+              if (!msg && widthMaxPixel && image.width > widthMaxPixel) {
+                msg = `上传文件[${fileParam.name}]超过最大分辨率${widthMaxPixel}(宽)`;
+              }
+              if (!msg && highMaxPixel && image.height > highMaxPixel) {
+                msg = `上传文件[${fileParam.name}]超过最大分辨率${highMaxPixel}(高)`;
+              }
+            }
+            if (!msg && (aspectRatioArray && aspectRatioArray.length > 0)) {
+              let flag = false;
+              const aspectRatio = `${(image.width / image.height).toFixed(2)}`;
+              aspectRatioArray.forEach(({ w, h }) => {
+                if (flag === false && `${(w / h).toFixed(2)}` === aspectRatio) flag = true;
+              });
+              if (flag === false) msg = `上传文件[${fileParam.name}]宽高比不正确`;
+            }
+            if (msg) {
+              message.warning(msg);
+              reject(msg);
+            } else {
+              resolve(fileParam);
+            }
+          }
+          image.onerror = (error) => {
+            return reject(error);
+          }
+        }
+        fileReader.onerror = (error) => {
+          return reject(error);
+        }
+      });
+    }
     return true;
   }
 
@@ -247,9 +297,13 @@ class ImageUpload extends PureComponent {
       file.url = getPreviewUrl(file, file.response);
     }
     if (!file.url && file.response && fileUrlJsonPath) {
-      const url = jsonpath.query(file.response, fileUrlJsonPath);
-      if (previewUrlPrefix && varTypeOf(file.url) === TypeEnum.string && lodash.trim(file.url).length > 0) {
+      let url = jsonpath.query(file.response, fileUrlJsonPath);
+      if (varTypeOf(url) === TypeEnum.array && url.length >= 1) url = url[0];
+      // console.log("getFileUrl url -->", url, file.response, fileUrlJsonPath);
+      if (previewUrlPrefix && varTypeOf(url) === TypeEnum.string && lodash.trim(url).length > 0) {
         file.url = previewUrlPrefix + url;
+      } else {
+        file.url = url;
       }
     }
     // console.log("getFileUrl file -->", file, " | ", fileUrlJsonPath);
@@ -278,6 +332,7 @@ class ImageUpload extends PureComponent {
     let { fileList } = this.state;
     fileList = fileList.filter(tmpFile => tmpFile.uid !== file.uid);
     // uid name status
+    let msg;
     switch (file.status) {
       case "uploading":
         // 上传中
@@ -291,6 +346,11 @@ class ImageUpload extends PureComponent {
         break;
       case "error":
         // 上传失败
+        msg = `上传文件[${file.name}]出错`;
+        if (file.response && (file.response.message || file.response.error)) {
+          msg = `${msg}: ${file.response.message || file.response.error}`;
+        }
+        message.warning(msg);
         fileList.push(file);
         if (onUploadError instanceof Function) onUploadError(changeParam);
         break;
@@ -306,6 +366,12 @@ class ImageUpload extends PureComponent {
     // console.log("handleChange fileList -->", fileList);
     this.setState({ fileList: [...fileList] });
     if (onChange instanceof Function) onChange(changeParam);
+  }
+
+  // 返回上传文件列表
+  getFileList = () => {
+    const { fileList } = this.state;
+    return fileList;
   }
 
   render() {
@@ -329,19 +395,23 @@ class ImageUpload extends PureComponent {
       onUploadError,                // 文件上传错误事件 ({ file, fileList, event }) => ()
       onUploadRemoved,              // 文件上传删除事件 ({ file, fileList, event }) => ()
       onChange,                     // 上传文件改变时的状态(功能同，antd的Upload组件onChange配置)
-      showAlert = true,             // 是否显示件上传提示信息Alert
+      showAlert = true,             // 是否显示文件上传提示信息Alert
+      alertContent,                 // 自定义文件上传提示信息Alert内容 ReactNode
       wrapStyle = {},               // 组件最外层样式
       alertStyle = {},              // 文件上传提示信息Alert组件样式
+      uploadWrapClassName,          // 上传组件Upload的属性WrapClassName
       uploadProps = {},             // 上传组件Upload的属性
       modalProps = {},              // 文件预览对话框属性
+      saveGetFileList,              // 保存getFileList函数 (getFileList) => ()
       children,                     // 子组件
     } = this.props;
     const { previewVisible, previewContent, previewAlt } = this.state;
     if (children) {
       React.Children.only(children);
     }
+    if (saveGetFileList instanceof Function) saveGetFileList(this.getFileList);
     return (
-      <div style={wrapStyle}>
+      <div style={{ minHeight: 112, ...wrapStyle }}>
         {
           this.getImageUpload({
             uploadUrl,
@@ -363,13 +433,14 @@ class ImageUpload extends PureComponent {
             onUploadError,
             onUploadRemoved,
             onChange,
+            uploadWrapClassName,
             uploadProps,
             children,
           })
         }
         {
           showAlert === true ?
-            this.getAlert({
+            alertContent || this.getAlert({
               fileMaxSizeByMB,
               fileMaxCount,
               widthMaxPixel,
