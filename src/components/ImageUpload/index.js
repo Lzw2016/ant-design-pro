@@ -58,6 +58,8 @@ class ImageUpload extends PureComponent {
     extFormData,
     fileMaxSizeByMB,
     fileMaxCount,
+    widthMinPixel,
+    highMinPixel,
     widthMaxPixel,
     highMaxPixel,
     aspectRatioArray,
@@ -87,6 +89,8 @@ class ImageUpload extends PureComponent {
             fileListParam,
             fileMaxSizeByMB,
             beforeUpload,
+            widthMinPixel,
+            highMinPixel,
             widthMaxPixel,
             highMaxPixel,
             aspectRatioArray,
@@ -149,6 +153,8 @@ class ImageUpload extends PureComponent {
   getAlert = ({
     fileMaxSizeByMB,
     fileMaxCount,
+    widthMinPixel,
+    highMinPixel,
     widthMaxPixel,
     highMaxPixel,
     aspectRatioArray,
@@ -162,8 +168,16 @@ class ImageUpload extends PureComponent {
     } else if (fileMaxSizeByMB) {
       alerts.push(`上传图片文件大小不能超过${fileMaxSizeByMB}MB`);
     }
-    if (widthMaxPixel && highMaxPixel) {
-      alerts.push(`支持最大分辨率${widthMaxPixel}(宽) × ${highMaxPixel}(高)`);
+    if ((widthMinPixel || highMinPixel) && (widthMaxPixel || highMaxPixel)) {
+      if (widthMinPixel === widthMaxPixel && highMinPixel === highMaxPixel) {
+        alerts.push(`仅支持分辨率${widthMinPixel || "*"}(宽) × ${highMinPixel || "*"}(高)`);
+      } else {
+        alerts.push(`支持分辨率${widthMinPixel || "*"}(宽) × ${highMinPixel || "*"}(高) ~ ${widthMaxPixel || "*"}(宽) × ${highMaxPixel || "*"}(高)`);
+      }
+    } else if (widthMinPixel || highMinPixel) {
+      alerts.push(`支持最小分辨率${widthMinPixel || "*"}(宽) × ${highMinPixel || "*"}(高)`);
+    } else if (widthMaxPixel || highMaxPixel) {
+      alerts.push(`支持最大分辨率${widthMaxPixel || "*"}(宽) × ${highMaxPixel || "*"}(高)`);
     }
     if (aspectRatioArray && aspectRatioArray.length > 0) {
       const tmp = aspectRatioArray.map((item, index, arr) => `${item.w}(宽) : ${item.h}(高)${index < (arr.length - 1) ? "、 " : ""}`);
@@ -192,6 +206,8 @@ class ImageUpload extends PureComponent {
     fileListParam,
     fileMaxSizeByMB,
     beforeUpload,
+    widthMinPixel,
+    highMinPixel,
     widthMaxPixel,
     highMaxPixel,
     aspectRatioArray,
@@ -219,7 +235,21 @@ class ImageUpload extends PureComponent {
           image.onload = () => {
             // console.log("图片：", image.width, image.height);
             let msg = null;
+            if (!msg && (widthMinPixel || highMinPixel)) {
+              if (!msg && widthMinPixel && image.width < widthMinPixel && highMinPixel && image.height > highMinPixel) {
+                msg = `上传文件[${fileParam.name}]低于最小分辨率${widthMinPixel}(宽) x ${highMinPixel}(高)`;
+              }
+              if (!msg && widthMinPixel && image.width < widthMinPixel) {
+                msg = `上传文件[${fileParam.name}]低于最小分辨率${widthMinPixel}(宽)`;
+              }
+              if (!msg && highMinPixel && image.height < highMinPixel) {
+                msg = `上传文件[${fileParam.name}]低于最小分辨率${highMinPixel}(高)`;
+              }
+            }
             if (!msg && (widthMaxPixel || highMaxPixel)) {
+              if (!msg && widthMaxPixel && image.width > widthMaxPixel && highMaxPixel && image.height > highMaxPixel) {
+                msg = `上传文件[${fileParam.name}]超过最大分辨率${widthMaxPixel}(宽) x ${highMaxPixel}(高)`;
+              }
               if (!msg && widthMaxPixel && image.width > widthMaxPixel) {
                 msg = `上传文件[${fileParam.name}]超过最大分辨率${widthMaxPixel}(宽)`;
               }
@@ -292,11 +322,12 @@ class ImageUpload extends PureComponent {
     previewUrlPrefix,
     getPreviewUrl,
   }) => {
+    // console.log("getFileUrl file -->", fileParam, " | ",fileParam.response);
     const file = fileParam;
     if (!file.url && file.response && getPreviewUrl instanceof Function) {
       file.url = getPreviewUrl(file, file.response);
     }
-    if (!file.url && file.response && fileUrlJsonPath) {
+    if (!file.url && file.response && varTypeOf(file.response) === TypeEnum.object && fileUrlJsonPath) {
       let url = jsonpath.query(file.response, fileUrlJsonPath);
       if (varTypeOf(url) === TypeEnum.array && url.length >= 1) url = url[0];
       // console.log("getFileUrl url -->", url, file.response, fileUrlJsonPath);
@@ -382,6 +413,8 @@ class ImageUpload extends PureComponent {
       extFormData = {},             // 除了上传文件数据额外需要提交的表单数据
       fileMaxSizeByMB = 10,         // 上传文件的最大大小，默认: 10MB
       fileMaxCount = 1,             // 上传文件数量限制，默认: 1
+      widthMinPixel,                // 宽度最小像素
+      highMinPixel,                 // 高度最小像素
       widthMaxPixel,                // 宽度最大像素
       highMaxPixel,                 // 高度最大像素
       aspectRatioArray = [],        // 图片宽高比例，如: [{ w: 16, h: 9 }, { w: 4, h: 3 }, { w: 5, h: 3 }]
@@ -420,6 +453,8 @@ class ImageUpload extends PureComponent {
             extFormData,
             fileMaxSizeByMB,
             fileMaxCount,
+            widthMinPixel,
+            highMinPixel,
             widthMaxPixel,
             highMaxPixel,
             aspectRatioArray,
@@ -443,6 +478,8 @@ class ImageUpload extends PureComponent {
             alertContent || this.getAlert({
               fileMaxSizeByMB,
               fileMaxCount,
+              widthMinPixel,
+              highMinPixel,
               widthMaxPixel,
               highMaxPixel,
               aspectRatioArray,

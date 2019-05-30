@@ -34,6 +34,8 @@ class DemoTest extends PureComponent {
                 fileMaxCount={3}
                 fileUrlJsonPath="$.successList[0].readUrl"
                 previewUrlPrefix="/api/file"
+                widthMinPixel={1920}
+                highMinPixel={1080}
                 widthMaxPixel={1920}
                 highMaxPixel={1080}
                 aspectRatioArray={[{ w: 5, h: 3 }, { w: 16, h: 9 }]}
@@ -42,16 +44,22 @@ class DemoTest extends PureComponent {
             </Col>
           </Row>
 
-          {/* <Row gutter={16}>
+          <Row gutter={16}>
             <Col span={12}>
               <ImageUpload
                 uploadUrl="/api/file/upload"
                 extFormData={{ fileSource: "test" }}
+                fileMaxSizeByMB={2}
+                fileMaxCount={3}
                 fileUrlJsonPath="$.successList[0].readUrl"
                 previewUrlPrefix="/api/file"
+                widthMaxPixel={1920}
+                highMaxPixel={1080}
+                aspectRatioArray={[{ w: 5, h: 3 }, { w: 16, h: 9 }]}
+                alertStyle={{ width: 310 }}
               />
             </Col>
-          </Row> */}
+          </Row>
         </Card>
       </PageHeaderWrapper>
     )
