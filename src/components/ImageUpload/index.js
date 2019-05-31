@@ -216,7 +216,6 @@ class ImageUpload extends PureComponent {
     // console.log("beforeUpload fileList -->", fileListParam);
     // console.log("beforeUpload fileMaxSizeByMB -->", fileMaxSizeByMB);
     // console.log("------------------------------------------------------------");
-    if (beforeUpload instanceof Function) return beforeUpload(fileParam, fileListParam);
     // 文件大小控制
     let fileMaxSize = 10;
     if (fileMaxSizeByMB) fileMaxSize = fileMaxSizeByMB;
@@ -265,6 +264,9 @@ class ImageUpload extends PureComponent {
               });
               if (flag === false) msg = `上传文件[${fileParam.name}]宽高比不正确`;
             }
+            if (!msg && beforeUpload instanceof Function && beforeUpload(fileParam, fileListParam) === false) {
+              msg = `上传文件[${fileParam.name}]自定义取消上传`;
+            }
             if (msg) {
               message.warning(msg);
               reject(msg);
@@ -281,6 +283,7 @@ class ImageUpload extends PureComponent {
         }
       });
     }
+    if (beforeUpload instanceof Function) return beforeUpload(fileParam, fileListParam);
     return true;
   }
 
