@@ -5,6 +5,7 @@ export default {
   "menu.demo.detail-form": "详情数据表格",
   "menu.demo.remote-select-input": "远程下拉输入框",
   "menu.demo.image-upload": "图片上传",
+  "menu.demo.input-limit": "字数限制输入框",
   "menu.demo.test2": "测试多级菜单",
   "menu.demo.test2.test": "三级菜单",
 

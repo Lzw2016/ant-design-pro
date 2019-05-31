@@ -31,6 +31,7 @@ export default [
           { path: '/demo/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
           { path: '/demo/remote-select-input', name: 'remote-select-input', icon: 'table', component: './Demo/RemoteSelect' },
           { path: '/demo/image-upload', name: 'image-upload', icon: 'table', component: './Demo/ImageUpload' },
+          { path: '/demo/input-limit', name: 'input-limit', icon: 'table', component: './Demo/InputLimit' },
           {
             path: '/demo/test2',
             name: 'test2',
