@@ -33,33 +33,24 @@ class FormEngine extends PureComponent {
   }
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
-  // align	flex 布局下的垂直对齐方式：top middle bottom	string	top
-  // gutter	栅格间隔，可以写成像素值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24}	number/object	0
-  // justify	flex 布局下的水平排列方式：start end center space-around space-between	string	start
-  // type	布局模式，可选 flex，现代浏览器 下有效	string
 
   getGridForm = ({
     columnCount,
+    defaultValues,
     formFields,
-    formLabels,
-
     defaultRowProps,
     rowPropsArray,
-
+    actions,
     formProps,
   }) => {
-
     let colSpan = Math.ceil(24 / columnCount);
     if (colSpan < 1) colSpan = 1;
     if (colSpan > 4) colSpan = 6;
     // console.log("getGridForm --> ", colSpan);
-    const rowArray = [];
-    let columnArray = [];
-    let columnIndex = 0;
+    const rowArray = [];    // 表单行数组
+    let columnArray = [];   // 单行表单输入组件数组
+    let columnIndex = 0;    // 一行中当前列位置
     lodash.forEach(formFields, (fieldProp, fieldName) => {
-      const { label, defaultValue, value, inputType, inputProp, inputRender } = fieldProp;
-      const { label: label2, formItemProps } = formLabels.fieldName || {};
-      console.log("getGridForm --> fieldProp ", fieldProp, inputType);
       if (columnIndex >= columnCount) {
         // 需要换行
         columnIndex = 0;
@@ -67,18 +58,15 @@ class FormEngine extends PureComponent {
         columnArray = [];
       }
       columnIndex++;
-
       columnArray.push(
         <Col key={fieldName} span={colSpan}>
-          <Form.Item label={label || label2 || fieldName} {...formItemProps}>
-            <Input placeholder="输入啦啦" defaultValue={defaultValue} value={value} {...inputProp} />
-          </Form.Item>
+          {this.getInputComponent(fieldName, fieldProp, defaultValues)}
         </Col>
       );
     });
     // 加入最后一行
     rowArray.push(columnArray);
-    console.log("getGridForm --> ", rowArray);
+    // console.log("getGridForm --> ", rowArray);
     return (
       <Form
         layout="horizontal"
@@ -87,29 +75,86 @@ class FormEngine extends PureComponent {
         {...formProps}
       >
         {
-          rowArray.map((columns, index) => <Row key={index}>{columns}</Row>)
+          rowArray.map((columns, index) => {
+            let rowProps = defaultRowProps;
+            if (rowPropsArray && rowPropsArray.length > index) rowProps = rowPropsArray[index];
+            return <Row key={index} {...rowProps}>{columns}</Row>;
+          })
+        }
+        {
+          actions || (
+            <div style={{ textAlign: 'center' }}>
+              <Button type="primary" onClick={this.handleSubmit}>保存</Button>
+              <span style={{ display: 'inline-block', width: 36 }} />
+              <Button onClick={this.handleReset}>重置</Button>
+              <span style={{ display: 'inline-block', width: 36 }} />
+              <Button onClick={this.handleCancel}>取消</Button>
+            </div>
+          )
         }
       </Form>
     )
   }
 
+  getInputComponent = (
+    fieldName,
+    fieldProp,
+    defaultValues,
+  ) => {
+    // console.log("getInputComponent --> ", "fieldName = ", fieldName, "fieldProp = ", fieldProp, "labelProp = ", labelProp);
+    const { form: { getFieldDecorator } } = this.props;
+    const { label, formItemProps, InputComponent, inputProp, inputRender, rules = [] } = fieldProp;
+    // TODO InputComponent 适配逻辑
+    return (
+      <Form.Item label={label || fieldName} {...formItemProps}>
+        {getFieldDecorator(fieldName, {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules,
+        })(
+          inputRender ?
+            inputRender instanceof Function ? inputRender()
+              : inputRender
+            : InputComponent ? <InputComponent.Component style={{ width: '100%' }} {...inputProp} />
+              : <Input style={{ width: '100%' }} {...inputProp} />
+        )}
+      </Form.Item>
+    )
+  }
+
   // -------------------------------------------------------------------------------------------------------------- 事件处理
+
+  handleSubmit = () => {
+    const { form } = this.props;
+    form.validateFields((err, formValues) => {
+      if (err) return;
+      console.log("handleSubmit --> ", formValues);
+      // 事件处理
+    });
+  }
+
+  handleReset = () => {
+    console.log("handleReset --> ", {});
+  }
+
+  handleCancel = () => {
+    console.log("handleCancel --> ", {});
+  }
 
   render() {
     const {
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
       formFields = {},                  // 表单字段配置
-      formLabels = {},                  // 表单字段Label配置
-
+      defaultValues = {},               // 表单字段默认值
+      saveForm,                         // 保存表单Form对象 (form) => ()
       defaultRowProps = {},             // Row组件默认属性配置
       rowPropsArray = [],               // 自定义每一行的Row组件属性配置(第1行配置取数组rowPropsArray[0]的值)
+      actions,                          // 自定义表单提交部分操作 ReactNode
+
 
       wrapClassName,                    // 最外层包装元素的className
       wrapStyle = {},                   // 最外层包装元素的className
       formProps = {},                   // Form控件属性
-
-
-
+      form,                             // 使用@Form.create()增强的表单对象
 
 
       // defaultValue,                 // 输入框默认内容
@@ -123,16 +168,17 @@ class FormEngine extends PureComponent {
       // inputStyle = {},              // Input控件style
       // inputProps = {},              // Input控件属性
     } = this.props;
+    if (saveForm instanceof Function) saveForm(form);
     return (
       <div className={wrapClassName || undefined} style={wrapStyle}>
         {
           this.getGridForm({
             columnCount,
+            defaultValues,
             formFields,
-            formLabels,
-
             defaultRowProps,
             rowPropsArray,
+            actions,
 
             formProps,
           })

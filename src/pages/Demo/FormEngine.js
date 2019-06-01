@@ -19,7 +19,54 @@ class Demo1 extends PureComponent {
           <FormEngine
             columnCount={6}
             formFields={{
-              userName: { label: "用户名", value: "lizhiwei", inputType: InputEnum.Input }
+              userName1: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName2: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName3: {
+                label: "用户名",
+                InputComponent: InputEnum.DatePicker,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName4: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName5: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName6: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName7: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+              userName8: {
+                label: "用户名",
+                InputComponent: InputEnum.Input,
+                inputProp: { placeholder: "请输入用户名" },
+              },
+            }}
+            defaultValues={{
+              userName1: "lizhiwei1",
+              // userName2: "lizhiwei2",
+              // userName3: "lizhiwei3",
+              // userName4: "lizhiwei4",
+              userName5: "lizhiwei5",
+              userName6: "lizhiwei6",
             }}
           />
         </Card>
