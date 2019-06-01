@@ -27,11 +27,6 @@ export default [
         icon: 'bars',
         routes: [
           { path: '/demo/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
-          { path: '/demo/excel', name: 'excel-import', icon: 'file-excel', component: './Demo/ExcelImport' },
-          { path: '/demo/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
-          { path: '/demo/remote-select-input', name: 'remote-select-input', icon: 'table', component: './Demo/RemoteSelect' },
-          { path: '/demo/image-upload', name: 'image-upload', icon: 'table', component: './Demo/ImageUpload' },
-          { path: '/demo/input-limit', name: 'input-limit', icon: 'table', component: './Demo/InputLimit' },
           {
             path: '/demo/test2',
             name: 'test2',
@@ -40,14 +35,20 @@ export default [
               { path: '/demo/test2/test', name: 'test', icon: 'smile', component: './Demo/DemoTest' },
             ],
           },
-          {
-            path: '/demo/FormEngine',
-            name: 'FormEngine',
-            icon: 'form',
-            routes: [
-              { path: '/demo/FormEngine/demo1', name: 'Demo1', component: './Demo/FormEngine/Demo1' },
-            ],
-          },
+          { path: '/demo/excel', name: 'excel-import', icon: 'file-excel', component: './Demo/ExcelImport' },
+          { path: '/demo/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
+          { path: '/demo/remote-select-input', name: 'remote-select-input', icon: 'table', component: './Demo/RemoteSelect' },
+          { path: '/demo/image-upload', name: 'image-upload', icon: 'table', component: './Demo/ImageUpload' },
+          { path: '/demo/input-limit', name: 'input-limit', icon: 'table', component: './Demo/InputLimit' },
+          { path: '/demo/form-engine', name: 'form-engine', icon: 'table', component: './Demo/FormEngine' },
+          // {
+          //   path: '/demo/FormEngine',
+          //   name: 'FormEngine',
+          //   icon: 'form',
+          //   routes: [
+          //     { path: '/demo/FormEngine/demo1', name: 'Demo1', component: './Demo/FormEngine/Demo1' },
+          //   ],
+          // },
         ],
       },
       // 多语言翻译开发工具

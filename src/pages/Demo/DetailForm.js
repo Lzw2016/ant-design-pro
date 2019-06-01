@@ -73,6 +73,23 @@ class DemoTest extends PureComponent {
           <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 100, display: "inline-block" }}>
             很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长:
           </span>
+
+          <DetailForm
+            style={{ width: "65%" }}
+            // style={{ width: 800 }}
+            title="表格标题"
+            footer="表格尾部"
+            borderColor="rgb(216, 236, 252)"
+            backgroundColor="#e7f1fa"
+            tableStyle={{}}
+            tbodyStyle={{}}
+            columnCount={3}
+            labelWidthPercent={0.36}
+            labelSuffix=":"
+            data={data}
+            label={label}
+            dataTransform={dataTransform}
+          />
         </Card>
       </PageHeaderWrapper>
     );

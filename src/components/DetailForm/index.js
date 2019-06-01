@@ -34,12 +34,11 @@ class DetailForm extends PureComponent {
   state = {
   }
 
-  // 边框颜色 #e8e8e8
-  border = "rgb(216, 236, 252)";
-
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
   getTable = ({
+    borderColor,
+    backgroundColor,
     tableStyle = {},
     tbodyStyle = {},
     trStyle = {},
@@ -54,7 +53,7 @@ class DetailForm extends PureComponent {
     dataTransform = {},
   }) => {
     // 表格默认样式
-    const tableDefaultStyle = { border: `1px solid ${this.border}`, borderRight: 0, borderBottom: 0 };
+    const tableDefaultStyle = { border: `1px solid ${borderColor}`, borderRight: 0, borderBottom: 0 };
     if (lodash.isFinite(tableStyle.width) || `${tableStyle.width}`.toLowerCase().endsWith("px")) {
       tableDefaultStyle.width = tableStyle.width;
     } else {
@@ -87,10 +86,10 @@ class DetailForm extends PureComponent {
     }
     // label单元格默认样式
     const labelDefaultStyle = {
-      borderRight: `1px solid ${this.border}`,
-      borderBottom: `1px solid ${this.border}`,
+      borderRight: `1px solid ${borderColor}`,
+      borderBottom: `1px solid ${borderColor}`,
       padding: "8px 8px",
-      background: "#e7f1fa",
+      background: backgroundColor,
       fontWeight: "bold",
       display: "inline-block",
       overflow: "hidden",
@@ -100,8 +99,8 @@ class DetailForm extends PureComponent {
     };
     // data单元格默认样式
     const dataDefaultStyle = {
-      borderRight: `1px solid ${this.border}`,
-      borderBottom: `1px solid ${this.border}`,
+      borderRight: `1px solid ${borderColor}`,
+      borderBottom: `1px solid ${borderColor}`,
       padding: "8px 8px",
       display: "inline-block",
       overflow: "hidden",
@@ -201,11 +200,11 @@ class DetailForm extends PureComponent {
   }
 
   /**
-   * style            样式
-   * dataTransformTmp dataTransform配置
-   * value          value
-   * key            value名称
-   * data           全局data
+   * style              样式
+   * dataTransformTmp   dataTransform配置
+   * value              value
+   * key                value名称
+   * data               全局data
    *
    * 不需要渲染返回 false
    */
@@ -289,6 +288,8 @@ class DetailForm extends PureComponent {
 
   render() {
     const {
+      borderColor = "#e8e8e8",    // 边框颜色 rgb(216, 236, 252)
+      backgroundColor = "#fafafa",// label单元格背景颜色 #e7f1fa
       style = {},                 // 组件样式
       title,                      // 详情表格头部标题 "string | ReactNode | (data) => (string | ReactNode)"
       footer,                     // 详情表格尾部     "string | ReactNode | (data) => (string | ReactNode)"
@@ -316,7 +317,7 @@ class DetailForm extends PureComponent {
               : (
                 <div
                   style={{
-                    border: `1px solid ${this.border}`,
+                    border: `1px solid ${borderColor}`,
                     borderBottom: 0,
                     padding: "8px 8px",
                     fontWeight: "bold",
@@ -332,6 +333,8 @@ class DetailForm extends PureComponent {
         {/* 详情表格 */}
         {
           this.getTable({
+            borderColor,
+            backgroundColor,
             tableStyle: (style.width && (lodash.isFinite(style.width) || `${style.width}`.toLowerCase().endsWith("px"))) ? { ...tableStyle, width: style.width } : tableStyle,
             tbodyStyle,
             trStyle,
@@ -354,7 +357,7 @@ class DetailForm extends PureComponent {
               : (
                 <div
                   style={{
-                    border: `1px solid ${this.border}`,
+                    border: `1px solid ${borderColor}`,
                     borderTop: 0,
                     padding: "8px 8px",
                     fontWeight: "bold",
