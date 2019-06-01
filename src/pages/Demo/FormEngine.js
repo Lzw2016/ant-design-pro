@@ -58,6 +58,9 @@ class Demo1 extends PureComponent {
                 label: "用户名",
                 InputComponent: InputEnum.Input,
                 inputProp: { placeholder: "请输入用户名" },
+                rules: [
+                  { required: true, message: "必须填项" },
+                ],
               },
             }}
             defaultValues={{
