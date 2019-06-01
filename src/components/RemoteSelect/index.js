@@ -52,10 +52,11 @@ class RemoteSelect extends PureComponent {
   //   // const { target } = this.props;
   // }
 
-  // // 组件卸载之前
-  // componentWillUnmount() {
-  //   // clearTimeout(this.timer);
-  // }
+  // 组件卸载之前
+  componentWillUnmount() {
+    // 卸载主键之后不能再修改 state
+    this.setState = () => { };
+  }
 
   // 组件状态
   state = {
