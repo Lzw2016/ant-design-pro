@@ -18,6 +18,7 @@ class Demo1 extends PureComponent {
         <Card bordered={false}>
           <Card bordered={true} style={{ width: 1000 }}>
             <FormEngine
+              saveForm={from => { this.from1 = from }}
               columnCount={3}
               formFields={{
                 userName10: {
@@ -84,7 +85,15 @@ class Demo1 extends PureComponent {
                   // suffixColSpan: 0,
                   label: "用户名8",
                   InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                  inputProp: {
+                    placeholder: "请输入用户名",
+                    onChange: e => {
+                      if (e.target.value === "666") {
+                        this.from1.setFieldsValue({ userName20: "666-888" });
+                      }
+                      console.log("onChange --> onValuesChange", this.from1.onValuesChange);
+                    },
+                  },
                   rules: [
                     { required: true, message: "必须填项" },
                   ],
@@ -131,9 +140,9 @@ class Demo1 extends PureComponent {
                 userName6: "lizhiwei6",
                 userName20: "默认值",
               }}
-              onFormValuesChange={(formValues, form) => {
-                if (formValues.userName8 && formValues.userName8 === "666") {
-                  form.setFieldsValue({ userName20: "666-888" });
+              onFormValuesChange={(changedValues, allValues, form) => {
+                if (changedValues.userName8 && changedValues.userName8 === "888") {
+                  form.setFieldsValue({ userName20: "888-888" });
                 }
               }}
             />

@@ -12,11 +12,13 @@ import DisplayEnum from './DisplayEnum';
   //   console.log("onFieldsChange --> changedFields ", changedFields);
   //   console.log("onFieldsChange --> allFields ", allFields);
   // },
-  // onValuesChange: (props, changedValues, allValues) => {
-  //   console.log("onValuesChange --> props ", props);
-  //   console.log("onValuesChange --> changedValues ", changedValues);
-  //   console.log("onValuesChange --> allValues ", allValues);
-  // },
+  onValuesChange: (props, changedValues, allValues) => {
+    // console.log("onValuesChange --> props ", props);
+    // console.log("onValuesChange --> changedValues ", changedValues);
+    // console.log("onValuesChange --> allValues ", allValues);
+    const { onFormValuesChange, form } = props;
+    if (onFormValuesChange instanceof Function) onFormValuesChange(changedValues, allValues, form);
+  },
 })
 class FormEngine extends PureComponent {
 
@@ -307,9 +309,12 @@ class FormEngine extends PureComponent {
     let columnCountTmp = columnCount || 1;
     if (columnCountTmp < 1) columnCountTmp = 1;
     if (columnCountTmp > 4) columnCountTmp = 6;
-    if (saveForm instanceof Function) saveForm(form);
+    if (this.saveFormFlag !== true && saveForm instanceof Function) {
+      saveForm(form);
+      this.saveFormFlag = true;
+    }
     // console.log("render --> formData ", form.getFieldsValue());
-    const resultComponent = (
+    return (
       <div className={wrapClassName || undefined} style={wrapStyle}>
         {
           this.getGridForm({
@@ -319,14 +324,12 @@ class FormEngine extends PureComponent {
             defaultRowProps,
             rowPropsArray,
             actions,
+            onFormValuesChange,
             formProps,
           })
         }
       </div>
-    )
-    // TODO 需要优化可能会有死循环
-    if (onFormValuesChange instanceof Function) setTimeout(() => onFormValuesChange(form.getFieldsValue(), form), 100);
-    return resultComponent;
+    );
   }
 }
 
