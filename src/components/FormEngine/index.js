@@ -127,7 +127,7 @@ class FormEngine extends PureComponent {
             span={colSpan * suffixLabelColSpan}
             {...suffixLabelColProps}
           >
-            {(suffixLabel instanceof Function) ? suffixLabel() : suffixLabel}
+            {(suffixLabel instanceof Function) ? suffixLabel(fieldName, defaultValues[fieldName], form.getFieldsValue()) : suffixLabel}
           </Col>
         );
       }
@@ -176,8 +176,9 @@ class FormEngine extends PureComponent {
     readOnly,
   ) => {
     // console.log("getInputComponent --> ", "fieldName = ", fieldName, "fieldProp = ", fieldProp, "labelProp = ", labelProp);
-    const { form: { getFieldDecorator } } = this.props;
-    const { label, formItemProps, InputComponent, inputProp, inputRender, decorator = true, rules = [], decoratorOptions = {} } = fieldProp;
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
+    const { useFormItem = true, label, formItemProps, InputComponent, inputProp, inputRender, decorator = true, rules = [], decoratorOptions = {} } = fieldProp;
     const itemProps = this.mergeCalculateCol(fieldColSpan, formItemProps, label);
     // console.log("getInputComponent --> ", "fieldColSpan = ", fieldColSpan, "itemProps = ", itemProps);
     // TODO InputComponent 适配逻辑
@@ -185,7 +186,7 @@ class FormEngine extends PureComponent {
     if (inputRender) {
       // 自定义控件
       component = inputRender;
-      if (inputRender instanceof Function) component = inputRender();
+      if (inputRender instanceof Function) component = inputRender(fieldName, defaultValues[fieldName], form.getFieldsValue());
     } else if (InputComponent) {
       // 使用预设控件
       component = <InputComponent.Component style={{ width: '100%' }} {...inputProp} disabled={disabled} readOnly={readOnly} />;
@@ -205,12 +206,16 @@ class FormEngine extends PureComponent {
       )(component);
     }
     return (
-      <Form.Item
-        label={label || fieldName}
-        {...itemProps}
-      >
-        {component}
-      </Form.Item>
+      useFormItem === true ?
+        (
+          <Form.Item
+            label={label || fieldName}
+            {...itemProps}
+          >
+            {component}
+          </Form.Item>
+        )
+        : component
     )
   }
 
@@ -293,7 +298,9 @@ class FormEngine extends PureComponent {
   render() {
     const {
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
+      defaultRules = [],                // 默认全局校验
       formFields = {},                  // 表单字段配置
+      resetValues = {},                 // 表单重置值配置
       defaultValues = {},               // 表单字段默认值
       saveForm,                         // 保存表单Form对象 (form) => ()
       defaultRowProps = {},             // Row组件默认属性配置
