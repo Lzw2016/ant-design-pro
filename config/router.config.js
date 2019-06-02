@@ -41,6 +41,7 @@ export default [
           { path: '/demo/image-upload', name: 'image-upload', icon: 'table', component: './Demo/ImageUpload' },
           { path: '/demo/input-limit', name: 'input-limit', icon: 'table', component: './Demo/InputLimit' },
           { path: '/demo/form-engine', name: 'form-engine', icon: 'table', component: './Demo/FormEngine' },
+          { path: '/demo/form-engine-01', name: 'form-engine-01', icon: 'table', component: './Demo/FormEngine01' },
           // {
           //   path: '/demo/FormEngine',
           //   name: 'FormEngine',

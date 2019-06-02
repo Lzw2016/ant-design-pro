@@ -10,6 +10,7 @@ export default {
   "menu.demo.image-upload": "图片上传",
   "menu.demo.input-limit": "字数限制输入框",
   "menu.demo.form-engine": "表单引擎",
+  "menu.demo.form-engine-01": "表单引擎(01)",
 
   "menu.demo.FormEngine.Demo1": "基本使用",
   "menu.demo.FormEngine.Demo2": "基本使用",
