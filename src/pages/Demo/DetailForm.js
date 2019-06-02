@@ -15,7 +15,7 @@ class DemoTest extends PureComponent {
   state = {
     data: {
       name: "freemenL",
-      deptName: "技术研发部 xxx部门 xxx部门 xxx部门",
+      deptName: "技术研发部 xxx部门 xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门",
       dutyType: "早班",
       startTime: "9:00",
       endTime: "6:00",
@@ -42,7 +42,8 @@ class DemoTest extends PureComponent {
         console.log("duration | ", data);
         return `${value} [${key}]`;
       },
-      deptName: { columnCount: 2 },
+      dutyType: { columnCount: 2 },
+      // deptName: { columnCount: 2 ,transform : (value, key, data)=> <span title={value}>{value}</span>},
       // startTime: { columnCount: 3 },
       stats: [{ value: 1, label: "成功" }, { value: 0, label: "失败" }]
     },
@@ -56,11 +57,11 @@ class DemoTest extends PureComponent {
           <DetailForm
             style={{ width: "65%" }}
             // style={{ width: 800 }}
-            title="表格标题"
-            footer="表格尾部"
+            // title="表格标题"
+            // footer="表格尾部"
             tableStyle={{}}
             tbodyStyle={{}}
-            columnCount={3}
+            columnCount={4}
             labelWidthPercent={0.36}
             labelSuffix=":"
             data={data}
