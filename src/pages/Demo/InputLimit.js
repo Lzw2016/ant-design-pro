@@ -20,6 +20,7 @@ class DemoTest extends PureComponent {
             <Col span={8}>
               <InputLimit
                 maxLength={8}
+                preventInput={true}
                 inputStyle={{ width: 230 }}
               />
             </Col>

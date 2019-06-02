@@ -58,6 +58,9 @@ class InputLimit extends PureComponent {
     } else {
       valueProp.value = (value === undefined ? innerValue : value);
     }
+    if (maxLength && preventInput === true) {
+      valueProp.maxLength = maxLength + 1;
+    }
     const inputCalss = {};
     inputCalss[this.getClassName(maxLength, valueProp.defaultValue ? valueProp.defaultValue : valueProp.value, allowClear, suffix)] = true;
     inputCalss[styles.input] = allowClear;
