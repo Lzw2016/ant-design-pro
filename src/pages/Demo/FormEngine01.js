@@ -16,10 +16,36 @@ class Demo1 extends PureComponent {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <Card bordered={true} style={{ width: 1000 }}>
+          <Card bordered={true} style={{ width: 1200 }}>
             <FormEngine
               saveForm={from => { this.from1 = from }}
+              actionsConfig={{
+                // width: "10%",
+                // height: 100,
+                style: {
+                  // textAlign: "right",
+                },
+
+                // placement: "top",
+                placement: "bottom",
+                // placement: "left",
+                // placement: "right",
+
+                // resetText: false,
+              }}
               columnCount={3}
+              defaultRules={[
+                { required: true, message: "必须填项" },
+              ]}
+              defaultValues={{
+                userName1: "lizhiwei1",
+                // userName2: "lizhiwei2",
+                // userName3: "lizhiwei3",
+                // userName4: "lizhiwei4",
+                userName5: "lizhiwei5",
+                userName6: "lizhiwei6",
+                userName20: "默认值",
+              }}
               formFields={{
                 userName10: {
                   label: "用户名10",
@@ -101,12 +127,12 @@ class Demo1 extends PureComponent {
                 userName9: {
                   suffixColSpan: 1,
                   label: "用户名9",
-                  decorator: false,
+                  // decorator: false,
                   inputRender: <Input placeholder="请输入-用户名9" />,
                   // InputComponent: InputEnum.Input,
                   // inputProp: { placeholder: "请输入用户名" },
                   rules: [
-                    { required: true, message: "必须填项" },
+                    { required: true, message: "必须填项-用户名9" },
                   ],
                 },
                 userName20: {
@@ -127,18 +153,9 @@ class Demo1 extends PureComponent {
                   InputComponent: InputEnum.InputTextArea,
                   inputProp: { placeholder: "请输入用户名20" },
                   rules: [
-                    { required: true, message: "必须填项" },
+                    { required: true, message: "必须填项-用户名20" },
                   ],
                 },
-              }}
-              defaultValues={{
-                userName1: "lizhiwei1",
-                // userName2: "lizhiwei2",
-                // userName3: "lizhiwei3",
-                // userName4: "lizhiwei4",
-                userName5: "lizhiwei5",
-                userName6: "lizhiwei6",
-                userName20: "默认值",
               }}
               onFormValuesChange={(changedValues, allValues, form) => {
                 if (changedValues.userName8 && changedValues.userName8 === "888") {
