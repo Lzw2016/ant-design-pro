@@ -390,9 +390,15 @@ class FormEngine extends PureComponent {
   }
 
   handleReset = (resetValues, defaultValues, onReset) => {
-    // console.log("handleReset --> resetValues ", resetValues, defaultValues);
+    // console.log("handleReset --> resetValues=", resetValues, " | defaultValues=", defaultValues);
     const { form } = this.props;
-    form.resetFields(resetValues || {});
+    // TODO 需要优化
+    if (lodash.values(resetValues).length >= 1) {
+      // form.setFields(resetValues);
+      form.resetFields();
+    } else {
+      form.resetFields();
+    }
     if (onReset instanceof Function) onReset(resetValues, defaultValues, form);
   }
 
@@ -408,8 +414,8 @@ class FormEngine extends PureComponent {
       actionsConfig = {},               // 表单提交部分配置 boolean | {}
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
       resetValues = {},                 // 表单重置值配置
-      defaultRules = [],                // 默认全局校验
       defaultValues = {},               // 表单字段默认值
+      defaultRules = [],                // 默认全局校验
       formFields = {},                  // 表单字段配置
       defaultRowProps = {},             // Row组件默认属性配置
       rowPropsArray = [],               // 自定义每一行的Row组件属性配置(第1行配置取数组rowPropsArray[0]的值)

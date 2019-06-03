@@ -15,13 +15,13 @@ const InputEnum = {
   // ------------------------------------------------------------------------------------------------------------------------- 官方组件
   // 自动完成完成
   AutoComplete: { Component: AutoComplete },
-  // 多选框
+  // 多选框 TODO 自定义渲染
   Checkbox: { Component: Checkbox },
   // 多选组
   CheckboxGroup: { Component: Checkbox.Group },
   // 级联选择
   Cascader: { Component: Cascader },
-  // 时间选择
+  // 日期选择
   DatePicker: { Component: DatePicker },
   // 月份选择
   MonthPicker: { Component: MonthPicker },
@@ -37,19 +37,19 @@ const InputEnum = {
   InputTextArea: { Component: Input.TextArea },
   // 搜索框
   InputSearch: { Component: Input.Search },
-  // 输入组
+  // 输入组 TODO 自定义渲染
   InputGroup: { Component: Input.Group },
   // 密码输入
   InputPassword: { Component: Input.Password },
-  // 提及输入
+  // 提及输入 TODO 自定义渲染
   Mentions: { Component: Mentions },
   // 评分输入
   Rate: { Component: Rate },
-  // 单选输入
+  // 单选输入 TODO 自定义渲染
   Radio: { Component: Radio },
   // 单选分组输入
   RadioGroup: { Component: Radio.Group },
-  // 选择开关
+  // 选择开关 TODO 自定义渲染
   Switch: { Component: Switch },
   // 滑动输入条
   Slider: { Component: Slider },
@@ -57,21 +57,21 @@ const InputEnum = {
   Select: { Component: Select },
   // 树选择输入
   TreeSelect: { Component: TreeSelect },
-  // 穿梭输入框 ?
+  // 穿梭输入框 TODO 自定义渲染
   Transfer: { Component: Transfer },
   // 时间选择
   TimePicker: { Component: TimePicker },
-  // 文件上传 ?
+  // 文件上传 TODO 自定义渲染
   Upload: { Component: Upload },
   // ------------------------------------------------------------------------------------------------------------------------- 自定义组件
-  // 通用远程数据下拉输入框
+  // 通用远程数据下拉输入框 TODO 自定义渲染
   RemoteSelect: { Component: RemoteSelect },
-  // 通用图片上传
-  ImageUpload: { Component: ImageUpload },
-  // 字数限制提示文本输入框(单行输入)
+  // 字数限制提示文本输入框(单行输入) TODO 自定义渲染
   InputLimit: { Component: InputLimit },
-  // 字数限制提示文本输入框(多行输入)
+  // 字数限制提示文本输入框(多行输入) TODO 自定义渲染
   TextAreaLimit: { Component: TextAreaLimit },
+  // 通用图片上传 TODO 自定义渲染
+  ImageUpload: { Component: ImageUpload },
 
 };
 

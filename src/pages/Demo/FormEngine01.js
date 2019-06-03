@@ -1,7 +1,9 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Card, Icon, Input } from 'antd';
+import React, { PureComponent } from 'react';
+import { Card } from 'antd';
+import lodash from 'lodash';
+import moment from 'moment';
 // import { connect } from 'dva';
-import { FormEngine, InputEnum, DisplayEnum } from '@/components/FormEngine';
+import { FormEngine, InputEnum } from '@/components/FormEngine';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './Log.less'
@@ -12,7 +14,52 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // }))
 class Demo1 extends PureComponent {
 
+  state = {
+    fieldName01DataSource: [],
+  }
+
+  fieldName01OnSearch = value => {
+    let result;
+    if (!value || value.indexOf('@') >= 0) {
+      result = [];
+    } else {
+      result = ['gmail.com', '163.com', 'qq.com'].map(domain => `${value}@${domain}`);
+    }
+    this.setState({ fieldName01DataSource: result });
+  }
+
   render() {
+    const { fieldName01DataSource } = this.state;
+    const values = {
+      fieldName01: "",
+      fieldName02: true,
+      fieldName03: ['2'],
+      fieldName04: ['zhejiang', 'hangzhou', 'xihu'],
+      fieldName05: moment("1993-06-11"),
+      fieldName06: moment("1993-06-11"),
+      fieldName07: [moment("1993-06-11"), undefined],
+      fieldName08: moment("1993-06-11"),
+      fieldName09: 123,
+      fieldName10: "lizw",
+      fieldName11: "第一行\n第二行",
+      fieldName12: "搜索关键字",
+      fieldName13: undefined,
+      fieldName14: "mima",
+      fieldName15: undefined,
+      fieldName16: 3,
+      fieldName18: "3",
+      fieldName19: true,
+      fieldName20: 39,
+      fieldName21: undefined,
+      fieldName22: undefined,
+      fieldName23: undefined,
+      fieldName24: moment(),
+      fieldName25: undefined,
+      // fieldName26: "Remote",
+      fieldName27: "字数限制提示文本输入框",
+      fieldName28: "第一行\n第二行",
+      // fieldName29: [],
+    };
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
@@ -20,147 +67,301 @@ class Demo1 extends PureComponent {
             <FormEngine
               saveForm={from => { this.from1 = from }}
               actionsConfig={{
-                // width: "10%",
-                // height: 100,
-                style: {
-                  // textAlign: "right",
-                },
-
-                // placement: "top",
-                placement: "bottom",
-                // placement: "left",
-                // placement: "right",
-
-                // resetText: false,
+                onSubmit: (formValues, form) => {
+                  console.log("提交表单", formValues, form);
+                }
               }}
               columnCount={3}
-              defaultRules={[
-                { required: true, message: "必须填项" },
-              ]}
-              defaultValues={{
-                userName1: "lizhiwei1",
-                // userName2: "lizhiwei2",
-                // userName3: "lizhiwei3",
-                // userName4: "lizhiwei4",
-                userName5: "lizhiwei5",
-                userName6: "lizhiwei6",
-                userName20: "默认值",
-              }}
+              // defaultRules={[
+              //   { required: true, message: "必须填项" },
+              // ]}
+              resetValues={values}
+              defaultValues={lodash.merge({}, values)}
               formFields={{
-                userName10: {
-                  label: "用户名10",
-                  InputComponent: InputEnum.Select,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName01: {
+                  label: "自动完成",
+                  InputComponent: InputEnum.AutoComplete,
+                  inputProp: {
+                    placeholder: "自动完成输入框",
+                    dataSource: fieldName01DataSource,
+                    onSearch: this.fieldName01OnSearch
+                  },
                 },
-                userName11: {
-                  label: "用户名11",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName02: {
+                  label: "单选框",
+                  InputComponent: InputEnum.Checkbox,
+                  inputProp: {
+                  },
                 },
-                userName12: {
-                  label: "用户名12",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName03: {
+                  label: "多选框",
+                  InputComponent: InputEnum.CheckboxGroup,
+                  inputProp: {
+                    options: [
+                      { label: 'Apple', value: '1' },
+                      { label: 'Pear', value: '2' },
+                      { label: 'Orange', value: '3' },
+                    ],
+                  },
                 },
-                userName1: {
-                  label: "用户名1",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
-                  suffixLabel: (
-                    <Fragment>
-                      <Icon type="exclamation-circle" style={{ color: 'red' }} />
-                      <span style={{ marginLeft: 8 }}>提示信息12345678</span>
-                    </Fragment>
-                  )
+                fieldName04: {
+                  label: "级联选择",
+                  InputComponent: InputEnum.Cascader,
+                  inputProp: {
+                    placeholder: "级联选择",
+                    options: [
+                      {
+                        value: 'zhejiang',
+                        label: '浙江',
+                        children: [{ value: 'hangzhou', label: '杭州', children: [{ value: 'xihu', label: '西湖' }] }],
+                      },
+                      {
+                        value: 'jiangsu',
+                        label: '江苏',
+                        children: [{ value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门' }] }],
+                      },
+                    ],
+                  },
                 },
-                userName2: {
-                  fieldColSpan: 2,
-                  label: "用户名2",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
-                },
-                userName3: {
-                  label: "用户名3",
+                fieldName05: {
+                  label: "日期选择",
                   InputComponent: InputEnum.DatePicker,
-                  inputProp: { placeholder: "请输入用户名" },
+                  inputProp: {
+                    placeholder: "日期选择",
+                    format: "YYYY年MM月DD日",
+                  },
                 },
-                userName4: {
-                  prefixColSpan: 1,
-                  display: DisplayEnum.none,
-                  label: "用户名4",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName06: {
+                  label: "月份选择",
+                  InputComponent: InputEnum.MonthPicker,
+                  inputProp: {
+                    placeholder: "月份选择",
+                    format: "YYYY-MM",
+                  },
                 },
-                userName5: {
-                  label: "用户名5",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName07: {
+                  label: "时间范围选择",
+                  InputComponent: InputEnum.RangePicker,
+                  inputProp: {
+                    placeholder: ["开始时间", "结束时间"],
+                    format: "YYYY-MM-DD",
+                  },
                 },
-                userName6: {
-                  label: "用户名6",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName08: {
+                  label: "周选择",
+                  InputComponent: InputEnum.WeekPicker,
+                  inputProp: {
+                    placeholder: "周选择",
+                  },
                 },
-                userName7: {
-                  fieldColSpan: 3,
-                  label: "用户名7",
-                  InputComponent: InputEnum.Input,
-                  inputProp: { placeholder: "请输入用户名" },
+                fieldName09: {
+                  label: "数字输入",
+                  InputComponent: InputEnum.InputNumber,
+                  inputProp: {
+                    placeholder: "数字输入",
+                    step: 5,
+                  },
                 },
-                userName8: {
-                  // suffixColSpan: 0,
-                  label: "用户名8",
+                fieldName10: {
+                  label: "文本输入",
                   InputComponent: InputEnum.Input,
                   inputProp: {
-                    placeholder: "请输入用户名",
-                    onChange: e => {
-                      if (e.target.value === "666") {
-                        this.from1.setFieldsValue({ userName20: "666-888" });
-                      }
-                      console.log("onChange --> onValuesChange", this.from1.onValuesChange);
+                    placeholder: "文本输入",
+                  },
+                },
+                fieldName11: {
+                  fieldColSpan: 2,
+                  label: "多行文本",
+                  InputComponent: InputEnum.InputTextArea,
+                  inputProp: {
+                    placeholder: "多行文本输入",
+                    autosize: { minRows: 3, maxRows: 3 },
+                  },
+                },
+                fieldName12: {
+                  label: "搜索框",
+                  InputComponent: InputEnum.InputSearch,
+                  inputProp: {
+                    placeholder: "搜索框",
+                  },
+                },
+                fieldName13: {
+                  label: "输入组",
+                  inputRender: "暂不支持(敬请期待...)",
+                  decorator: false,
+                  // InputComponent: InputEnum.InputGroup,
+                  // inputProp: {
+                  //   placeholder: "输入组",
+                  // },
+                },
+                fieldName14: {
+                  label: "密码输入",
+                  InputComponent: InputEnum.InputPassword,
+                  inputProp: {
+                    placeholder: "密码输入",
+                  },
+                },
+                fieldName15: {
+                  label: "提及输入",
+                  inputRender: "暂不支持(敬请期待...)",
+                  decorator: false,
+                  // InputComponent: InputEnum.Mentions,
+                  // inputProp: {
+                  //   placeholder: "提及输入",
+                  // },
+                },
+                fieldName16: {
+                  label: "评分输入",
+                  InputComponent: InputEnum.Rate,
+                  inputProp: {
+                    count: 5,
+                    tooltips: ['很糟糕', '糟糕', '正常', '好', '很好'],
+                  },
+                },
+                fieldName17: {
+                  label: "单选输入",
+                  InputComponent: InputEnum.Radio,
+                  inputProp: {
+                  },
+                },
+                fieldName18: {
+                  label: "单选组输入",
+                  InputComponent: InputEnum.RadioGroup,
+                  inputProp: {
+                    options: [
+                      { label: 'Apple', value: '1' },
+                      { label: 'Pear', value: '2' },
+                      { label: 'Orange', value: '3' },
+                    ],
+                  },
+                },
+                fieldName19: {
+                  label: "单选组输入",
+                  InputComponent: InputEnum.Switch,
+                  inputProp: {
+                    checkedChildren: "开",
+                    unCheckedChildren: "关",
+                    style: { width: undefined },
+                  },
+                },
+                fieldName20: {
+                  label: "滑动输入条",
+                  InputComponent: InputEnum.Slider,
+                  inputProp: {
+                    min: 10,
+                    max: 50,
+                    marks: {
+                      10: "10°C",
+                      37.5: "37.5°C",
+                      50: {
+                        style: { color: '#f50' },
+                        label: <strong>50°C</strong>,
+                      },
                     },
                   },
-                  rules: [
-                    { required: true, message: "必须填项" },
-                  ],
                 },
-                userName9: {
-                  suffixColSpan: 1,
-                  label: "用户名9",
-                  // decorator: false,
-                  inputRender: <Input placeholder="请输入-用户名9" />,
-                  // InputComponent: InputEnum.Input,
-                  // inputProp: { placeholder: "请输入用户名" },
-                  rules: [
-                    { required: true, message: "必须填项-用户名9" },
-                  ],
+                fieldName21: {
+                  label: "选择输入",
+                  inputRender: "暂不支持(敬请期待...)",
+                  decorator: false,
+                  // InputComponent: InputEnum.Select,
+                  // inputProp: {
+                  //   placeholder: "选择输入",
+                  // },
                 },
-                userName20: {
+                fieldName22: {
+                  label: "树选择输入",
+                  InputComponent: InputEnum.TreeSelect,
+                  inputProp: {
+                    placeholder: "树选择输入",
+                    treeData: [
+                      { title: "水果", value: "01", key: "01", children: [{ title: "香蕉", value: "0101", key: "0101" }, { title: "苹果", value: "0102", key: "0102" }] },
+                      { title: "动物", value: "02", key: "02", children: [{ title: "猫仔", value: "0201", key: "0201" }, { title: "小狗", value: "0202", key: "0202" }] },
+                    ],
+                  },
+                },
+                fieldName23: {
                   fieldColSpan: 2,
-                  display: formValues => {
-                    if (formValues.userName8 && formValues.userName8 === "111") return DisplayEnum.none;
-                    return DisplayEnum.show;
+                  label: "穿梭输入框",
+                  InputComponent: InputEnum.Transfer,
+                  inputProp: {
+                    titles: ["全部", "选中"],
+                    render: item => item.title,
+                    targetKeys: ["1", "5", "6"],
+                    dataSource: [
+                      { key: "1", title: "选项1", description: '描述1', disabled: false },
+                      { key: "2", title: "选项2", description: '描述2', disabled: false },
+                      { key: "3", title: "选项3", description: '描述3', disabled: false },
+                      { key: "4", title: "选项4", description: '描述4', disabled: true },
+                      { key: "5", title: "选项5", description: '描述5', disabled: false },
+                      { key: "6", title: "选项6", description: '描述6', disabled: false },
+                    ],
                   },
-                  disabled: formValues => {
-                    if (formValues.userName8 && formValues.userName8 === "222") return true;
-                    return false;
-                  },
-                  readOnly: formValues => {
-                    if (formValues.userName8 && formValues.userName8 === "333") return true;
-                    return false;
-                  },
-                  label: "用户名20",
-                  InputComponent: InputEnum.InputTextArea,
-                  inputProp: { placeholder: "请输入用户名20" },
-                  rules: [
-                    { required: true, message: "必须填项-用户名20" },
-                  ],
                 },
-              }}
-              onFormValuesChange={(changedValues, allValues, form) => {
-                if (changedValues.userName8 && changedValues.userName8 === "888") {
-                  form.setFieldsValue({ userName20: "888-888" });
-                }
+                fieldName24: {
+                  label: "时间选择",
+                  InputComponent: InputEnum.TimePicker,
+                  inputProp: {
+                    placeholder: "时间选择",
+                    format: "HH:mm:ss",
+                  },
+                },
+                fieldName25: {
+                  label: "文件上传",
+                  inputRender: "暂不支持(敬请期待...)",
+                  decorator: false,
+                  // InputComponent: InputEnum.Upload,
+                  // inputProp: {
+                  // },
+                },
+                fieldName26: {
+                  label: "远程数据下拉",
+                  InputComponent: InputEnum.RemoteSelect,
+                  inputProp: {
+                    defaultLoadData: true,
+                    url: "/api/remote/input/string",
+                    searchParamName: "key",
+                    searchQueryString: { num: 6 },
+                    selectProps: {
+                      placeholder: "通用远程数据下拉输入框",
+                    },
+                  },
+                },
+                fieldName27: {
+                  label: "限制输入",
+                  InputComponent: InputEnum.InputLimit,
+                  inputProp: {
+                    maxLength: 25,
+                    preventInput: true,
+                    inputProps: {
+                      placeholder: "字数限制提示文本输入框(单行输入)",
+                    },
+                  },
+                },
+                fieldName28: {
+                  label: "限制输入",
+                  InputComponent: InputEnum.TextAreaLimit,
+                  inputProp: {
+                    maxLength: 25,
+                    preventInput: true,
+                    autosize: { minRows: 2, maxRows: 2 },
+                    inputProps: {
+                      placeholder: "字数限制提示文本输入框(多行输入)",
+                    },
+                  },
+                },
+                fieldName29: {
+                  fieldColSpan: 2,
+                  label: "图片上传",
+                  InputComponent: InputEnum.ImageUpload,
+                  inputProp: {
+                    uploadUrl: "/api/file/upload",
+                    extFormData: { fileSource: "test" },
+                    fileUrlJsonPath: "$.successList[0].readUrl",
+                    previewUrlPrefix: "/api/file",
+                    fileMaxCount: 3,
+                  },
+                },
               }}
             />
           </Card>

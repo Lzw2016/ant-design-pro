@@ -191,7 +191,12 @@ class ImageUpload extends PureComponent {
         message="提示:"
         description={(
           <div style={{ fontSize: 12 }}>
-            {alerts.map((alert, index) => <div key={index}><strong>{index + 1}.</strong>{alert}</div>)}
+            {alerts.map((alert, index) => (
+              <div key={index}>
+                {alerts.length <= 1 ? undefined : <strong>{index + 1}.</strong>}
+                {alert}
+              </div>
+            ))}
           </div>
         )}
       />
