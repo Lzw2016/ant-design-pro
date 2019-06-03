@@ -77,6 +77,18 @@ class Demo1 extends PureComponent {
                 },
                 userName7: {
                   fieldColSpan: 3,
+                  display: formValues => {
+                    if (formValues.userName8 && formValues.userName8 === "111") return DisplayEnum.hidden;
+                    return DisplayEnum.show;
+                  },
+                  disabled: formValues => {
+                    if (formValues.userName8 && formValues.userName8 === "222") return true;
+                    return false;
+                  },
+                  readOnly: formValues => {
+                    if (formValues.userName8 && formValues.userName8 === "333") return true;
+                    return false;
+                  },
                   label: "用户名7",
                   InputComponent: InputEnum.Input,
                   inputProp: { placeholder: "请输入用户名" },
