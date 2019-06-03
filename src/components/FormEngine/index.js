@@ -4,6 +4,7 @@ import lodash from 'lodash';
 // import classNames from 'classnames';
 import InputEnum from './InputEnum';
 import DisplayEnum from './DisplayEnum';
+import RulesEnum from './RulesEnum';
 // import styles from './index.less';
 
 @Form.create({
@@ -481,5 +482,6 @@ class FormEngine extends PureComponent {
 export {
   InputEnum,
   DisplayEnum,
+  RulesEnum,
   FormEngine,
 }

@@ -42,6 +42,7 @@ export default [
           { path: '/demo/input-limit', name: 'input-limit', icon: 'table', component: './Demo/InputLimit' },
           { path: '/demo/form-engine', name: 'form-engine', icon: 'table', component: './Demo/FormEngine' },
           { path: '/demo/form-engine-01', name: 'form-engine-01', icon: 'table', component: './Demo/FormEngine01' },
+          { path: '/demo/form-engine-02', name: 'form-engine-02', icon: 'table', component: './Demo/FormEngine02' },
           // {
           //   path: '/demo/FormEngine',
           //   name: 'FormEngine',

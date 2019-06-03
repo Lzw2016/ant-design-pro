@@ -331,7 +331,7 @@ class Demo1 extends PureComponent {
                   label: "限制输入",
                   InputComponent: InputEnum.InputLimit,
                   inputProp: {
-                    maxLength: 25,
+                    maxLength: 10,
                     preventInput: true,
                     inputProps: {
                       placeholder: "字数限制提示文本输入框(单行输入)",
