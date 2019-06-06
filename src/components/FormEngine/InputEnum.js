@@ -58,20 +58,59 @@ const InputEnum = {
   InputTextArea: { Component: Input.TextArea },
   // 搜索框
   InputSearch: { Component: Input.Search },
-  // 输入组 TODO 自定义渲染
-  InputGroup: { Component: Input.Group },
+  // 输入组 TODO 组合输入配置单独组件
+  InputGroup: {
+    Component: Input.Group,
+    // skipDecorator: true,
+    // render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+    // },
+  },
   // 密码输入
   InputPassword: { Component: Input.Password },
-  // 提及输入 TODO 自定义渲染
+  // 提及输入
   Mentions: { Component: Mentions },
   // 评分输入
   Rate: { Component: Rate },
-  // 单选输入 TODO 自定义渲染
-  Radio: { Component: Radio },
+  // 单选输入
+  Radio: {
+    Component: Radio,
+    skipDecorator: true,
+    render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+      const { getFieldDecorator } = form;
+      return getFieldDecorator(
+        fieldName,
+        {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules: (rules && rules.length > 0) ? rules : defaultRules,
+          ...decoratorOptions,
+          valuePropName: "checked",
+          trigger: "onChange",
+          validateTrigger: "onChange",
+        }
+      )(<Radio {...props} />);
+    },
+  },
   // 单选分组输入
   RadioGroup: { Component: Radio.Group },
-  // 选择开关 TODO 自定义渲染
-  Switch: { Component: Switch },
+  // 选择开关
+  Switch: {
+    Component: Switch,
+    skipDecorator: true,
+    render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+      const { getFieldDecorator } = form;
+      return getFieldDecorator(
+        fieldName,
+        {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules: (rules && rules.length > 0) ? rules : defaultRules,
+          ...decoratorOptions,
+          valuePropName: "checked",
+          trigger: "onChange",
+          validateTrigger: "onChange",
+        }
+      )(<Switch {...props} />);
+    },
+  },
   // 滑动输入条
   Slider: { Component: Slider },
   // 选择输入
@@ -79,11 +118,45 @@ const InputEnum = {
   // 树选择输入
   TreeSelect: { Component: TreeSelect },
   // 穿梭输入框 TODO 自定义渲染
-  Transfer: { Component: Transfer },
+  Transfer: {
+    Component: Transfer,
+    skipDecorator: true,
+    render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+      const { getFieldDecorator } = form;
+      return getFieldDecorator(
+        fieldName,
+        {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules: (rules && rules.length > 0) ? rules : defaultRules,
+          ...decoratorOptions,
+          valuePropName: "targetKeys",
+          trigger: "onChange",
+          validateTrigger: "onChange",
+        }
+      )(<Transfer {...props} />);
+    },
+  },
   // 时间选择
   TimePicker: { Component: TimePicker },
   // 文件上传 TODO 自定义渲染
-  Upload: { Component: Upload },
+  Upload: {
+    Component: Upload,
+    skipDecorator: true,
+    render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+      const { getFieldDecorator } = form;
+      return getFieldDecorator(
+        fieldName,
+        {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules: (rules && rules.length > 0) ? rules : defaultRules,
+          ...decoratorOptions,
+          valuePropName: "fileList",
+          trigger: "onChange",
+          validateTrigger: "onChange",
+        }
+      )(<Upload {...props} />);
+    },
+  },
   // ------------------------------------------------------------------------------------------------------------------------- 自定义组件
   // 通用远程数据下拉输入框 TODO 自定义渲染
   RemoteSelect: { Component: RemoteSelect },
