@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { Card } from 'antd';
 import lodash from 'lodash';
 import moment from 'moment';
@@ -91,6 +91,7 @@ class Demo1 extends PureComponent {
                   label: "单选框",
                   InputComponent: InputEnum.Checkbox,
                   inputProp: {
+                    children: <Fragment>同意<span style={{ color: "red" }}>xxx</span>条款</Fragment>
                   },
                 },
                 fieldName03: {
