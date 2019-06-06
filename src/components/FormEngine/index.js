@@ -291,13 +291,17 @@ class FormEngine extends PureComponent {
       if (inputRender instanceof Function) component = inputRender(fieldName, defaultValues[fieldName], form.getFieldsValue());
     } else if (InputComponent) {
       // 使用预设控件
-      component = <InputComponent.Component style={{ width: '100%' }} {...inputProp} disabled={disabled} readOnly={readOnly} />;
+      if (InputComponent.render instanceof Function) {
+        component = InputComponent.render(form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, { disabled, readOnly, ...inputProp });
+      } else {
+        component = <InputComponent.Component style={{ width: '100%' }} {...inputProp} disabled={disabled} readOnly={readOnly} />;
+      }
     } else {
       // 默认输入控件
       component = <Input style={{ width: '100%' }} {...inputProp} disabled={disabled} readOnly={readOnly} />;
     }
     // 是否需要使用 form.getFieldDecorator 装饰输入控件
-    if (decorator === true) {
+    if (decorator === true && InputComponent.skipDecorator !== true) {
       component = getFieldDecorator(
         fieldName,
         {

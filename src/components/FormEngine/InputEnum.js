@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import { AutoComplete, Checkbox, Cascader, DatePicker, InputNumber, Input, Mentions, Rate, Radio, Switch, Slider, Select, TreeSelect, Transfer, TimePicker, Upload } from 'antd';
 import RemoteSelect from '../RemoteSelect';
 import ImageUpload from '../ImageUpload';
@@ -7,16 +7,37 @@ import { InputLimit, TextAreaLimit } from '../InputLimit';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 /*
-TODO
   - 部分控件需要适配渲染规则，如: CheckboxGroup(Checkbox.Group)
   - 自定义控件需要 遵循Antd-Form的约定: 提供受控属性value、提供onChange事件、支持ref
+ {
+   Component: "Component",       // 默认组件
+   skipDecorator: "boolean",     // 是否跳过使用 getFieldDecorator 修饰
+   render: "Function"            // 自定义渲染组件 (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => (ReactNode)
+ }
 */
 const InputEnum = {
   // ------------------------------------------------------------------------------------------------------------------------- 官方组件
   // 自动完成完成
   AutoComplete: { Component: AutoComplete },
-  // 多选框 TODO 自定义渲染
-  Checkbox: { Component: Checkbox },
+  // 多选框
+  Checkbox: {
+    Component: Checkbox,
+    skipDecorator: true,
+    render: (form, fieldName, defaultValues, rules, defaultRules, decoratorOptions, props) => {
+      const { getFieldDecorator } = form;
+      return getFieldDecorator(
+        fieldName,
+        {
+          initialValue: defaultValues[fieldName] || undefined,
+          rules: (rules && rules.length > 0) ? rules : defaultRules,
+          ...decoratorOptions,
+          valuePropName: "checked",
+          trigger: "onChange",
+          validateTrigger: "onChange",
+        }
+      )(<Checkbox {...props} />);
+    },
+  },
   // 多选组
   CheckboxGroup: { Component: Checkbox.Group },
   // 级联选择
