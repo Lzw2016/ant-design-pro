@@ -34,9 +34,7 @@
     "tslint:fix": "tslint --fix 'src/**/*.ts*'"
   },
   "husky": {
-    "hooks": {
-
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -88,7 +86,10 @@
     "react-hot-keys": "^1.2.0",
     "crypto-js": "^3.1.9-1",
     "xlsx": "^0.14.3",
-    "jsonpath": "^1.0.1"
+    "jsonpath": "^1.0.1",
+    "react-color": "^2.17.3",
+    "react-text-mask": "5.4.3",
+    "qrcode.react": "^0.9.3"
   },
   "devDependencies": {
     "@types/history": "^4.7.2",
