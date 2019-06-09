@@ -9,10 +9,15 @@ import styles from './index.less'
 
 class ImageUpload extends PureComponent {
 
-  // // 构造器
-  // constructor(props) {
-  //   super(props);
-  // }
+  // 构造器
+  constructor(props) {
+    super(props);
+    const { defaultFileList, initFileList = [] } = props;
+    this.useDefaultFileList = defaultFileList !== undefined && varTypeOf(defaultFileList) === TypeEnum.array;
+    const { innerFileList } = this.state;
+    this.state = { ...this.state, innerFileList: [...initFileList, ...innerFileList], defaultFileList };
+    // console.log("constructor -> ", defaultFileList);
+  }
 
   // // 加载完成
   // componentDidMount() {
@@ -38,7 +43,7 @@ class ImageUpload extends PureComponent {
     // 预览上传文件名称或者描述文本
     previewAlt: undefined,
     // 上传文件列表
-    fileList: [
+    innerFileList: [
       // uid: 'uid',        // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
       // name: 'xx.png'     // 文件名
       // status: 'done',    // 状态有：uploading done error removed
@@ -77,7 +82,15 @@ class ImageUpload extends PureComponent {
     uploadProps,
     children,
   }) => {
-    const { fileList } = this.state;
+    const { useDefaultFileList } = this;
+    const { defaultFileList, innerFileList } = this.state;
+    const valueProp = {};
+    if (useDefaultFileList) {
+      valueProp.defaultFileList = defaultFileList;
+    } else {
+      valueProp.fileList = innerFileList;
+    }
+    // console.log("getImageUpload -> ", innerFileList);
     return (
       <Upload
         accept={accept}
@@ -98,7 +111,7 @@ class ImageUpload extends PureComponent {
         }
         // customRequest={}
         data={extFormData}
-        fileList={fileList}
+        {...valueProp}
         listType="picture-card" // text picture picture-card
         // multiple={false}
         name={fileFormName}
@@ -131,7 +144,7 @@ class ImageUpload extends PureComponent {
         {...uploadProps}
       >
         {
-          fileList.length >= fileMaxCount ?
+          (valueProp.defaultFileList ? valueProp.defaultFileList : valueProp.fileList).length >= fileMaxCount ?
             null :
             (React.Children.count(children) > 0 ? children : this.getUploadButton())
         }
@@ -368,19 +381,19 @@ class ImageUpload extends PureComponent {
     // console.log("handleChange fileList -->", newFileList);
     // console.log("handleChange event -->", event);
     // console.log("------------------------------------------------------------");
-    let { fileList } = this.state;
-    fileList = fileList.filter(tmpFile => tmpFile.uid !== file.uid);
+    let { innerFileList } = this.state;
+    innerFileList = innerFileList.filter(tmpFile => tmpFile.uid !== file.uid);
     // uid name status
     let msg;
     switch (file.status) {
       case "uploading":
         // 上传中
-        fileList.push(file);
+        innerFileList.push(file);
         if (onUploading instanceof Function) onUploading(changeParam);
         break;
       case "done":
         // 上传完成
-        fileList.push(file);
+        innerFileList.push(file);
         if (onUploadDone instanceof Function) onUploadDone(changeParam);
         break;
       case "error":
@@ -390,7 +403,7 @@ class ImageUpload extends PureComponent {
           msg = `${msg}: ${file.response.message || file.response.error}`;
         }
         message.warning(msg);
-        fileList.push(file);
+        innerFileList.push(file);
         if (onUploadError instanceof Function) onUploadError(changeParam);
         break;
       case "removed":
@@ -399,22 +412,25 @@ class ImageUpload extends PureComponent {
         break;
       default:
         if (file.percent !== undefined) {
-          fileList.push(file);
+          innerFileList.push(file);
         }
     }
     // console.log("handleChange fileList -->", fileList);
-    this.setState({ fileList: [...fileList] });
+    this.useDefaultFileList = false;
+    this.setState({ innerFileList: [...innerFileList] });
     if (onChange instanceof Function) onChange(changeParam);
   }
 
   // 返回上传文件列表
   getFileList = () => {
-    const { fileList } = this.state;
-    return fileList;
+    const { innerFileList } = this.state;
+    return innerFileList;
   }
 
   render() {
     const {
+      defaultFileList,              // 默认上传图片数据
+      initFileList = [],            // 初始上传的图片数据
       uploadUrl,                    // 上传请求地址
       accept,                       // 支持上传的文件后缀, 如: ".bmp,.jpg,.jpeg,.png,.gif,.svg,.ico"
       fileFormName = "file",        // 上传文件数据表单字段名
@@ -455,6 +471,8 @@ class ImageUpload extends PureComponent {
       <div style={{ minHeight: 112, ...wrapStyle }}>
         {
           this.getImageUpload({
+            defaultFileList,
+            initFileList,
             uploadUrl,
             accept: accept || ".bmp,.jpg,.jpeg,.png,.gif,.svg,.ico,.webp,.pcx,.tif,.tga,.exif,.fpx,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.hdri,.raw,.wmf,.flic,.emf",
             fileFormName,

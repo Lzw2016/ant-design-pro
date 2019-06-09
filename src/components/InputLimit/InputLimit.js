@@ -59,7 +59,7 @@ class InputLimit extends PureComponent {
       valueProp.value = (value === undefined ? innerValue : value);
     }
     if (maxLength && preventInput === true) {
-      valueProp.maxLength = maxLength + 1;
+      valueProp.maxLength = maxLength;
     }
     const inputCalss = {};
     inputCalss[this.getClassName(maxLength, valueProp.defaultValue ? valueProp.defaultValue : valueProp.value, allowClear, suffix)] = true;
@@ -101,7 +101,7 @@ class InputLimit extends PureComponent {
   getSuffix = (maxLength, value, suffix) => {
     return (
       <Fragment>
-        <span style={{ color: maxLength < (value || "").length ? 'red' : '#bbb', marginRight: suffix ? 5 : undefined }}>
+        <span style={{ color: maxLength <= (value || "").length ? 'red' : '#bbb', marginRight: suffix ? 5 : undefined }}>
           {(value || "").length}/{maxLength}
         </span>
         {suffix || null}
@@ -113,11 +113,12 @@ class InputLimit extends PureComponent {
 
   handleChange = (e, maxLength, preventInput, value, onChange, onLimit) => {
     // console.log("handleChange --> ", e.target.value);
-    if (value === undefined && (!preventInput || (e.target.value || "").length <= (maxLength + 1))) {
+    this.useDefaultValue = false;
+    if (value === undefined && (!preventInput || (e.target.value || "").length <= maxLength)) {
       this.setState({ innerValue: e.target.value });
     }
     if (onChange instanceof Function) onChange(e);
-    if (onLimit instanceof Function && (e.target.value || "").length <= (maxLength + 1)) onLimit(e.target.value, e);
+    if (onLimit instanceof Function && (e.target.value || "").length <= maxLength) onLimit(e.target.value, e);
   }
 
   render() {
@@ -126,7 +127,7 @@ class InputLimit extends PureComponent {
       value,                        // 输入框内容
       suffix,                       // input的后缀图标 ReactNode
       maxLength,                    // 输入框输入最大长度
-      preventInput = false,         // 输入框输入操过最大长度是否阻止输入
+      preventInput = true,         // 输入框输入操过最大长度是否阻止输入
       allowClear = false,           // 可以点击清除图标删除内容 boolean
       onChange,                     // 输入框内容变化时的回调 (e) => ()
       onLimit,                      // 输入超限 (value, e) => ()

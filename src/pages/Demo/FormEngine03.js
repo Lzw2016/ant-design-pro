@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Mentions, Input, Button } from 'antd';
+import { Card, Mentions, Button, Icon } from 'antd';
 import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
@@ -17,12 +17,42 @@ class Demo1 extends PureComponent {
   render() {
     const values = {
       fieldName01: true,
-      fieldName02: ["111", "222", "333"],
+      fieldName02: ["111", "222333666"],
       fieldName03: "@[lzw]找@[ww] _ @试试 -> ",
       fieldName04: true,
       fieldName05: true,
       fieldName06: ["1", "5", "6"],
-      fieldName07: [],
+      fieldName07: [
+        {
+          uid: '1',
+          name: '图片01.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+        {
+          uid: '2',
+          name: '图片02.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ],
+      fieldName08: { key: "00001", label: "远程数据1" },
+      fieldName09: "初始值123",
+      fieldName10: "第一行\n第二行",
+      fieldName11: [
+        {
+          uid: '1',
+          name: '图片01.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+        {
+          uid: '2',
+          name: '图片02.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ],
       fieldName99: "123",
     };
     return (
@@ -47,20 +77,13 @@ class Demo1 extends PureComponent {
                   label: "单选框",
                   InputComponent: InputEnum.Checkbox,
                   inputProp: {
-                    children: "Checkbox",
+                    children: <span style={{ color: "red" }}>Checkbox</span>,
                   },
                 },
-                // fieldName02: {
-                //   label: "输入组",
-                //   InputComponent: InputEnum.InputGroup,
-                //   inputProp: {
-                //     compact: true,
-                //     children: [
-                //       <Input style={{ width: '20%' }} defaultValue="0571" />,
-                //       <Input style={{ width: '30%' }} defaultValue="26888888" />
-                //     ],
-                //   },
-                // },
+                fieldName02: {
+                  label: "输入组",
+                  InputComponent: InputEnum.InputGroup,
+                },
                 fieldName03: {
                   fieldColSpan: 2,
                   label: "提及输入",
@@ -112,7 +135,63 @@ class Demo1 extends PureComponent {
                   label: "文件上传",
                   InputComponent: InputEnum.Upload,
                   inputProp: {
-                    children: <Button type="default">上传</Button>
+                    action: "/api/file/upload",
+                    accept: ".bmp,.jpg,.jpeg,.png,.gif,.svg,.ico",
+                    listType: "picture",
+                    data: { fileSource: "test" },
+                    children: <Button><Icon type="upload" />上传</Button>
+                  },
+                },
+                fieldName08: {
+                  label: "远程数据下拉",
+                  InputComponent: InputEnum.RemoteSelect,
+                  inputProp: {
+                    defaultLoadData: true,
+                    url: "/api/remote/input/object",
+                    searchParamName: "key",
+                    searchQueryString: { num: 6 },
+                    dataValueKey: "column1",
+                    dataLabelKey: "column2",
+                    selectProps: {
+                      placeholder: "通用远程数据下拉输入框",
+                    },
+                  },
+                },
+                fieldName09: {
+                  label: "限制输入",
+                  InputComponent: InputEnum.InputLimit,
+                  inputProp: {
+                    maxLength: 10,
+                    preventInput: true,
+                    inputProps: {
+                      placeholder: "字数限制提示文本输入框(单行输入)",
+                    },
+                  },
+                },
+                fieldName10: {
+                  label: "限制输入",
+                  InputComponent: InputEnum.TextAreaLimit,
+                  inputProp: {
+                    maxLength: 25,
+                    preventInput: true,
+                    autosize: { minRows: 3, maxRows: 6 },
+                    inputProps: {
+                      placeholder: "字数限制提示文本输入框(多行输入)",
+                    },
+                  },
+                },
+                fieldName11: {
+                  fieldColSpan: 2,
+                  label: "图片上传",
+                  InputComponent: InputEnum.ImageUpload,
+                  inputProp: {
+                    uploadUrl: "/api/file/upload",
+                    extFormData: { fileSource: "test" },
+                    fileUrlJsonPath: "$.successList[0].readUrl",
+                    previewUrlPrefix: "/api/file",
+                    fileMaxCount: 3,
+                    fileMaxSizeByMB: 2,
+                    // showAlert: false,
                   },
                 },
                 fieldName99: {

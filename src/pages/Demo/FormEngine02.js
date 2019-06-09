@@ -128,6 +128,7 @@ class Demo1 extends PureComponent {
                   ],
                 },
                 fieldName09: {
+                  fieldColSpan: 1,
                   label: "URL",
                   InputComponent: InputEnum.Input,
                   inputProp: {

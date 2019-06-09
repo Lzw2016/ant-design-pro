@@ -60,7 +60,7 @@ class TextAreaLimit extends PureComponent {
       valueProp.value = (value === undefined ? innerValue : value);
     }
     if (maxLength && preventInput === true) {
-      valueProp.maxLength = maxLength + 1;
+      valueProp.maxLength = maxLength;
     }
     return (
       <span className={wrapClassName || undefined} style={{ whiteSpace: 'nowrap', ...wrapStyle }}>
@@ -97,7 +97,7 @@ class TextAreaLimit extends PureComponent {
             position: 'relative',
             left: -1 * (21 + length * 8.75),
             bottom: 2,
-            color: maxLength < (value || "").length ? 'red' : '#bbb'
+            color: maxLength <= (value || "").length ? 'red' : '#bbb'
           }}
         >
           {(value || "").length}/{maxLength}
@@ -110,11 +110,12 @@ class TextAreaLimit extends PureComponent {
 
   handleChange = (e, maxLength, preventInput, value, onChange, onLimit) => {
     // console.log("handleChange --> ", e.target.value);
-    if (value === undefined && (!preventInput || (e.target.value || "").length <= (maxLength + 1))) {
+    this.useDefaultValue = false;
+    if (value === undefined && (!preventInput || (e.target.value || "").length <= maxLength)) {
       this.setState({ innerValue: e.target.value });
     }
     if (onChange instanceof Function) onChange(e);
-    if (onLimit instanceof Function && (e.target.value || "").length <= (maxLength + 1)) onLimit(e.target.value, e);
+    if (onLimit instanceof Function && (e.target.value || "").length <= maxLength) onLimit(e.target.value, e);
   }
 
   render() {
@@ -122,7 +123,7 @@ class TextAreaLimit extends PureComponent {
       defaultValue,                 // 输入框默认内容
       value,                        // 输入框内容
       maxLength,                    // 输入框输入最大长度
-      preventInput = false,         // 输入框输入操过最大长度是否阻止输入
+      preventInput = true,          // 输入框输入操过最大长度是否阻止输入
       autosize = false,             // 自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }
       onChange,                     // 输入框内容变化时的回调 (e) => ()
       onLimit,                      // 输入超限 (value, e) => ()

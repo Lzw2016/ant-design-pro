@@ -193,7 +193,7 @@ class RemoteSelect extends PureComponent {
       flag = true;
     }
     if (flag) this.setState(newState);
-    if (onChange instanceof Function) onChange(valueChange, option, option.props["data-option"]);
+    if (onChange instanceof Function) onChange(valueChange, option, option ? option.props["data-option"] : undefined);
   }
 
   // 请求服务端数据

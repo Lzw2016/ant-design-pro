@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Card } from 'antd';
+import { Card, Mentions, Button, Icon, Select } from 'antd';
 import lodash from 'lodash';
 import moment from 'moment';
 // import { connect } from 'dva';
@@ -43,22 +43,49 @@ class Demo1 extends PureComponent {
       fieldName10: "lizw",
       fieldName11: "第一行\n第二行",
       fieldName12: "搜索关键字",
-      fieldName13: undefined,
+      fieldName13: ["111", "222-333-666"],
       fieldName14: "mima",
-      fieldName15: undefined,
+      fieldName15: "@[lzw] 输入...",
       fieldName16: 3,
+      fieldName17: true,
       fieldName18: "3",
       fieldName19: true,
       fieldName20: 39,
-      fieldName21: undefined,
+      fieldName21: "lucy",
       fieldName22: undefined,
-      fieldName23: undefined,
+      fieldName23: ["1", "5", "6"],
       fieldName24: moment(),
-      fieldName25: undefined,
-      // fieldName26: "Remote",
+      fieldName25: [
+        {
+          uid: '1',
+          name: '图片01.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+        {
+          uid: '2',
+          name: '图片02.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ],
+      fieldName26: { key: "00001", label: "远程数据1" },
       fieldName27: "字数限制提示文本输入框",
       fieldName28: "第一行\n第二行",
-      // fieldName29: [],
+      fieldName29: [
+        {
+          uid: '1',
+          name: '图片01.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+        {
+          uid: '2',
+          name: '图片02.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        },
+      ],
     };
     return (
       <PageHeaderWrapper>
@@ -188,12 +215,7 @@ class Demo1 extends PureComponent {
                 },
                 fieldName13: {
                   label: "输入组",
-                  inputRender: "暂不支持(敬请期待...)",
-                  decorator: false,
-                  // InputComponent: InputEnum.InputGroup,
-                  // inputProp: {
-                  //   placeholder: "输入组",
-                  // },
+                  InputComponent: InputEnum.InputGroup,
                 },
                 fieldName14: {
                   label: "密码输入",
@@ -204,12 +226,19 @@ class Demo1 extends PureComponent {
                 },
                 fieldName15: {
                   label: "提及输入",
-                  inputRender: "暂不支持(敬请期待...)",
-                  decorator: false,
-                  // InputComponent: InputEnum.Mentions,
-                  // inputProp: {
-                  //   placeholder: "提及输入",
-                  // },
+                  // inputRender: "暂不支持(敬请期待...)",
+                  // decorator: false,
+                  InputComponent: InputEnum.Mentions,
+                  inputProp: {
+                    placeholder: "提及输入",
+                    children: [
+                      <Mentions.Option key="1" value="[lzw]">李志伟</Mentions.Option>,
+                      <Mentions.Option key="2" value="[zs]">张三</Mentions.Option>,
+                      <Mentions.Option key="3" value="[ls]">李四</Mentions.Option>,
+                      <Mentions.Option key="4" value="[ww]">王五</Mentions.Option>,
+                      <Mentions.Option key="5" value="[zl]">赵六</Mentions.Option>,
+                    ],
+                  },
                 },
                 fieldName16: {
                   label: "评分输入",
@@ -223,6 +252,7 @@ class Demo1 extends PureComponent {
                   label: "单选输入",
                   InputComponent: InputEnum.Radio,
                   inputProp: {
+                    children: "单选输入",
                   },
                 },
                 fieldName18: {
@@ -263,12 +293,15 @@ class Demo1 extends PureComponent {
                 },
                 fieldName21: {
                   label: "选择输入",
-                  inputRender: "暂不支持(敬请期待...)",
-                  decorator: false,
-                  // InputComponent: InputEnum.Select,
-                  // inputProp: {
-                  //   placeholder: "选择输入",
-                  // },
+                  InputComponent: InputEnum.Select,
+                  inputProp: {
+                    placeholder: "选择输入",
+                    children: [
+                      <Select.Option value="jack">Jack</Select.Option>,
+                      <Select.Option value="lucy">Lucy</Select.Option>,
+                      <Select.Option value="disabled" disabled>Disabled</Select.Option>,
+                    ]
+                  },
                 },
                 fieldName22: {
                   label: "树选择输入",
@@ -288,7 +321,7 @@ class Demo1 extends PureComponent {
                   inputProp: {
                     titles: ["全部", "选中"],
                     render: item => item.title,
-                    targetKeys: ["1", "5", "6"],
+                    // targetKeys: ["1", "5", "6"],
                     dataSource: [
                       { key: "1", title: "选项1", description: '描述1', disabled: false },
                       { key: "2", title: "选项2", description: '描述2', disabled: false },
@@ -309,11 +342,14 @@ class Demo1 extends PureComponent {
                 },
                 fieldName25: {
                   label: "文件上传",
-                  inputRender: "暂不支持(敬请期待...)",
-                  decorator: false,
-                  // InputComponent: InputEnum.Upload,
-                  // inputProp: {
-                  // },
+                  InputComponent: InputEnum.Upload,
+                  inputProp: {
+                    action: "/api/file/upload",
+                    accept: ".bmp,.jpg,.jpeg,.png,.gif,.svg,.ico",
+                    listType: "picture",
+                    data: { fileSource: "test" },
+                    children: <Button><Icon type="upload" />上传</Button>
+                  },
                 },
                 fieldName26: {
                   label: "远程数据下拉",
@@ -361,6 +397,8 @@ class Demo1 extends PureComponent {
                     fileUrlJsonPath: "$.successList[0].readUrl",
                     previewUrlPrefix: "/api/file",
                     fileMaxCount: 3,
+                    fileMaxSizeByMB: 2,
+                    // showAlert: false,
                   },
                 },
               }}

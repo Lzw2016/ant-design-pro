@@ -283,7 +283,6 @@ class FormEngine extends PureComponent {
     const { useFormItem = true, label, formItemProps, InputComponent, inputProp, inputRender, decorator = true, rules = [], decoratorOptions = {} } = fieldProp;
     const itemProps = this.mergeCalculateCol(fieldColSpan, formItemProps, label);
     // console.log("getInputComponent --> ", "fieldColSpan = ", fieldColSpan, "itemProps = ", itemProps);
-    // TODO InputComponent 适配逻辑
     let component;
     if (inputRender) {
       // 自定义控件
