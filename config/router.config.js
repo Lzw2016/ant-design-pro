@@ -44,6 +44,7 @@ export default [
           { path: '/demo/form-engine-01', name: 'form-engine-01', icon: 'table', component: './Demo/FormEngine01' },
           { path: '/demo/form-engine-02', name: 'form-engine-02', icon: 'table', component: './Demo/FormEngine02' },
           { path: '/demo/form-engine-03', name: 'form-engine-03', icon: 'table', component: './Demo/FormEngine03' },
+          { path: '/demo/form-engine-04', name: 'form-engine-04', icon: 'table', component: './Demo/FormEngine04' },
           // {
           //   path: '/demo/FormEngine',
           //   name: 'FormEngine',

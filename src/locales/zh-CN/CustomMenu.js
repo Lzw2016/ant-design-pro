@@ -13,6 +13,7 @@ export default {
   "menu.demo.form-engine-01": "表单引擎(预览)",
   "menu.demo.form-engine-02": "表单引擎(校验)",
   "menu.demo.form-engine-03": "表单引擎(适配)",
+  "menu.demo.form-engine-04": "表单引擎(提交)",
 
   "menu.demo.FormEngine.Demo1": "基本使用",
   "menu.demo.FormEngine.Demo2": "基本使用",

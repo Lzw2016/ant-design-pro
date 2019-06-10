@@ -183,8 +183,9 @@ class FormEngine extends PureComponent {
       onCancel,                 // 表单取消事件 (form) => ()
       submitUrl,                // 数据提交给服务端地址
       submitMethod,             // 数据提交 Method
-      submitSuccessful,         // 提交成功回调 (resData) => ()
-      submitFailure,            // 提交失败回调 (resData) => ()
+      requestInterceptor,       // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      submitSuccessful,         // 提交成功回调 (resData, response) => ()
+      submitFailure,            // 提交失败回调 (resData, response, error) => ()
     } = actionsConfig;
     const actions = !actionsConfig ?
       undefined
@@ -192,7 +193,7 @@ class FormEngine extends PureComponent {
         (render instanceof Function) ? render(resetValues, defaultValues, form) : render
         : (
           <div style={{ textAlign: 'center', height, ...style }} className={className}>
-            <Button type="primary" onClick={() => this.handleSubmit(submitUrl, submitMethod, submitSuccessful, submitFailure, onSubmit)}>{submitText || "保存"}</Button>
+            <Button type="primary" onClick={() => this.handleSubmit(submitUrl, submitMethod, submitSuccessful, submitFailure, requestInterceptor, onSubmit)}>{submitText || "保存"}</Button>
             {
               resetText ? (
                 <Fragment>
@@ -381,15 +382,40 @@ class FormEngine extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
-  handleSubmit = (submitUrl, submitMethod, submitSuccessful, submitFailure, onSubmit) => {
+  handleSubmit = (submitUrl, submitMethod, submitSuccessful, submitFailure, requestInterceptor, onSubmit) => {
     const { form } = this.props;
     form.validateFields((err, formValues) => {
       // console.log("handleSubmit --> ", formValues);
       if (err) return;
       // 事件处理
       if (onSubmit instanceof Function) onSubmit(formValues, form);
-      // TODO 发送提交请求
-      // if(submitUrl)
+      // 发送提交请求
+      if (!submitUrl) return;
+      const fetchOptions = {
+        url: submitUrl,
+        options: { method: submitMethod, body: JSON.stringify(formValues), headers: { "Content-Type": "application/json" } },
+      };
+      // 请求之前的拦截
+      if (requestInterceptor instanceof Function) {
+        const tmp = requestInterceptor(fetchOptions);
+        if (tmp === false) return;
+        if (tmp && tmp.url) fetchOptions.url = tmp.url;
+        if (tmp && tmp.options) fetchOptions.options = tmp.options;
+      }
+      // console.log("handleSubmit --> ", fetchOptions);
+      fetch(fetchOptions.url, fetchOptions.options)
+        .then(response => {
+          const resData = response.json();
+          if (response.status < 200 || response.status >= 400) {
+            if (submitFailure instanceof Function) submitFailure(resData, response);
+            return;
+          }
+          if (submitSuccessful instanceof Function) submitSuccessful(resData, response);
+
+        })
+        .catch(error => {
+          if (submitFailure instanceof Function) submitFailure(undefined, undefined, error);
+        });
     });
   }
 
@@ -452,8 +478,9 @@ class FormEngine extends PureComponent {
       onCancel: undefined,                // 表单取消事件 (form) => ()
       submitUrl: undefined,               // 数据提交给服务端地址
       submitMethod: "post",               // 数据提交 Method
-      submitSuccessful: undefined,        // 提交成功回调 (resData) => ()
-      submitFailure: undefined,           // 提交失败回调 (resData) => ()
+      requestInterceptor: undefined,      // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      submitSuccessful: undefined,        // 提交成功回调 (resData, response) => ()
+      submitFailure: undefined,           // 提交失败回调 (resData, response, error) => ()
       ...(actionsConfig || {}),
     }
     if (this.saveFormFlag !== true && saveForm instanceof Function) {

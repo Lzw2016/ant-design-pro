@@ -224,7 +224,7 @@ class RemoteSelect extends PureComponent {
         fetchOptions.url = tmp.url;
       }
       if (tmp && tmp.options) {
-        fetchOptions.url = tmp.options;
+        fetchOptions.options = tmp.options;
       }
     }
     this.setState({ responseData: undefined, fetching: true });
