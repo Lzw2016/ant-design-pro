@@ -1,9 +1,9 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 // import lodash from 'lodash';
 // import classNames from 'classnames';
 import { FormEngine } from '@/components/FormEngine';
-// import DisplayEnum from './DisplayEnum';
+import { TypeEnum, varTypeOf } from '../_utils/varTypeOf';
 // import RulesEnum from './RulesEnum';
 // import styles from './index.less';
 
@@ -51,6 +51,12 @@ class FormModal extends PureComponent {
     formFields,
     defaultRowProps,
     formEngineProps,
+    onSubmit,
+    submitUrl,
+    submitMethod,
+    requestInterceptor,
+    submitSuccessful,
+    submitFailure,
   }) => {
     const { internalVisible, submitLoading } = this.state;
     const props = {};
@@ -67,7 +73,7 @@ class FormModal extends PureComponent {
         bodyStyle={{ padding: "24px 24px 8px 24px" }}
         {...modalProps}
         {...props}
-        onOk={this.handleSubmit}
+        onOk={() => this.handleSubmit(submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit)}
         confirmLoading={submitLoading}
       >
         <FormEngine
@@ -90,17 +96,57 @@ class FormModal extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
-  handleSubmit = () => {
+  handleSubmit = (submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit) => {
     const { form } = this;
     if (!form) return;
     form.validateFields((err, formValues) => {
-      if (err) return;
       console.log("handleSubmit --> ", formValues);
+      if (err) return;
+      // 事件处理
+      if (onSubmit instanceof Function) onSubmit(formValues, form);
+      // 发送提交请求
+      if (!submitUrl) return;
+      const fetchOptions = {
+        url: submitUrl,
+        options: { method: submitMethod, body: formValues, headers: { "Content-Type": "application/json" } },
+      };
+      // 请求之前的拦截
+      if (requestInterceptor instanceof Function) {
+        const tmp = requestInterceptor(fetchOptions);
+        if (tmp === false) return;
+        if (tmp && tmp.url) fetchOptions.url = tmp.url;
+        if (tmp && tmp.options) fetchOptions.options = tmp.options;
+      }
+      this.setState({ submitLoading: true });
+      // 请求数据序列化
+      if (fetchOptions.options && fetchOptions.options.body && varTypeOf(fetchOptions.options.body) === TypeEnum.object) {
+        fetchOptions.options.body = JSON.stringify(fetchOptions.options.body)
+      }
+      fetch(fetchOptions.url, fetchOptions.options)
+        .then(async response => {
+          this.setState({ submitLoading: false });
+          const resData = await response.json();
+          if (response.status < 200 || response.status >= 400) {
+            if (submitFailure instanceof Function && submitFailure(resData, response) === false) return;
+            if (resData && (resData.message || resData.error)) {
+              message.warning(resData.message || resData.error);
+            }
+            return;
+          }
+          // 提交成功
+          this.setState({ internalVisible: false });
+          if (submitSuccessful instanceof Function) submitSuccessful(resData, response);
+        })
+        .catch(error => {
+          this.setState({ submitLoading: false });
+          if (submitFailure instanceof Function) submitFailure(undefined, undefined, error);
+        });
     });
   }
 
   render() {
     const {
+      saveForm,                       // 保存表单Form对象 (form) => ()
       title = undefined,              // 对话框表单标题
       visible = undefined,            // 是否显示对话框表单
       width = 520,                    // 对话框表单宽度
@@ -113,8 +159,18 @@ class FormModal extends PureComponent {
       formFields = {},                // 表单字段配置
       defaultRowProps = {},           // Row组件默认属性配置
       formEngineProps = {},           // 表单引擎属性
+      onSubmit,                       // 表单提交事件 (formValues, form) => ()
+      submitUrl = undefined,          // 数据提交给服务端地址
+      submitMethod = "post",          // 数据提交 Method
+      requestInterceptor = undefined, // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      submitSuccessful = undefined,   // 提交成功回调 (resData, response) => ()
+      submitFailure = undefined,      // 提交失败回调 (resData, response, error) => (boolean)
       children,                       // 子组件
     } = this.props;
+    if (this.form && this.saveFormFlag !== true && saveForm instanceof Function) {
+      saveForm(this.form);
+      this.saveFormFlag = true;
+    }
     if (children) {
       React.Children.only(children);
     }
@@ -134,6 +190,12 @@ class FormModal extends PureComponent {
             formFields,
             defaultRowProps,
             formEngineProps,
+            onSubmit,
+            submitUrl,
+            submitMethod,
+            requestInterceptor,
+            submitSuccessful,
+            submitFailure,
           })
         }
         {
