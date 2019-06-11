@@ -58,6 +58,7 @@ class FormEngine extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
   getGridForm = ({
+    defaultLabelCol,
     columnCount,
     defaultRules,
     resetValues,
@@ -120,7 +121,7 @@ class FormEngine extends PureComponent {
       // 输入控件
       columnArray.push(
         <Col key={fieldName} span={colSpan * fieldColSpan} style={{ visibility: display === DisplayEnum.hidden ? 'hidden' : undefined }}>
-          {this.getInputComponent(fieldColSpan, fieldName, fieldProp, defaultValues, disabled, readOnly, defaultRules)}
+          {this.getInputComponent(fieldColSpan, fieldName, fieldProp, defaultLabelCol, defaultValues, disabled, readOnly, defaultRules)}
         </Col>
       );
       // 输入控件后缀文案
@@ -276,6 +277,7 @@ class FormEngine extends PureComponent {
     fieldColSpan,
     fieldName,
     fieldProp,
+    defaultLabelCol,
     defaultValues,
     disabled,
     readOnly,
@@ -285,7 +287,7 @@ class FormEngine extends PureComponent {
     const { form } = this.props;
     const { getFieldDecorator } = form;
     const { useFormItem = true, label, formItemProps, InputComponent, inputProp, inputRender, decorator = true, rules = [], decoratorOptions = {} } = fieldProp;
-    const itemProps = this.mergeCalculateCol(fieldColSpan, formItemProps, label);
+    const itemProps = this.mergeCalculateCol(fieldColSpan, formItemProps, defaultLabelCol, label);
     // console.log("getInputComponent --> ", "fieldColSpan = ", fieldColSpan, "itemProps = ", itemProps);
     let component;
     if (inputRender) {
@@ -329,8 +331,8 @@ class FormEngine extends PureComponent {
   }
 
   // 合并计算 labelCol wrapperCol
-  mergeCalculateCol = (colSpan = 1, colProps = {}, label) => {
-    let labelCol = colProps.labelCol || this.labelCol || {};
+  mergeCalculateCol = (colSpan = 1, colProps = {}, defaultLabelCol, label) => {
+    let labelCol = colProps.labelCol || defaultLabelCol || this.labelCol || {};
     const { offset = 0, order = 0, pull = 0, push = 0, span, xs, sm, md, lg, xl, xxl } = labelCol;
     if (label === false) {
       labelCol = {
@@ -447,6 +449,7 @@ class FormEngine extends PureComponent {
   render() {
     const {
       saveForm,                         // 保存表单Form对象 (form) => ()
+      defaultLabelCol,                  // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
       actionsConfig = {},               // 表单提交部分配置 boolean | {}
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
       resetValues = {},                 // 表单重置值配置
@@ -498,6 +501,7 @@ class FormEngine extends PureComponent {
       <div className={wrapClassName || undefined} style={wrapStyle}>
         {
           this.getGridForm({
+            defaultLabelCol,
             columnCount: columnCountTmp,
             defaultRules,
             resetValues,
