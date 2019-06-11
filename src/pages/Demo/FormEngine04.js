@@ -45,6 +45,7 @@ class Demo1 extends PureComponent {
             <FormEngine
               saveForm={from => { this.from1 = from }}
               actionsConfig={{
+                resetText: false,
                 submitUrl: "/api/remote/form/submit",
                 submitMethod: "post",
                 onSubmit: (formValues, form) => {

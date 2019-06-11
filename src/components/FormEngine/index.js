@@ -45,6 +45,8 @@ class FormEngine extends PureComponent {
 
   // 组件状态
   state = {
+    // 表单提交状态
+    submitLoading: false,
   }
 
   // Form labelCol
@@ -163,6 +165,7 @@ class FormEngine extends PureComponent {
 
   // 表单和提交部分 - 布局处理
   getActionForm = (formComponent, actionsConfig, resetValues, defaultValues) => {
+    const { submitLoading } = this.state;
     const { form } = this.props;
     // 根据 actionsConfig 动态渲染表单提交部分
     const {
@@ -190,15 +193,15 @@ class FormEngine extends PureComponent {
     const actions = !actionsConfig ?
       undefined
       : render ?
-        (render instanceof Function) ? render(resetValues, defaultValues, form) : render
+        (render instanceof Function) ? render(resetValues, defaultValues, form, submitLoading) : render
         : (
           <div style={{ textAlign: 'center', height, ...style }} className={className}>
-            <Button type="primary" onClick={() => this.handleSubmit(submitUrl, submitMethod, submitSuccessful, submitFailure, requestInterceptor, onSubmit)}>{submitText || "保存"}</Button>
+            <Button loading={submitLoading} type="primary" onClick={() => this.handleSubmit(submitUrl, submitMethod, submitSuccessful, submitFailure, requestInterceptor, onSubmit)}>{submitText || "保存"}</Button>
             {
               resetText ? (
                 <Fragment>
                   <span style={{ display: 'inline-block', width: 36 }} />
-                  <Button onClick={() => this.handleReset(resetValues, defaultValues, onReset)}>{resetText || "重置"}</Button>
+                  <Button disabled={submitLoading} onClick={() => this.handleReset(resetValues, defaultValues, onReset)}>{resetText || "重置"}</Button>
                 </Fragment>
               )
                 : undefined
@@ -207,7 +210,7 @@ class FormEngine extends PureComponent {
               cancelText ? (
                 <Fragment>
                   <span style={{ display: 'inline-block', width: 36 }} />
-                  <Button onClick={() => this.handleCancel(onCancel)}>{cancelText || "取消"}</Button>
+                  <Button disabled={submitLoading} onClick={() => this.handleCancel(onCancel)}>{cancelText || "取消"}</Button>
                 </Fragment>
               )
                 : undefined
@@ -403,8 +406,10 @@ class FormEngine extends PureComponent {
         if (tmp && tmp.options) fetchOptions.options = tmp.options;
       }
       // console.log("handleSubmit --> ", fetchOptions);
+      this.setState({ submitLoading: true });
       fetch(fetchOptions.url, fetchOptions.options)
         .then(response => {
+          this.setState({ submitLoading: false });
           const resData = response.json();
           if (response.status < 200 || response.status >= 400) {
             if (submitFailure instanceof Function) submitFailure(resData, response);
@@ -414,6 +419,7 @@ class FormEngine extends PureComponent {
 
         })
         .catch(error => {
+          this.setState({ submitLoading: false });
           if (submitFailure instanceof Function) submitFailure(undefined, undefined, error);
         });
     });
