@@ -38,6 +38,7 @@ class Demo1 extends PureComponent {
       fieldName04: ['zhejiang', 'hangzhou', 'xihu'],
       fieldName05: moment("1993-06-11"),
       fieldName06: moment("1993-06-11"),
+      fieldName07: "第一行\n第二行",
     };
     return (
       <PageHeaderWrapper>
@@ -45,9 +46,10 @@ class Demo1 extends PureComponent {
           <FormModal
             title="测试XXXX"
             width={800}
+            modalBodyStyle={{ padding: "24px 36px 8px 0" }}
             modalProps={{}}
-            defaultLabelCol={{ span: 6 }}
-            defaultRowProps={{ gutter: 48 }}
+            defaultLabelCol={{ span: 8 }}
+            defaultRowProps={{ gutter: 0 }}
             columnCount={2}
             resetValues={values}
             defaultValues={lodash.merge({}, values)}
@@ -130,6 +132,14 @@ class Demo1 extends PureComponent {
                 inputProp: {
                   placeholder: "月份选择",
                   format: "YYYY-MM",
+                },
+              },
+              fieldName07: {
+                fieldColSpan: 2,
+                label: "多行输入",
+                InputComponent: InputEnum.InputTextArea,
+                inputProp: {
+                  autosize: { minRows: 3, maxRows: 6 },
                 },
               },
             }}

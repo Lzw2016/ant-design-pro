@@ -45,6 +45,7 @@ class FormModal extends PureComponent {
     okText,
     okType,
     cancelText,
+    modalBodyStyle,
     modalProps,
     defaultLabelCol,
     columnCount,
@@ -82,7 +83,7 @@ class FormModal extends PureComponent {
         visible={(visible === undefined || visible === null) ? internalVisible : visible}
         mask={true}
         maskClosable={false}
-        bodyStyle={{ padding: "24px 24px 8px 24px" }}
+        bodyStyle={{ padding: "24px 24px 8px 24px", ...modalBodyStyle }}
         confirmLoading={submitLoading}
         {...modalProps}
         {...props}
@@ -170,6 +171,7 @@ class FormModal extends PureComponent {
       okText = "确定",                   // 确定按钮 string | ReactNode
       okType = "primary",               // 确定按钮样式类型
       cancelText = "取消",               // 取消按钮 string | ReactNode
+      modalBodyStyle = {},              // Modal body 样式
       modalProps = {},                  // 对话框表单属性
       defaultLabelCol,                  // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
@@ -205,6 +207,7 @@ class FormModal extends PureComponent {
             okText,
             okType,
             cancelText,
+            modalBodyStyle,
             modalProps,
             defaultLabelCol,
             columnCount,
