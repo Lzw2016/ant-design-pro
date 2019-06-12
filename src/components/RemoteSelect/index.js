@@ -232,9 +232,9 @@ class RemoteSelect extends PureComponent {
     const fetchCount = this.lastFetchCount;
     // console.log("fetchData --> ", fetchOptions)
     fetch(fetchOptions.url, fetchOptions.options)
-      .then(response => {
+      .then(async response => {
         if (fetchCount < this.lastFetchCount) return {};
-        let resData = response.json();
+        let resData = await response.json();
         if (response.status < 200 || response.status >= 400) {
           const { message, error } = resData;
           // error: "业务异常"

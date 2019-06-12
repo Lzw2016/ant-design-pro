@@ -450,6 +450,18 @@ class FormEngine extends PureComponent {
     if (onCancel instanceof Function) onCancel(form);
   }
 
+  // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
+
+  // 提交表单
+  formSubmit = () => {
+
+  }
+
+  // 重置表单
+  formReset = () => {
+
+  }
+
   render() {
     const {
       saveForm,                         // 保存表单Form对象 (form) => ()

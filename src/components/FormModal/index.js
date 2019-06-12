@@ -42,6 +42,9 @@ class FormModal extends PureComponent {
     title,
     visible,
     width,
+    okText,
+    okType,
+    cancelText,
     modalProps,
     defaultLabelCol,
     columnCount,
@@ -57,24 +60,33 @@ class FormModal extends PureComponent {
     requestInterceptor,
     submitSuccessful,
     submitFailure,
+    submitSuccessfulResetForm,
   }) => {
     const { internalVisible, submitLoading } = this.state;
     const props = {};
     if (visible === undefined || visible === null) {
       props.onCancel = () => this.setState({ internalVisible: false });
     }
+    // 提交中窗口不可关闭
+    if (submitLoading === true) {
+      props.closable = false;
+      props.cancelButtonProps = { ...(modalProps.cancelButtonProps || {}), disabled: true };
+    }
     return (
       <Modal
         title={title}
         width={width}
+        okText={okText}
+        okType={okType}
+        cancelText={cancelText}
         visible={(visible === undefined || visible === null) ? internalVisible : visible}
         mask={true}
         maskClosable={false}
         bodyStyle={{ padding: "24px 24px 8px 24px" }}
+        confirmLoading={submitLoading}
         {...modalProps}
         {...props}
-        onOk={() => this.handleSubmit(submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit)}
-        confirmLoading={submitLoading}
+        onOk={() => this.handleSubmit(submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit, submitSuccessfulResetForm)}
       >
         <FormEngine
           saveForm={form => { this.form = form }}
@@ -96,11 +108,11 @@ class FormModal extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
-  handleSubmit = (submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit) => {
+  handleSubmit = (submitUrl, submitMethod, requestInterceptor, submitSuccessful, submitFailure, onSubmit, submitSuccessfulResetForm) => {
     const { form } = this;
     if (!form) return;
     form.validateFields((err, formValues) => {
-      console.log("handleSubmit --> ", formValues);
+      // console.log("handleSubmit --> ", formValues);
       if (err) return;
       // 事件处理
       if (onSubmit instanceof Function) onSubmit(formValues, form);
@@ -135,6 +147,9 @@ class FormModal extends PureComponent {
           }
           // 提交成功
           this.setState({ internalVisible: false });
+          // 重置表单
+          if (submitSuccessfulResetForm === true && form) setTimeout(() => form.resetFields(), 200);
+          // 自定义事件
           if (submitSuccessful instanceof Function) submitSuccessful(resData, response);
         })
         .catch(error => {
@@ -144,28 +159,34 @@ class FormModal extends PureComponent {
     });
   }
 
+  // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
+
   render() {
     const {
-      saveForm,                       // 保存表单Form对象 (form) => ()
-      title = undefined,              // 对话框表单标题
-      visible = undefined,            // 是否显示对话框表单
-      width = 520,                    // 对话框表单宽度
-      modalProps = {},                // 对话框表单属性
-      defaultLabelCol,                // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
-      columnCount = 1,                // 表单布局列数(支持1、2、3、4、6)
-      resetValues = {},               // 表单重置值配置
-      defaultValues = {},             // 表单字段默认值
-      defaultRules = [],              // 默认全局校验
-      formFields = {},                // 表单字段配置
-      defaultRowProps = {},           // Row组件默认属性配置
-      formEngineProps = {},           // 表单引擎属性
-      onSubmit,                       // 表单提交事件 (formValues, form) => ()
-      submitUrl = undefined,          // 数据提交给服务端地址
-      submitMethod = "post",          // 数据提交 Method
-      requestInterceptor = undefined, // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
-      submitSuccessful = undefined,   // 提交成功回调 (resData, response) => ()
-      submitFailure = undefined,      // 提交失败回调 (resData, response, error) => (boolean)
-      children,                       // 子组件
+      saveForm,                         // 保存表单Form对象 (form) => ()
+      title = undefined,                // 对话框表单标题
+      visible = undefined,              // 是否显示对话框表单
+      width = 520,                      // 对话框表单宽度
+      okText = "确定",                   // 确定按钮 string | ReactNode
+      okType = "primary",               // 确定按钮样式类型
+      cancelText = "取消",               // 取消按钮 string | ReactNode
+      modalProps = {},                  // 对话框表单属性
+      defaultLabelCol,                  // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
+      columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
+      resetValues = {},                 // 表单重置值配置
+      defaultValues = {},               // 表单字段默认值
+      defaultRules = [],                // 默认全局校验
+      formFields = {},                  // 表单字段配置
+      defaultRowProps = {},             // Row组件默认属性配置
+      formEngineProps = {},             // 表单引擎属性
+      onSubmit,                         // 表单提交事件 (formValues, form) => ()
+      submitUrl = undefined,            // 数据提交给服务端地址
+      submitMethod = "post",            // 数据提交 Method
+      requestInterceptor = undefined,   // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      submitSuccessful = undefined,     // 提交成功回调 (resData, response) => ()
+      submitFailure = undefined,        // 提交失败回调 (resData, response, error) => (boolean)
+      submitSuccessfulResetForm = true, // 提交成功后是否需要重置表单
+      children,                         // 子组件
     } = this.props;
     if (this.form && this.saveFormFlag !== true && saveForm instanceof Function) {
       saveForm(this.form);
@@ -181,6 +202,9 @@ class FormModal extends PureComponent {
             title,
             visible,
             width,
+            okText,
+            okType,
+            cancelText,
             modalProps,
             defaultLabelCol,
             columnCount,
@@ -196,6 +220,7 @@ class FormModal extends PureComponent {
             requestInterceptor,
             submitSuccessful,
             submitFailure,
+            submitSuccessfulResetForm,
           })
         }
         {

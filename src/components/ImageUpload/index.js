@@ -421,6 +421,8 @@ class ImageUpload extends PureComponent {
     if (onChange instanceof Function) onChange(changeParam);
   }
 
+  // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
+
   // 返回上传文件列表
   getFileList = () => {
     const { innerFileList } = this.state;
