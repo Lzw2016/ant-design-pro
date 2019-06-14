@@ -9,12 +9,14 @@ export default {
   "menu.demo.remote-select-input": "远程下拉输入框",
   "menu.demo.image-upload": "图片上传",
   "menu.demo.input-limit": "字数限制输入框",
+
   "menu.demo.form-engine": "表单引擎(基本)",
   "menu.demo.form-engine-01": "表单引擎(预览)",
   "menu.demo.form-engine-02": "表单引擎(校验)",
   "menu.demo.form-engine-03": "表单引擎(适配)",
   "menu.demo.form-engine-04": "表单引擎(提交)",
   "menu.demo.form-modal": "对话框表单",
+  "menu.demo.paging-query-table": "分页查询表格",
 
   "menu.demo.FormEngine.Demo1": "基本使用",
   "menu.demo.FormEngine.Demo2": "基本使用",
