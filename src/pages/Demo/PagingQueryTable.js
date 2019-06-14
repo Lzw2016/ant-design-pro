@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Card, Button } from 'antd';
 // import lodash from 'lodash';
 // import moment from 'moment';
@@ -18,7 +18,25 @@ class Demo1 extends PureComponent {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <PagingQueryTable />
+          <Button type="primary">刷新</Button>
+          <br />
+          <br />
+          <PagingQueryTable
+            columns={[
+              { title: '主键id', dataIndex: 'id' },
+              { title: '系统(或服务)名称', dataIndex: 'sysName' },
+              { title: '权限标题', dataIndex: 'title' },
+              { title: '唯一权限标识', dataIndex: 'permissionStr' },
+              { title: '权限类型', dataIndex: 'resourcesType' },
+              { title: '权限说明', dataIndex: 'description' },
+              { title: '创建时间', dataIndex: 'createAt' },
+              { title: '更新时间', dataIndex: 'updateAt' },
+            ]}
+            rowKey="id"
+            dataUrl="/api/query_page/find2"
+            // defaultLoadData={true}
+            dataSourceJsonPath="$.records"
+          />
         </Card>
       </PageHeaderWrapper>
     );

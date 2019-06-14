@@ -446,7 +446,7 @@ class ImageUpload extends PureComponent {
       aspectRatioArray = [],        // 图片宽高比例，如: [{ w: 16, h: 9 }, { w: 4, h: 3 }, { w: 5, h: 3 }]
       fileUrlJsonPath,              // 从上传文件响应数据中读取文件url数据的JsonPath
       previewUrlPrefix,             // 文件预览地址前缀
-      getPreviewUrl,                // 文件预览地址前缀 (file, response) => (String)
+      getPreviewUrl,                // 文件预览地址 (file, response) => (String)
       beforeUpload,                 // 上传文件之前的钩子(功能同，antd的Upload组件beforeUpload配置)
       onPreview,                    // 点击文件链接或预览图标时的回调(功能同，antd的Upload组件onPreview配置)
       onUploading,                  // 文件正在上传事件 ({ file, fileList, event }) => ()
