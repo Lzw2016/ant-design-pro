@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Table } from 'antd';
 import { formatMessage } from 'umi/locale';
 import jsonpath from "jsonpath";
@@ -44,10 +44,10 @@ class PagingQueryTable extends PureComponent {
   constructor(props) {
     super(props);
     this.lastFetchCount = 0;
-    const { columns, orderFieldMapping, defaultQueryParam, defaultPagination, defaultData } = props;
+    const { columns = [], orderFieldMapping, defaultQueryParam, defaultPagination, defaultData } = props;
     const { internalQueryParam, internalPagination } = this.state;
     // 默认排序参数处理
-    if (!internalQueryParam.orderField) {
+    if (!internalQueryParam.orderField && varTypeOf(columns) === TypeEnum.array && columns.length > 0) {
       const column = columns.find(tmp => (tmp.defaultSortOrder === "ascend" || tmp.defaultSortOrder === "descend"));
       if (column && column.orderFieldParam) {
         internalQueryParam.orderField = column.orderFieldParam;
@@ -57,8 +57,8 @@ class PagingQueryTable extends PureComponent {
       }
       internalQueryParam.sort = SorterOrderMapper[column.defaultSortOrder];
     }
-    this.state.internalQueryParam = { ...internalQueryParam, defaultQueryParam };
-    this.state.internalPagination = { ...internalPagination, defaultPagination };
+    if (varTypeOf(defaultQueryParam) === TypeEnum.object) this.state.internalQueryParam = { ...internalQueryParam, defaultQueryParam };
+    if (varTypeOf(defaultPagination) === TypeEnum.object) this.state.internalPagination = { ...internalPagination, defaultPagination };
     if (varTypeOf(defaultData) === TypeEnum.array) this.state.internalData = defaultData;
   }
 
@@ -395,6 +395,8 @@ class PagingQueryTable extends PureComponent {
       pageSizeJsonPath,               // 请求响应josn中页面数据量的JsonPath
       currentJsonPath,                // 请求响应josn中页面当前页码数的JsonPath
       onDataSourceChange,             // 表格数据发生变化事件 (queryParam, pagination, dataSource) => ()
+      wrapClassName,                  // 最外层包装元素的className
+      wrapStyle = {},                 // 最外层包装元素的样式
     } = this.props;
     // console.log("render --> ", defaultLoadData);
     const columnsTmp = columns.map((column = {}) => {
@@ -431,7 +433,7 @@ class PagingQueryTable extends PureComponent {
     });
     // console.log("render --> columnsTmp ", columnsTmp);
     return (
-      <Fragment>
+      <div className={wrapClassName || undefined} style={wrapStyle}>
         {
           this.getTable({
             size,
@@ -464,7 +466,7 @@ class PagingQueryTable extends PureComponent {
             onDataSourceChange,
           })
         }
-      </Fragment>
+      </div>
     )
   }
 }
