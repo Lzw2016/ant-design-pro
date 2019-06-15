@@ -418,6 +418,9 @@ class PagingQueryTable extends PureComponent {
           case TypeEnum.function:
             render = (text, record, index) => transform(text, record, index, column);
             break;
+          case TypeEnum.object:
+            render = () => transform;
+            break;
           default:
         }
       }

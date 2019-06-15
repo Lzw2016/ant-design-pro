@@ -4,7 +4,7 @@ import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
 // import classNames from 'classnames';
 import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
-import { Mapper } from "../_utils/mapper";
+import { MapperObject } from "../_utils/mapper";
 // import styles from './index.less';
 
 class DetailForm extends PureComponent {
@@ -209,18 +209,28 @@ class DetailForm extends PureComponent {
    * 不需要渲染返回 false
    */
   getValueTd = (style, dataTransformTmp, value, key, data, callColSpan) => {
+    // console.log(" getValueTd --> ", value, key);
     if (dataTransformTmp === undefined || dataTransformTmp === null) {
-      return <td key={`${key}-value`} style={style}>{value}</td>
+      return <td key={`${key}-value`} style={style}>{value || "-"}</td>
     }
-    const dataTransformTmpType = varTypeOf(dataTransformTmp);
+    const dataTransformTmpType = varTypeOf(dataTransformTmp)
     if (dataTransformTmpType === TypeEnum.array) {
-      return <td key={`${key}-value`} style={style}>{Mapper(dataTransformTmp, value)}</td>
+      const object = MapperObject(dataTransformTmp, value, { label: value });
+      if (varTypeOf(object) === TypeEnum.object) {
+        const { label, color } = object;
+        return (
+          <td key={`${key}-value`} style={style}>
+            <span style={{ ...object.style, color }}>{label || "-"}</span>
+          </td>
+        )
+      }
+      return <td key={`${key}-value`} style={style}>{object || "-"}</td>
     }
     if (dataTransformTmpType === TypeEnum.reactNode) {
-      return <td key={`${key}-value`} style={style}>{dataTransformTmp}</td>
+      return <td key={`${key}-value`} style={style}>{dataTransformTmp || "-"}</td>
     }
     if (dataTransformTmpType === TypeEnum.function) {
-      return <td key={`${key}-value`} style={style}>{dataTransformTmp(value, key, data)}</td>
+      return <td key={`${key}-value`} style={style}>{dataTransformTmp(value, key, data) || "-"}</td>
     }
     if (dataTransformTmpType === TypeEnum.object) {
       const { transform: internalTransform, style: internalStyle, columnCount, hidden } = dataTransformTmp;
@@ -234,17 +244,26 @@ class DetailForm extends PureComponent {
       }
       // 渲染
       if (internalTransform === null || internalTransform === undefined) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{value}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{value || "-"}</td>
       }
       const internalTransformType = varTypeOf(internalTransform);
       if (internalTransformType === TypeEnum.array) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{Mapper(internalTransform, value)}</td>
+        const object = MapperObject(internalTransform, value, { label: value });
+        if (varTypeOf(object) === TypeEnum.object) {
+          const { label, color } = object;
+          return (
+            <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>
+              <span style={{ ...object.style, color }}>{label || "-"}</span>
+            </td>
+          )
+        }
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{object || "-"}</td>
       }
       if (internalTransformType === TypeEnum.reactNode) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform || "-"}</td>
       }
       if (internalTransformType === TypeEnum.function) {
-        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform(value, key, data)}</td>
+        return <td key={`${key}-value`} style={{ ...style, ...internalStyle, ...colSpan }}>{internalTransform(value, key, data) || "-"}</td>
       }
     }
     throw Error(`[${key}]：dataTransform配置错误`);
