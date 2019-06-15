@@ -7,6 +7,7 @@ import jsonpath from "jsonpath";
 import { stringify } from 'qs';
 // import { formatMessage } from 'umi/locale';
 import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
+import { MapperObject } from "../_utils/mapper";
 // import classNames from 'classnames';
 // import styles from './index.less';
 
@@ -43,6 +44,22 @@ class PagingQueryTable extends PureComponent {
   constructor(props) {
     super(props);
     this.lastFetchCount = 0;
+    const { columns, orderFieldMapping, defaultQueryParam, defaultPagination, defaultData } = props;
+    const { internalQueryParam, internalPagination } = this.state;
+    // 默认排序参数处理
+    if (!internalQueryParam.orderField) {
+      const column = columns.find(tmp => (tmp.defaultSortOrder === "ascend" || tmp.defaultSortOrder === "descend"));
+      if (column && column.orderFieldParam) {
+        internalQueryParam.orderField = column.orderFieldParam;
+      } else if (varTypeOf(orderFieldMapping) === TypeEnum.object) {
+        internalQueryParam.orderField = orderFieldMapping[column.dataIndex];
+        if (!internalQueryParam.orderField) internalQueryParam.orderField = column.dataIndex;
+      }
+      internalQueryParam.sort = SorterOrderMapper[column.defaultSortOrder];
+    }
+    this.state.internalQueryParam = { ...internalQueryParam, defaultQueryParam };
+    this.state.internalPagination = { ...internalPagination, defaultPagination };
+    if (varTypeOf(defaultData) === TypeEnum.array) this.state.internalData = defaultData;
   }
 
   // 加载完成
@@ -91,6 +108,7 @@ class PagingQueryTable extends PureComponent {
     pagination,
     onChange,
     tableProps,
+    orderFieldMapping,
     dataUrl,
     requestMethod,
     requestOptions,
@@ -112,7 +130,6 @@ class PagingQueryTable extends PureComponent {
         size={size}
         bordered={bordered}
         loading={(loading !== undefined && loading !== null) ? loading : internalLoading}
-
         rowKey={rowKey}
         columns={columns}
         dataSource={(dataSource !== undefined && dataSource !== null) ? dataSource : internalData}
@@ -120,6 +137,7 @@ class PagingQueryTable extends PureComponent {
         onChange={(paginationParam, filters, sorter, extra) => {
           this.handleChange(paginationParam, filters, sorter, extra, {
             onChange,
+            orderFieldMapping,
             dataUrl,
             requestMethod,
             requestOptions,
@@ -147,6 +165,7 @@ class PagingQueryTable extends PureComponent {
   handleChange = (pagination, filters, sorter, extra,
     {
       onChange,
+      orderFieldMapping,
       dataUrl,
       requestMethod,
       requestOptions,
@@ -166,10 +185,13 @@ class PagingQueryTable extends PureComponent {
     let queryParam = { ...internalQueryParam, pageNo: pagination.current, pageSize: pagination.pageSize };
     // 排序
     if (sorter.field) {
-      // OrderFieldMapping
-      // const sorterMapper = {};
-      // queryParam.orderField = sorterMapper[sorter.field];
-      queryParam.orderField = sorter.field;
+      // orderFieldParam
+      if (sorter.column && sorter.column.orderFieldParam) {
+        queryParam.orderField = sorter.column.orderFieldParam;
+      } else if (varTypeOf(orderFieldMapping) === TypeEnum.object) {
+        queryParam.orderField = orderFieldMapping[sorter.field];
+      }
+      if (!queryParam.orderField) queryParam.orderField = sorter.field;
       queryParam.sort = SorterOrderMapper[sorter.order];
     } else {
       queryParam.orderField = undefined;
@@ -224,6 +246,7 @@ class PagingQueryTable extends PureComponent {
     if (dataUrl === null || dataUrl === undefined) return;
     let { internalQueryParam, internalPagination } = this.state;
     internalQueryParam = { ...internalQueryParam, ...queryParam };
+    // 组装请求数据
     const fetchOptions = {
       url: `${dataUrl}?${stringify(internalQueryParam)}`,
       options: { method: requestMethod, ...requestOptions },
@@ -348,8 +371,12 @@ class PagingQueryTable extends PureComponent {
       columns = [],                   // 表格列配置
       dataSource,                     // 表格数据
       pagination,                     // 分页配置
-      onChange,                       // 分页、排序、筛选变化时触发
+      onChange,                       // 分页、排序、筛选变化时触发 (pagination, filters, sorter, extra) => (Object<queryParamExt>)
       tableProps = {},                // 表格属性
+      defaultQueryParam = {},         // 默认查询参数
+      defaultPagination = {},         // 默认分页数据
+      defaultData,                    // 默认表格数据 array
+      orderFieldMapping,              // 全局排序映射关系 { "columnsDataIndex_1": "orderFieldParam_1", "columnsDataIndex_2": "orderFieldParam_2", ... }
       defaultLoadData = true,         // 是否初始化就加载数据
       dataUrl,                        // 表格数据请求地址
       requestMethod = "get",          // 请求提交 Method
@@ -367,6 +394,36 @@ class PagingQueryTable extends PureComponent {
       onDataSourceChange,             // 表格数据发生变化事件 (queryParam, pagination, dataSource) => ()
     } = this.props;
     // console.log("render --> ", defaultLoadData);
+    const columnsTmp = columns.map((column = {}) => {
+      const {
+        // orderFieldParam,       // 列排序请求参数
+        transform,             // 列数据转换 array | ReactNode | (text, record, index, column) => (string | ReactNode)
+      } = column;
+      let { render } = column;
+      if (!render && transform) {
+        switch (varTypeOf(transform)) {
+          case TypeEnum.array:
+            render = (text) => {
+              const object = MapperObject(transform, text);
+              if (varTypeOf(object) === TypeEnum.object) {
+                const { style, label, color } = object;
+                return <span style={{ ...style, color }}>{label}</span>;
+              }
+              return object;
+            }
+            break;
+          case TypeEnum.reactNode:
+            render = () => transform;
+            break;
+          case TypeEnum.function:
+            render = (text, record, index) => transform(text, record, index, column);
+            break;
+          default:
+        }
+      }
+      return { ...column, render };
+    });
+    // console.log("render --> columnsTmp ", columnsTmp);
     return (
       <Fragment>
         {
@@ -375,12 +432,15 @@ class PagingQueryTable extends PureComponent {
             bordered,
             loading,
             rowKey,
-            columns,
+            columns: columnsTmp,
             dataSource,
             pagination,
             onChange,
             tableProps,
-
+            defaultQueryParam,
+            defaultPagination,
+            defaultData,
+            orderFieldMapping,
             defaultLoadData,
             dataUrl,
             requestMethod,
