@@ -122,6 +122,7 @@ class PagingQueryTable extends PureComponent {
     totalJsonPath,
     pageSizeJsonPath,
     currentJsonPath,
+    onLoadingChange,
     onDataSourceChange,
   }) => {
     const { internalLoading, internalPagination, internalData } = this.state;
@@ -151,6 +152,7 @@ class PagingQueryTable extends PureComponent {
             totalJsonPath,
             pageSizeJsonPath,
             currentJsonPath,
+            onLoadingChange,
             onDataSourceChange,
           })
         }}
@@ -179,6 +181,7 @@ class PagingQueryTable extends PureComponent {
       totalJsonPath,
       pageSizeJsonPath,
       currentJsonPath,
+      onLoadingChange,
       onDataSourceChange,
     }) => {
     // console.log("handleChange --> sorter", sorter);
@@ -223,6 +226,7 @@ class PagingQueryTable extends PureComponent {
       totalJsonPath,
       pageSizeJsonPath,
       currentJsonPath,
+      onLoadingChange,
       onDataSourceChange,
     });
   }
@@ -243,6 +247,7 @@ class PagingQueryTable extends PureComponent {
     totalJsonPath,
     pageSizeJsonPath,
     currentJsonPath,
+    onLoadingChange,
     onDataSourceChange,
   }) => {
     // console.log("fetchData --> ", dataUrl);
@@ -266,6 +271,7 @@ class PagingQueryTable extends PureComponent {
       }
     }
     this.setState({ internalLoading: true });
+    if (onLoadingChange instanceof Function) onLoadingChange(true);
     this.lastFetchCount++;
     const fetchCount = this.lastFetchCount;
     // console.log("fetchData --> ", fetchOptions)
@@ -316,11 +322,13 @@ class PagingQueryTable extends PureComponent {
         if (onDataSourceChange instanceof Function) onDataSourceChange(internalQueryParam, internalPagination, internalData);
         // console.log("fetchData --> internalPagination", internalPagination);
         this.setState({ internalLoading: false, internalQueryParam, internalPagination, internalData });
+        if (onLoadingChange instanceof Function) onLoadingChange(false);
       })
       .catch(err => {
         if (fetchCount < this.lastFetchCount) return;
         if (requestError instanceof Function) requestError(undefined, undefined, err);
         this.setState({ internalLoading: false });
+        if (onLoadingChange instanceof Function) onLoadingChange(false);
       });
   }
 
@@ -342,6 +350,7 @@ class PagingQueryTable extends PureComponent {
       totalJsonPath,
       pageSizeJsonPath,
       currentJsonPath,
+      onLoadingChange,
       onDataSourceChange,
     } = this.props;
     // const
@@ -361,6 +370,7 @@ class PagingQueryTable extends PureComponent {
       totalJsonPath,
       pageSizeJsonPath,
       currentJsonPath,
+      onLoadingChange,
       onDataSourceChange,
     });
   }
@@ -394,6 +404,7 @@ class PagingQueryTable extends PureComponent {
       totalJsonPath,                  // 请求响应josn中数据总量的JsonPath
       pageSizeJsonPath,               // 请求响应josn中页面数据量的JsonPath
       currentJsonPath,                // 请求响应josn中页面当前页码数的JsonPath
+      onLoadingChange,                // 表格加载状态发生变化 (loading) => ()
       onDataSourceChange,             // 表格数据发生变化事件 (queryParam, pagination, dataSource) => ()
       wrapClassName,                  // 最外层包装元素的className
       wrapStyle = {},                 // 最外层包装元素的样式
@@ -463,6 +474,7 @@ class PagingQueryTable extends PureComponent {
             totalJsonPath,
             pageSizeJsonPath,
             currentJsonPath,
+            onLoadingChange,
             onDataSourceChange,
           })
         }

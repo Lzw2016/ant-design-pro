@@ -116,7 +116,7 @@ class PagingQueryPage extends PureComponent {
       defaultRowProps = {},           // Row组件默认属性配置
       formEngineProps = {},           // 表单引擎属性
 
-      actionsContent,                 // 操作块内容
+      actionsContent,                 // 操作块内容 ReactNode | (?) => (ReactNode)
       actionsClassName,               // 操作块className
       actionsStyle = {},              // 操作块样式
 

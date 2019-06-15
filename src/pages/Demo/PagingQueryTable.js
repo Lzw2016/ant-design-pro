@@ -22,17 +22,19 @@ const ResourcesTypeAyyay = [
 class Demo1 extends PureComponent {
 
   state = {
+    loading: false,
     visible: false,
     data: {},
   }
 
   render() {
-    const { visible, data } = this.state;
+    const { visible, data, loading } = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Button
             type="primary"
+            loading={loading}
             onClick={() => {
               if (this.pagingQueryTable) this.pagingQueryTable.reloadDataSource();
             }}
@@ -42,6 +44,7 @@ class Demo1 extends PureComponent {
           <span style={{ display: "inline-block", width: 24 }} />
           <Button
             type="primary"
+            loading={loading}
             onClick={() => {
               if (this.pagingQueryTable) this.pagingQueryTable.reloadDataSource(true);
             }}
@@ -74,6 +77,7 @@ class Demo1 extends PureComponent {
             totalJsonPath="$.total"
             pageSizeJsonPath="$.size"
             currentJsonPath="$.current"
+            onLoadingChange={loadingParam => this.setState({ loading: loadingParam })}
           />
         </Card>
         <Modal
