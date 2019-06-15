@@ -21,12 +21,6 @@ const ResourcesTypeAyyay = [
 // }))
 class Demo1 extends PureComponent {
 
-  // // 构造器
-  // constructor(props) {
-  //   super(props);
-  //   this.pagingQueryTable = React.createRef();
-  // }
-
   state = {
     visible: false,
     data: {},

@@ -17,6 +17,7 @@ export default {
   "menu.demo.form-engine-04": "表单引擎(提交)",
   "menu.demo.form-modal": "对话框表单",
   "menu.demo.paging-query-table": "分页查询表格",
+  "menu.demo.paging-query-page": "分页查询页面",
 
   "menu.demo.FormEngine.Demo1": "基本使用",
   "menu.demo.FormEngine.Demo2": "基本使用",
