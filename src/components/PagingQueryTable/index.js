@@ -181,23 +181,26 @@ class PagingQueryTable extends PureComponent {
       currentJsonPath,
       onDataSourceChange,
     }) => {
+    // console.log("handleChange --> sorter", sorter);
     const { internalQueryParam } = this.state;
     let queryParam = { ...internalQueryParam, pageNo: pagination.current, pageSize: pagination.pageSize };
     // 排序
     if (sorter.field) {
       // orderFieldParam
+      queryParam.orderField = undefined;
       if (sorter.column && sorter.column.orderFieldParam) {
         queryParam.orderField = sorter.column.orderFieldParam;
       } else if (varTypeOf(orderFieldMapping) === TypeEnum.object) {
         queryParam.orderField = orderFieldMapping[sorter.field];
       }
+      // console.log("handleChange --> orderFieldMapping", orderFieldMapping);
       if (!queryParam.orderField) queryParam.orderField = sorter.field;
       queryParam.sort = SorterOrderMapper[sorter.order];
     } else {
       queryParam.orderField = undefined;
       queryParam.sort = undefined;
     }
-    // console.log("handleChange --> sorter", sorter);
+    // console.log("handleChange --> queryParam", queryParam);
     if (onChange instanceof Function) {
       const queryParamExt = onChange(pagination, filters, sorter, extra);
       if (varTypeOf(queryParamExt) === TypeEnum.object) {
