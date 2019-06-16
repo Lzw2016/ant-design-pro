@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
-// import { Table } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { Button } from 'antd';
 // import { formatMessage } from 'umi/locale';
 // import jsonpath from "jsonpath";
-// import lodash from 'lodash';
+import lodash from 'lodash';
 // import moment from 'moment';
-// import { stringify } from 'qs';
+import { parse, stringify } from 'qs';
 import { FormEngine } from '@/components/FormEngine';
 import PagingQueryTable from '@/components/PagingQueryTable';
 // import { formatMessage } from 'umi/locale';
@@ -57,12 +57,14 @@ class PagingQueryPage extends PureComponent {
     formFields,
     defaultRowProps,
     formEngineProps,
+    formActionsWidth,
     formClassName,
     formStyle,
   }) => {
+    const { internalLoading } = this.state;
     return (
       <FormEngine
-        ref={formEngine => { this.formEngine = formEngine; }}
+        wrappedComponentRef={formEngine => { this.formEngine = formEngine; }}
         saveForm={form => { this.form = form; }}
         defaultLabelCol={defaultLabelCol}
         columnCount={columnCount}
@@ -72,8 +74,47 @@ class PagingQueryPage extends PureComponent {
         defaultRowProps={defaultRowProps}
         wrapClassName={formClassName || styles.queryForm}
         wrapStyle={formStyle}
-        actionsConfig={false}
-        {...formEngineProps}
+        actionsConfig={{
+          render: (
+            <Fragment>
+              <Button
+                type="primary"
+                disabled={internalLoading}
+                onClick={() => {
+                  if (this.pagingQueryTable) this.pagingQueryTable.reloadDataSource(true);
+                }}
+              >
+                查询
+              </Button>
+              <Button
+                type="default"
+                disabled={internalLoading}
+                style={{ marginLeft: 12 }}
+                onClick={() => {
+                  if (this.formEngine) {
+                    // console.log("this.formEngine -->", this.formEngine);
+                    this.formEngine.formReset();
+                    // TODO 保存状态数据
+                  }
+                }}
+              >
+                重置
+              </Button>
+            </Fragment>
+          ),
+          placement: "right",
+          width: formActionsWidth,
+          rightStyle: { padding: "4px 0 0 24px" },
+        }}
+        formProps={{
+          // TODO 回车就能搜索
+          // onSubmit: e => {
+          //   console.log("getForm --> onSubmit", e);
+          //   if (e) e.preventDefault();
+          //   if (this.pagingQueryTable) this.pagingQueryTable.reloadDataSource(true);
+          // },
+          ...formEngineProps
+        }}
       />
     )
   }
@@ -87,7 +128,7 @@ class PagingQueryPage extends PureComponent {
     if (actionsContent === null || actionsContent === undefined) return <div style={{ marginBottom: 4 }} />;
     const { internalLoading } = this.state;
     return (
-      <div className={actionsClassName || undefined} style={{ ...actionsStyle, marginBottom: 12 }}>
+      <div className={actionsClassName || undefined} style={{ marginBottom: 12, ...actionsStyle }}>
         {(actionsContent instanceof Function) ? actionsContent(internalLoading) : actionsContent}
       </div>
     )
@@ -129,7 +170,32 @@ class PagingQueryPage extends PureComponent {
         dataUrl={dataUrl}
         requestMethod={requestMethod}
         requestOptions={requestOptions}
-        requestInterceptor={requestInterceptor}
+        requestInterceptor={({ url, options }) => {
+          const result = { url, options };
+          const { form } = this;
+          if (!form) return false;
+          const separatorIndex = url.indexOf("/");
+          const queryStringIndex = url.indexOf("?", separatorIndex !== -1 ? separatorIndex : 0);
+          const path = (queryStringIndex === -1 ? url : url.substr(0, queryStringIndex));
+          const queryString = (queryStringIndex === -1 ? "" : url.substr(queryStringIndex + 1, url.length));
+          // console.log(`requestInterceptor --> path=[${path}]`);
+          // console.log(`requestInterceptor --> queryString=[${queryString}]`);
+          let tmp;
+          form.validateFields((err, formValues) => {
+            if (err) return;
+            // console.log(`requestInterceptor --> queryString `, parse(queryString));
+            // console.log(`requestInterceptor --> formValues `, stringify(formValues));
+            const queryObject = lodash.merge(parse(queryString), formValues);
+            // console.log(`requestInterceptor --> queryObject `, queryObject);
+            result.url = `${path}?${stringify(queryObject)}`;
+            // console.log(`requestInterceptor --> result.url `, result.url);
+            if (requestInterceptor instanceof Function) tmp = requestInterceptor(result, path, queryString, formValues);
+          });
+          if (tmp === false) return false;
+          if (tmp && tmp.url) result.url = tmp.url;
+          if (tmp && tmp.options) result.options = tmp.options;
+          return result;
+        }}
         responseFilter={responseFilter}
         requestError={requestError}
         requestSuccessful={requestSuccessful}
@@ -143,7 +209,7 @@ class PagingQueryPage extends PureComponent {
         wrapClassName={tableClassName}
         wrapStyle={tableStyle}
         onLoadingChange={loadingParam => this.setState({ internalLoading: loadingParam })}
-        {...pagingQueryTableProps}
+        tableProps={pagingQueryTableProps}
       />
     )
   }
@@ -161,6 +227,7 @@ class PagingQueryPage extends PureComponent {
       formFields = {},                // 表单字段配置
       defaultRowProps = {},           // Row组件默认属性配置
       formEngineProps = {},           // 表单引擎属性
+      formActionsWidth = 170,         // 表单操作部分宽度，只能使用绝对宽度 number
       formClassName,                  // 表单最外层包装元素的className
       formStyle = {},                 // 表单最外层包装元素的样式
 
@@ -176,7 +243,7 @@ class PagingQueryPage extends PureComponent {
       dataUrl,                        // 表格数据请求地址
       requestMethod = "get",          // 请求提交 Method
       requestOptions = {},            // 请求 fetch options(选项)
-      requestInterceptor,             // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      requestInterceptor,             // 请求之前的拦截 ({ url, options }, path, queryString, formValues) => (boolean | {url, options })
       responseFilter,                 // 响应数据拦截 (Object<resData>, response) => (Object<resData> | undefined | null)
       requestError,                   // 请求失败处理   (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,              // 请求成功回调 (resData, response) => ()
@@ -194,7 +261,6 @@ class PagingQueryPage extends PureComponent {
       wrapClassName,                  // 最外层包装元素的className
       wrapStyle = {},                 // 最外层包装元素的样式
     } = this.props;
-
     return (
       <div className={wrapClassName || undefined} style={wrapStyle}>
         {/* 查询表单 */}
@@ -207,6 +273,7 @@ class PagingQueryPage extends PureComponent {
             formFields,
             defaultRowProps,
             formEngineProps,
+            formActionsWidth,
             formClassName,
             formStyle,
           })

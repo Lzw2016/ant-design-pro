@@ -35,10 +35,10 @@ class Demo1 extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <PagingQueryPage
-            // formStyle={{ padding: "0 0 0 0" }}
+            formStyle={{ width: 1300 }}
             defaultLabelCol={{ span: 6 }}
             defaultRowProps={{ gutter: 12 }}
-            columnCount={4}
+            columnCount={3}
             resetValues={values}
             defaultValues={lodash.merge({}, values)}
             formFields={{

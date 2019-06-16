@@ -146,6 +146,7 @@ class FormEngine extends PureComponent {
     // 加入最后一行
     rowArray.push(columnArray);
     // console.log("getGridForm --> ", rowArray);
+    // console.log("getGridForm --> formProps", formProps);
     // 生成表单
     const formComponent = (
       <Form
@@ -229,6 +230,12 @@ class FormEngine extends PureComponent {
       widthTmp = lodash.toFinite(width.substr(0, width.length - 1));
       widthTmp = (100 - widthTmp);
       if (widthTmp <= 0) widthTmp = undefined;
+      if (widthTmp) widthTmp = `${widthTmp}%`;
+    } else if (`${width}`.toLowerCase().endsWith("px")) {
+      widthTmp = `calc(100% - ${width})`;
+    } else if (varTypeOf(width) === TypeEnum.number && width > 0) {
+      widthTmp = `calc(100% - ${width}px)`;
+      // console.log("getActionForm --> widthTmp", widthTmp);
     }
     let actionForm;
     switch ((placement || "bottom").toLowerCase()) {
@@ -252,15 +259,15 @@ class FormEngine extends PureComponent {
         actionForm = (
           <div style={{ width: '100%', ...wrapStyle }}>
             <span style={{ display: 'inline-block', verticalAlign: 'top', width, ...leftStyle }}>{actions}</span>
-            <span style={{ display: 'inline-block', verticalAlign: 'top', width: `${widthTmp}%`, ...rightStyle }}>{formComponent}</span>
+            <span style={{ display: 'inline-block', verticalAlign: 'top', width: widthTmp, ...rightStyle }}>{formComponent}</span>
           </div>
         )
         break;
       case "right":
         actionForm = (
           <div style={{ width: '100%', ...wrapStyle }}>
-            <span style={{ display: 'inline-block', verticalAlign: 'top', width: `${widthTmp}%`, ...rightStyle }}>{formComponent}</span>
-            <span style={{ display: 'inline-block', verticalAlign: 'top', width, ...leftStyle }}>{actions}</span>
+            <span style={{ display: 'inline-block', verticalAlign: 'top', width: widthTmp, ...leftStyle }}>{formComponent}</span>
+            <span style={{ display: 'inline-block', verticalAlign: 'top', width, ...rightStyle }}>{actions}</span>
           </div>
         )
         break;
@@ -456,12 +463,28 @@ class FormEngine extends PureComponent {
 
   // 提交表单
   formSubmit = () => {
-
+    const { actionsConfig } = this.props;
+    if (actionsConfig === false) return;
+    const {
+      submitUrl = undefined,
+      submitMethod = "post",
+      submitSuccessful = undefined,
+      submitFailure = undefined,
+      requestInterceptor = undefined,
+      onSubmit = undefined,
+    } = actionsConfig;
+    this.handleSubmit(submitUrl, submitMethod, submitSuccessful, submitFailure, requestInterceptor, onSubmit);
   }
 
   // 重置表单
   formReset = () => {
-
+    const {
+      resetValues = {},
+      defaultValues = {},
+      actionsConfig = {},
+    } = this.props;
+    const onReset = (actionsConfig && actionsConfig.onReset ? actionsConfig.onReset : undefined);
+    this.handleReset(resetValues, defaultValues, onReset);
   }
 
   render() {
