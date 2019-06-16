@@ -59,16 +59,20 @@ class Demo1 extends PureComponent {
             submitUrl="/api/remote/form/submit"
             submitMethod="post"
             onSubmit={(formValues, form) => {
+              // eslint-disable-next-line no-console
               console.log("onSubmit --> ", formValues, form);
             }}
             requestInterceptor={({ url, options }) => {
+              // eslint-disable-next-line no-console
               console.log("requestInterceptor --> ", url, options);
               return { url, options };
             }}
             submitSuccessful={(resData, response) => {
+              // eslint-disable-next-line no-console
               console.log("submitSuccessful --> ", resData, response);
             }}
             submitFailure={(resData, response, error) => {
+              // eslint-disable-next-line no-console
               console.log("submitFailure --> ", resData, response, error);
             }}
             formFields={{

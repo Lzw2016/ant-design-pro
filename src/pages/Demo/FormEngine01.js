@@ -95,6 +95,7 @@ class Demo1 extends PureComponent {
               saveForm={from => { this.from1 = from }}
               actionsConfig={{
                 onSubmit: (formValues, form) => {
+                  // eslint-disable-next-line no-console
                   console.log("提交表单", formValues, form);
                 }
               }}

@@ -8,6 +8,7 @@ import { stringify } from 'qs';
 // import { formatMessage } from 'umi/locale';
 import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
 import { MapperObject } from "../_utils/mapper";
+import { cutOffStr } from "../_utils/utils";
 // import classNames from 'classnames';
 // import styles from './index.less';
 
@@ -376,6 +377,7 @@ class PagingQueryTable extends PureComponent {
   }
 
   render() {
+    // console.log("PagingQueryTable --> render");
     const {
       size = "middle",                // 表格大小
       bordered = true,                // 表格是否有边框
@@ -413,6 +415,7 @@ class PagingQueryTable extends PureComponent {
     const columnsTmp = columns.map((column = {}) => {
       const {
         // orderFieldParam,       // 列排序请求参数
+        contentMaxLength,      // 内容最大长度(一个中文长度为2，英文字母长度为1)
         transform,             // 列数据转换 array | ReactNode | (text, record, index, column) => (string | ReactNode)
       } = column;
       let { render } = column;
@@ -440,6 +443,14 @@ class PagingQueryTable extends PureComponent {
           default:
         }
       }
+      if (!render && varTypeOf(contentMaxLength) === TypeEnum.number && contentMaxLength > 0) {
+        render = (text) => {
+          const tmp = cutOffStr(text, contentMaxLength);
+          if (tmp === text) return text;
+          return <span title={text}>{tmp}</span>
+        }
+      }
+      // console.log("render --> contentMaxLength ", contentMaxLength);
       return { ...column, render };
     });
     // console.log("render --> columnsTmp ", columnsTmp);

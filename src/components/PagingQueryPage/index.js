@@ -11,7 +11,7 @@ import PagingQueryTable from '@/components/PagingQueryTable';
 // import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
 // import { MapperObject } from "../_utils/mapper";
 // import classNames from 'classnames';
-// import styles from './index.less';
+import styles from './index.less';
 
 class PagingQueryPage extends PureComponent {
 
@@ -40,6 +40,8 @@ class PagingQueryPage extends PureComponent {
 
   // 组件状态
   state = {
+    // 内部加载状态
+    internalLoading: false,
     // 选中数据
     // selectedRowKeys: [],
   }
@@ -55,10 +57,23 @@ class PagingQueryPage extends PureComponent {
     formFields,
     defaultRowProps,
     formEngineProps,
+    formClassName,
+    formStyle,
   }) => {
     return (
       <FormEngine
+        ref={formEngine => { this.formEngine = formEngine; }}
         saveForm={form => { this.form = form; }}
+        defaultLabelCol={defaultLabelCol}
+        columnCount={columnCount}
+        resetValues={resetValues}
+        defaultValues={defaultValues}
+        formFields={formFields}
+        defaultRowProps={defaultRowProps}
+        wrapClassName={formClassName || styles.queryForm}
+        wrapStyle={formStyle}
+        actionsConfig={false}
+        {...formEngineProps}
       />
     )
   }
@@ -69,17 +84,22 @@ class PagingQueryPage extends PureComponent {
     actionsClassName,
     actionsStyle,
   }) => {
+    if (actionsContent === null || actionsContent === undefined) return <div style={{ marginBottom: 4 }} />;
+    const { internalLoading } = this.state;
     return (
-      <div>
-        123
+      <div className={actionsClassName || undefined} style={{ ...actionsStyle, marginBottom: 12 }}>
+        {(actionsContent instanceof Function) ? actionsContent(internalLoading) : actionsContent}
       </div>
     )
   }
 
   // 数据表格
   getTable = ({
+    rowKey,
+    columns,
     defaultPagination,
     defaultData,
+    defaultLoadData,
     dataUrl,
     requestMethod,
     requestOptions,
@@ -94,11 +114,37 @@ class PagingQueryPage extends PureComponent {
     pageSizeJsonPath,
     currentJsonPath,
     onDataSourceChange,
+    pagingQueryTableProps,
     tableClassName,
     tableStyle,
   }) => {
     return (
-      <PagingQueryTable />
+      <PagingQueryTable
+        ref={pagingQueryTable => { this.pagingQueryTable = pagingQueryTable; }}
+        rowKey={rowKey}
+        columns={columns}
+        defaultPagination={defaultPagination}
+        defaultData={defaultData}
+        defaultLoadData={defaultLoadData}
+        dataUrl={dataUrl}
+        requestMethod={requestMethod}
+        requestOptions={requestOptions}
+        requestInterceptor={requestInterceptor}
+        responseFilter={responseFilter}
+        requestError={requestError}
+        requestSuccessful={requestSuccessful}
+        getDataSource={getDataSource}
+        dataSourceJsonPath={dataSourceJsonPath}
+        getPaginationInfo={getPaginationInfo}
+        totalJsonPath={totalJsonPath}
+        pageSizeJsonPath={pageSizeJsonPath}
+        currentJsonPath={currentJsonPath}
+        onDataSourceChange={onDataSourceChange}
+        wrapClassName={tableClassName}
+        wrapStyle={tableStyle}
+        onLoadingChange={loadingParam => this.setState({ internalLoading: loadingParam })}
+        {...pagingQueryTableProps}
+      />
     )
   }
 
@@ -115,13 +161,18 @@ class PagingQueryPage extends PureComponent {
       formFields = {},                // 表单字段配置
       defaultRowProps = {},           // Row组件默认属性配置
       formEngineProps = {},           // 表单引擎属性
+      formClassName,                  // 表单最外层包装元素的className
+      formStyle = {},                 // 表单最外层包装元素的样式
 
       actionsContent,                 // 操作块内容 ReactNode | (?) => (ReactNode)
       actionsClassName,               // 操作块className
       actionsStyle = {},              // 操作块样式
 
+      rowKey = "key",                 // 表格行 key 的取值，可以是字符串或一个函数
+      columns = [],                   // 表格列配置
       defaultPagination = {},         // 默认分页数据
       defaultData,                    // 默认表格数据 array
+      defaultLoadData = true,         // 是否初始化就加载数据
       dataUrl,                        // 表格数据请求地址
       requestMethod = "get",          // 请求提交 Method
       requestOptions = {},            // 请求 fetch options(选项)
@@ -136,6 +187,7 @@ class PagingQueryPage extends PureComponent {
       pageSizeJsonPath,               // 请求响应josn中页面数据量的JsonPath
       currentJsonPath,                // 请求响应josn中页面当前页码数的JsonPath
       onDataSourceChange,             // 表格数据发生变化事件 (queryParam, pagination, dataSource) => ()
+      pagingQueryTableProps = {},     // 分页表格属性
       tableClassName,                 // 数据表格块className
       tableStyle = {},                // 数据表格块样式
 
@@ -155,6 +207,8 @@ class PagingQueryPage extends PureComponent {
             formFields,
             defaultRowProps,
             formEngineProps,
+            formClassName,
+            formStyle,
           })
         }
         {/* 操作按钮 */}
@@ -168,8 +222,11 @@ class PagingQueryPage extends PureComponent {
         {/* 数据表格 */}
         {
           this.getTable({
+            rowKey,
+            columns,
             defaultPagination,
             defaultData,
+            defaultLoadData,
             dataUrl,
             requestMethod,
             requestOptions,
@@ -184,6 +241,7 @@ class PagingQueryPage extends PureComponent {
             pageSizeJsonPath,
             currentJsonPath,
             onDataSourceChange,
+            pagingQueryTableProps,
             tableClassName,
             tableStyle,
           })

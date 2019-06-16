@@ -25,12 +25,15 @@ class DemoTest extends PureComponent {
                 url="/api/remote/input/object"
                 searchParamName="key"
                 requestInterceptor={({ url, options }) => {
+                  // eslint-disable-next-line no-console
                   console.log("---->", url, options);
                 }}
                 requestError={err => {
+                  // eslint-disable-next-line no-console
                   console.log("---->", err)
                 }}
                 responseFilter={(resData, response) => {
+                  // eslint-disable-next-line no-console
                   console.log("---->", resData, response);
                 }}
                 dataValueKey="column1"
@@ -83,6 +86,7 @@ class DemoTest extends PureComponent {
               <RemoteSelect
                 defaultLoadData={["#1890ff", "#52c41a", "#faad14", "#f5222d", "RED", "#000"]}
                 render={(key, value, label, item) => <span style={{ color: item }}>{item}</span>}
+                // eslint-disable-next-line no-console
                 onChange={(value, option, item) => console.log("---->", value, option, item)}
               />
             </Col>

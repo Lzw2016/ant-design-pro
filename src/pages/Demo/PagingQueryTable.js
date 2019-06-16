@@ -28,6 +28,7 @@ class Demo1 extends PureComponent {
   }
 
   render() {
+    // console.log("PagingQueryTable Demo --> render");
     const { visible, data, loading } = this.state;
     return (
       <PageHeaderWrapper>
@@ -58,7 +59,7 @@ class Demo1 extends PureComponent {
             columns={[
               { title: '主键id', dataIndex: 'id', sorter: true, defaultSortOrder: "ascend", orderFieldParam: "id" },
               { title: '系统(或服务)名称', dataIndex: 'sysName', sorter: true },
-              { title: '权限标题', dataIndex: 'title', sorter: true },
+              { title: '权限标题', dataIndex: 'title', sorter: true, contentMaxLength: 20 },
               { title: '唯一权限标识', dataIndex: 'permissionStr', sorter: true },
               { title: '权限类型', dataIndex: 'resourcesType', sorter: true, transform: ResourcesTypeAyyay },
               { title: '权限说明', dataIndex: 'description', sorter: true },

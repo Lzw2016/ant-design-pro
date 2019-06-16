@@ -103,6 +103,7 @@ class Demo1 extends PureComponent {
                       if (e.target.value === "666") {
                         this.from1.setFieldsValue({ userName20: "666-888" });
                       }
+                      // eslint-disable-next-line no-console
                       console.log("onChange --> onValuesChange", this.from1.onValuesChange);
                     },
                   },

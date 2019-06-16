@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Card, Modal } from 'antd';
-// import lodash from 'lodash';
+import { Card, Modal, Button } from 'antd';
+import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
 import DetailForm from '@/components/DetailForm';
+import { InputEnum } from '@/components/FormEngine';
 import PagingQueryPage from '@/components/PagingQueryPage';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
@@ -28,10 +29,83 @@ class Demo1 extends PureComponent {
 
   render() {
     const { visible, data } = this.state;
+    const values = {
+    };
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <PagingQueryPage />
+          <PagingQueryPage
+            // formStyle={{ padding: "0 0 0 0" }}
+            defaultLabelCol={{ span: 6 }}
+            defaultRowProps={{ gutter: 12 }}
+            columnCount={4}
+            resetValues={values}
+            defaultValues={lodash.merge({}, values)}
+            formFields={{
+              sysName: {
+                label: "系统名称",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "请输入系统名称",
+                },
+              },
+              title: {
+                label: "权限标题",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "请输入权限标题",
+                },
+              },
+              permissionStr: {
+                label: "唯一权限标识",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "请输入唯一权限标识",
+                },
+              },
+              // title: {
+              //   label: "权限标题",
+              //   InputComponent: InputEnum.DatePicker,
+              //   inputProp: {
+              //     placeholder: "日期选择",
+              //     format: "YYYY年MM月DD日",
+              //   },
+              // },
+            }}
+            actionsContent={loadingParam => {
+              return (
+                <Button.Group>
+                  <Button disabled={loadingParam} icon="plus-circle">功能1</Button>
+                  <Button disabled={loadingParam} icon="plus-circle">功能2</Button>
+                  <Button disabled={loadingParam} icon="plus-circle">功能3</Button>
+                  <Button disabled={loadingParam} icon="plus-circle">功能4</Button>
+                  <Button disabled={loadingParam} icon="plus-circle">功能5</Button>
+                </Button.Group>
+              )
+            }}
+            columns={[
+              { title: '主键id', dataIndex: 'id', sorter: true, defaultSortOrder: "ascend", orderFieldParam: "id" },
+              { title: '系统(或服务)名称', dataIndex: 'sysName', sorter: true },
+              { title: '权限标题', dataIndex: 'title', sorter: true, contentMaxLength: 30 },
+              { title: '唯一权限标识', dataIndex: 'permissionStr', sorter: true },
+              { title: '权限类型', dataIndex: 'resourcesType', sorter: true, transform: ResourcesTypeAyyay },
+              { title: '权限说明', dataIndex: 'description', sorter: true },
+              { title: '创建时间', dataIndex: 'createAt', sorter: true },
+              { title: '更新时间', dataIndex: 'updateAt', sorter: true },
+              {
+                title: '操作', dataIndex: 'action', render: (text, record) => {
+                  return <a onClick={() => this.setState({ visible: true, data: record })}>查看</a>
+                }
+              },
+            ]}
+            rowKey="id"
+            dataUrl="/api/query_page/find2"
+            defaultLoadData={true}
+            dataSourceJsonPath="$.records"
+            totalJsonPath="$.total"
+            pageSizeJsonPath="$.size"
+            currentJsonPath="$.current"
+          />
         </Card>
         <Modal
           title="数据详情"

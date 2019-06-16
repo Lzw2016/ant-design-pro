@@ -167,6 +167,8 @@ class FormEngine extends PureComponent {
 
   // 表单和提交部分 - 布局处理
   getActionForm = (formComponent, actionsConfig, resetValues, defaultValues) => {
+    // console.log("getActionForm --> actionsConfig", actionsConfig);
+    if (actionsConfig === undefined || actionsConfig === false) return formComponent;
     const { submitLoading } = this.state;
     const { form } = this.props;
     // 根据 actionsConfig 动态渲染表单提交部分
@@ -476,7 +478,7 @@ class FormEngine extends PureComponent {
       rowPropsArray = [],               // 自定义每一行的Row组件属性配置(第1行配置取数组rowPropsArray[0]的值)
       onFormValuesChange,               // 表单数据发生变化触发
       wrapClassName,                    // 最外层包装元素的className
-      wrapStyle = {},                   // 最外层包装元素的className
+      wrapStyle = {},                   // 最外层包装元素的样式
       formProps = {},                   // Form控件属性
       form,                             // 使用@Form.create()增强的表单对象
     } = this.props;
