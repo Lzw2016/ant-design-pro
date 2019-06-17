@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Button } from 'antd';
+import { Button, Icon, Tooltip } from 'antd';
 // import { formatMessage } from 'umi/locale';
 // import jsonpath from "jsonpath";
 import lodash from 'lodash';
@@ -15,35 +15,46 @@ import styles from './index.less';
 
 class PagingQueryPage extends PureComponent {
 
-  // // 构造器
-  // constructor(props) {
-  //   super(props);
-  // }
+  // 构造器
+  constructor(props) {
+    super(props);
+    const { smartHeight } = props;
+    if (smartHeight === true) {
+      this.handleHeight = lodash.debounce(this.handleHeight, 100, { maxWait: 350 });
+    }
+  }
 
-  // // 加载完成
-  // componentDidMount() {
-  //   const { defaultLoadData = true } = this.props;
-  //   // console.log("componentDidMount --> ", defaultLoadData);
-  //   if (defaultLoadData !== true) return;
-  //   this.reloadDataSource(false);
-  // }
+  // 加载完成
+  componentDidMount() {
+    const { smartHeight } = this.props;
+    if (smartHeight === true) {
+      window.addEventListener('resize', this.handleHeight);
+      this.useSmartHeight = true;
+    }
+  }
 
   // // 组件更新
   // componentDidUpdate(prevProps) {
   //   // const { target } = this.props;
   // }
 
-  // // 组件卸载之前
-  // componentWillUnmount() {
-  //   // clearTimeout(this.timer);
-  // }
+  // 组件卸载之前
+  componentWillUnmount() {
+    if (this.useSmartHeight === true) {
+      window.removeEventListener('resize', this.handleHeight);
+    }
+  }
 
   // 组件状态
   state = {
+    // 浏览器高度
+    screenHeight: document.documentElement.clientHeight,
     // 内部加载状态
     internalLoading: false,
     // 选中数据
     // selectedRowKeys: [],
+    // 展开/折叠 down up
+    formIsDown: true,
   }
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
@@ -60,8 +71,12 @@ class PagingQueryPage extends PureComponent {
     formActionsWidth,
     formClassName,
     formStyle,
+    showFormReset,
+    showFormDownUp,
   }) => {
-    const { internalLoading } = this.state;
+    let widthTmp = formActionsWidth || 205;
+    if (showFormDownUp !== true) widthTmp -= 34;
+    if (showFormReset !== true) widthTmp -= 71.81;
     return (
       <FormEngine
         wrappedComponentRef={formEngine => { this.formEngine = formEngine; }}
@@ -75,14 +90,12 @@ class PagingQueryPage extends PureComponent {
         wrapClassName={formClassName || styles.queryForm}
         wrapStyle={formStyle}
         actionsConfig={{
-          render: (
-            <Fragment>
-              <Button type="primary" disabled={internalLoading} onClick={this.handleQuery}>查询</Button>
-              <Button type="default" disabled={internalLoading} style={{ marginLeft: 12 }} onClick={this.handleReset}>重置</Button>
-            </Fragment>
-          ),
+          render: () => {
+            // resetValues, defaultValues, form, submitLoading
+            return this.getFormActions(showFormReset, showFormDownUp);
+          },
           placement: "right",
-          width: formActionsWidth,
+          width: widthTmp,
           rightStyle: { padding: "4px 0 0 24px" },
         }}
         formProps={{
@@ -95,6 +108,33 @@ class PagingQueryPage extends PureComponent {
           ...formEngineProps
         }}
       />
+    )
+  }
+
+  // 查询表单按钮 resetValues, defaultValues, form, submitLoading
+  getFormActions = (showFormReset, showFormDownUp) => {
+    const { internalLoading, formIsDown } = this.state;
+    return (
+      <Fragment>
+        <Button type="primary" disabled={internalLoading} onClick={this.handleQuery}>查询</Button>
+        {
+          showFormReset === true ?
+            (<Button type="default" disabled={internalLoading} style={{ marginLeft: 12 }} onClick={this.handleReset}>重置</Button>)
+            : undefined
+        }
+        {
+          showFormDownUp === true ?
+            (
+              <Tooltip title={formIsDown ? "展开" : "折叠"} placement="top">
+                <Icon
+                  style={{ marginLeft: 12, cursor: "pointer", color: "#1890ff", verticalAlign: "middle", fontSize: 22 }}
+                  type={formIsDown ? "caret-down" : "caret-up"}
+                  onClick={this.handFormIsDown}
+                />
+              </Tooltip>
+            ) : undefined
+        }
+      </Fragment>
     )
   }
 
@@ -115,6 +155,7 @@ class PagingQueryPage extends PureComponent {
 
   // 数据表格
   getTable = ({
+    smartHeight,
     formValuesHandle,
     rowKey,
     columns,
@@ -139,6 +180,10 @@ class PagingQueryPage extends PureComponent {
     tableClassName,
     tableStyle,
   }) => {
+    const { screenHeight } = this.state;
+    let y = screenHeight - 300;
+    if (y < 300) y = 500;
+    const tableProps = (smartHeight === true) ? { scroll: { x: true, y }, ...pagingQueryTableProps } : pagingQueryTableProps;
     return (
       <PagingQueryTable
         ref={pagingQueryTable => { this.pagingQueryTable = pagingQueryTable; }}
@@ -164,12 +209,22 @@ class PagingQueryPage extends PureComponent {
         wrapClassName={tableClassName}
         wrapStyle={tableStyle}
         onLoadingChange={loadingParam => this.setState({ internalLoading: loadingParam })}
-        tableProps={pagingQueryTableProps}
+        // tableProps={{ style: { maxHeight: 400, overflowX: "auto" }, ...pagingQueryTableProps }}
+        // tableProps={{ scroll: true, ...pagingQueryTableProps }}
+        // tableProps={{ scroll: { x: true, y }, ...pagingQueryTableProps }}
+        // tableProps={pagingQueryTableProps}
+        tableProps={tableProps}
       />
     )
   }
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
+
+  // 表单 展开/折叠
+  handFormIsDown = () => {
+    const { formIsDown } = this.state;
+    this.setState({ formIsDown: !formIsDown });
+  }
 
   // 表单请求数据处理
   handleRequestInterceptor = ({
@@ -220,10 +275,18 @@ class PagingQueryPage extends PureComponent {
     }
   }
 
+  // 高度变化
+  handleHeight = () => {
+    const screenHeight = document.documentElement.clientHeight;
+    this.setState({ screenHeight });
+    // console.log("handleHeight -> clientHeight", document.documentElement.clientHeight);
+  };
+
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
 
   render() {
     const {
+      smartHeight = false,            // 智能高度调节
       defaultLabelCol,                // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
       columnCount = 1,                // 表单布局列数(支持1、2、3、4、6)
       resetValues = {},               // 表单重置值配置
@@ -231,10 +294,12 @@ class PagingQueryPage extends PureComponent {
       formFields = {},                // 表单字段配置
       defaultRowProps = {},           // Row组件默认属性配置
       formEngineProps = {},           // 表单引擎属性
-      formActionsWidth = 170,         // 表单操作部分宽度，只能使用绝对宽度 number
+      formActionsWidth = 205,         // 表单操作部分宽度，只能使用绝对宽度 number
       formClassName,                  // 表单最外层包装元素的className
       formStyle = {},                 // 表单最外层包装元素的样式
       formValuesHandle,               // 表单数据处理 (formValues) => (formValues)
+      showFormReset = false,          // 是否显示表单[重置]按钮
+      showFormDownUp = false,         // 是否显示表单[展开/折叠]指示器
 
       actionsContent,                 // 操作块内容 ReactNode | (?) => (ReactNode)
       actionsClassName,               // 操作块className
@@ -267,7 +332,7 @@ class PagingQueryPage extends PureComponent {
       wrapStyle = {},                 // 最外层包装元素的样式
     } = this.props;
     return (
-      <div className={wrapClassName || undefined} style={wrapStyle}>
+      <div className={wrapClassName || undefined} style={{ height: "100%", ...wrapStyle }}>
         {/* 查询表单 */}
         {
           this.getForm({
@@ -281,6 +346,8 @@ class PagingQueryPage extends PureComponent {
             formActionsWidth,
             formClassName,
             formStyle,
+            showFormReset,
+            showFormDownUp,
           })
         }
         {/* 操作按钮 */}
@@ -294,6 +361,7 @@ class PagingQueryPage extends PureComponent {
         {/* 数据表格 */}
         {
           this.getTable({
+            smartHeight,
             formValuesHandle,
             rowKey,
             columns,

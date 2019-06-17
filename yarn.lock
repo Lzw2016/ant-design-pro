@@ -2727,7 +2727,7 @@ antd@3.x:
     shallowequal "^1.1.0"
     warning "~4.0.2"
 
-antd@^3.19.4:
+antd@^3.19.5:
   version "3.19.5"
   resolved "https://registry.npm.taobao.org/antd/download/antd-3.19.5.tgz#f206ae40889b6189de38b9c681bc9f44a1c2bb54"
   integrity sha1-8gauQIibYYneOLnGgbyfRKHCu1Q=

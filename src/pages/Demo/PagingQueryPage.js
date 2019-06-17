@@ -47,6 +47,7 @@ class Demo1 extends PureComponent {
                 InputComponent: InputEnum.Input,
                 inputProp: {
                   placeholder: "请输入系统名称",
+                  allowClear: true,
                 },
               },
               title: {
@@ -54,6 +55,7 @@ class Demo1 extends PureComponent {
                 InputComponent: InputEnum.Input,
                 inputProp: {
                   placeholder: "请输入权限标题",
+                  allowClear: true,
                 },
               },
               permissionStr: {
@@ -61,6 +63,7 @@ class Demo1 extends PureComponent {
                 InputComponent: InputEnum.Input,
                 inputProp: {
                   placeholder: "请输入唯一权限标识",
+                  allowClear: true,
                 },
               },
               // title: {

@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "@antv/data-set": "^0.10.1",
-    "antd": "^3.19.4",
+    "antd": "^3.19.5",
     "bizcharts": "3.5.2-beta.1",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
