@@ -1,4 +1,4 @@
-[English](./README.md) | 简体中文 | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md)
+[English](./README.md) | 简体中文 | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md) | [Français](./README.fr-FR.md)
 
 <h1 align="center">Ant Design Pro</h1>
 
@@ -17,8 +17,14 @@
 - 常见问题：http://pro.ant.design/docs/faq-cn
 - 国内镜像：http://ant-design-pro.gitee.io
 
+## 现在我们发布了 4.0! 🎉🎉🎉
+
+[Announcing Ant Design Pro 4.0.0](https://zhuanlan.zhihu.com/p/67498559)
+
 ## 特性
 
+- :bulb: **TypeScript**: 应用程序级 JavaScript 的语言
+- :scroll: **区块**: 通过区块模板快速构建页面
 - :gem: **优雅美观**：基于 Ant Design 体系精心设计
 - :triangular_ruler: **常见设计模式**：提炼自中后台应用的典型页面和场景
 - :rocket: **最新技术栈**：使用 React/umi/dva/antd 等前端前沿技术开发
@@ -66,35 +72,19 @@
 
 ## 使用
 
-### 使用命令行
-
 ```bash
-$ git clone https://github.com/ant-design/ant-design-pro.git --depth=1
-$ cd ant-design-pro
+$ yarn create umi  # or npm create umi
+
+# Choose ant-design-pro:
+ Select the boilerplate type (Use arrow keys)
+❯ ant-design-pro  - Create project with an layout-only ant-design-pro boilerplate, use together with umi block.
+  app             - Create project with a simple boilerplate, support typescript.
+  block           - Create a umi block.
+  library         - Create a library with umi.
+  plugin          - Create a umi plugin.
+
 $ npm install
-$ npm start         # 访问 http://localhost:8000
-```
-
-### 使用 docker
-
-```bash
-# preview
-$ docker pull antdesign/ant-design-pro
-$ docker run -p 80:80 antdesign/ant-design-pro
-# open http://localhost
-
-# dev
-$ npm run docker:dev
-
-# build
-$ npm run docker:build
-
-
-# production dev
-$ npm run docker-prod:dev
-
-// production build
-$ npm run docker-prod:build
+$ npm start         # visit http://localhost:8000
 ```
 
 更多信息请参考 [使用文档](http://pro.ant.design/docs/getting-started)。
@@ -114,3 +104,9 @@ $ npm run docker-prod:build
 - 在你的公司或个人项目中使用 Ant Design Pro。
 - 通过 [Issue](http://github.com/ant-design/ant-design-pro/issues) 报告 bug 或进行咨询。
 - 提交 [Pull Request](http://github.com/ant-design/ant-design-pro/pulls) 改进 Pro 的代码。
+
+<div align="center">
+   <a href="https://www.netlify.com">
+    <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
+  </a>
+</div>

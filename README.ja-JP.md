@@ -1,4 +1,4 @@
-[English](./README.md) | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | 日本語
+[English](./README.md) | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | 日本語 | [Français](./README.fr-FR.md)
 
 <h1 align="center">Ant Design Pro</h1>
 
@@ -77,32 +77,18 @@
 ### bash を使う方法
 
 ```bash
-$ git clone https://github.com/ant-design/ant-design-pro.git --depth=1
-$ cd ant-design-pro
+$ yarn create umi  # or npm create umi
+
+# Choose ant-design-pro:
+ Select the boilerplate type (Use arrow keys)
+❯ ant-design-pro  - Create project with an layout-only ant-design-pro boilerplate, use together with umi block.
+  app             - Create project with a simple boilerplate, support typescript.
+  block           - Create a umi block.
+  library         - Create a library with umi.
+  plugin          - Create a umi plugin.
+
 $ npm install
 $ npm start         # http://localhost:8000 を開く
-```
-
-### Docker を使う方法
-
-```bash
-# プレビュー
-$ docker pull antdesign/ant-design-pro
-$ docker run -p 80:80 antdesign/ant-design-pro
-# http://localhost を開く
-
-# dev
-$ npm run docker:dev
-
-# build
-$ npm run docker:build
-
-
-# production dev
-$ npm run docker-prod:dev
-
-# production build
-$ npm run docker-prod:build
 ```
 
 ### Gitpod を使う方法
@@ -130,3 +116,9 @@ Gitpod（GitHub 用の無料オンライン開発環境）でプロジェクト�
 - 更新すること。 改善を、[pull requests](http://github.com/ant-design/ant-design-pro/pulls) で送ってください。
 
 [![DevDependencies](https://img.shields.io/david/dev/ant-design/ant-design-pro.svg)](https://david-dm.org/ant-design/ant-design-pro?type=dev)
+
+<div align="center">
+   <a href="https://www.netlify.com">
+    <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
+  </a>
+</div>

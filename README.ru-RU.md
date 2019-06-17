@@ -1,4 +1,4 @@
-[English](./README.md) | [简体中文](./README.zh-CN.md) | Русский | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md)
+[English](./README.md) | [简体中文](./README.zh-CN.md) | Русский | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md) | [Français](./README.fr-FR.md)
 
 <h1 align="center">Ant Design Pro</h1>
 
@@ -71,8 +71,16 @@ UI-решение "из коробки" для корпоративных при
 ## Использование
 
 ```bash
-$ git clone https://github.com/ant-design/ant-design-pro.git --depth=1
-$ cd ant-design-pro
+$ yarn create umi  # or npm create umi
+
+# Choose ant-design-pro:
+ Select the boilerplate type (Use arrow keys)
+❯ ant-design-pro  - Create project with an layout-only ant-design-pro boilerplate, use together with umi block.
+  app             - Create project with a simple boilerplate, support typescript.
+  block           - Create a umi block.
+  library         - Create a library with umi.
+  plugin          - Create a umi plugin.
+
 $ npm install
 $ npm start         # visit http://localhost:8000
 ```
@@ -94,3 +102,9 @@ $ npm start         # visit http://localhost:8000
 - Использовать Ant Design Pro в ежедневной работе.
 - Создавать [задачи](http://github.com/ant-design/ant-design-pro/issues) заводить баги или отвечать на вопросы.
 - Делать [pull-реквесты](http://github.com/ant-design/ant-design-pro/pulls) для совершенствования нашего кода.
+
+<div align="center">
+   <a href="https://www.netlify.com">
+    <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
+  </a>
+</div>

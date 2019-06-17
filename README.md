@@ -1,4 +1,4 @@
-English | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md)
+English | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | [日本語](./README.ja-JP.md) | [Français](./README.fr-FR.md)
 
 <h1 align="center">Ant Design Pro</h1>
 
@@ -17,9 +17,9 @@ An out-of-box UI solution for enterprise applications as a React boilerplate.
 - FAQ: http://pro.ant.design/docs/faq
 - Mirror Site in China: http://ant-design-pro.gitee.io
 
-## 2.0 Released Now! 🎉🎉🎉
+## 4.0 Released Now! 🎉🎉🎉
 
-[Announcing Ant Design Pro 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
+[Announcing Ant Design Pro 4.0.0](https://medium.com/ant-design/ant-design-pro-v4-is-here-6f23098ae9d9)
 
 ## Translation Recruitment :loudspeaker:
 
@@ -27,6 +27,8 @@ We need your help: https://github.com/ant-design/ant-design-pro/issues/120
 
 ## Features
 
+- :bulb: **TypeScript**: A language for application-scale JavaScript
+- :scroll: **Blocks**: Build page with block template
 - :gem: **Neat Design**: Follow [Ant Design specification](http://ant.design/)
 - :triangular_ruler: **Common Templates**: Typical templates for enterprise applications
 - :rocket: **State of The Art Development**: Newest development stack of React/umi/dva/antd
@@ -77,32 +79,18 @@ We need your help: https://github.com/ant-design/ant-design-pro/issues/120
 ### Use bash
 
 ```bash
-$ git clone https://github.com/ant-design/ant-design-pro.git --depth=1
-$ cd ant-design-pro
+$ yarn create umi  # or npm create umi
+
+# Choose ant-design-pro:
+ Select the boilerplate type (Use arrow keys)
+❯ ant-design-pro  - Create project with an layout-only ant-design-pro boilerplate, use together with umi block.
+  app             - Create project with a simple boilerplate, support typescript.
+  block           - Create a umi block.
+  library         - Create a library with umi.
+  plugin          - Create a umi plugin.
+
 $ npm install
 $ npm start         # visit http://localhost:8000
-```
-
-### Use by docker
-
-```bash
-# preview
-$ docker pull antdesign/ant-design-pro
-$ docker run -p 80:80 antdesign/ant-design-pro
-# open http://localhost
-
-# dev
-$ npm run docker:dev
-
-# build
-$ npm run docker:build
-
-
-# production dev
-$ npm run docker-prod:dev
-
-# production build
-$ npm run docker-prod:build
 ```
 
 ### Use Gitpod
@@ -128,3 +116,9 @@ Any type of contribution is welcome, here are some examples of how you may contr
 - Use Ant Design Pro in your daily work.
 - Submit [issues](http://github.com/ant-design/ant-design-pro/issues) to report bugs or ask questions.
 - Propose [pull requests](http://github.com/ant-design/ant-design-pro/pulls) to improve our code.
+
+<div align="center">
+   <a href="https://www.netlify.com">
+    <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
+  </a>
+</div>
