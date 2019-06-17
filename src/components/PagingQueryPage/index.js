@@ -80,6 +80,7 @@ class PagingQueryPage extends PureComponent {
     return (
       <FormEngine
         wrappedComponentRef={formEngine => { this.formEngine = formEngine; }}
+        enterSubmit={true}
         saveForm={form => { this.form = form; }}
         defaultLabelCol={defaultLabelCol}
         columnCount={columnCount}
@@ -99,12 +100,12 @@ class PagingQueryPage extends PureComponent {
           rightStyle: { padding: "4px 0 0 24px" },
         }}
         formProps={{
-          // TODO 回车就能搜索
-          // onSubmit: e => {
-          //   console.log("getForm --> onSubmit", e);
-          //   if (e) e.preventDefault();
-          //   if (this.pagingQueryTable) this.pagingQueryTable.reloadDataSource(true);
-          // },
+          // 回车就能搜索
+          onSubmit: e => {
+            // console.log("getForm --> onSubmit", e);
+            if (e) e.preventDefault();
+            this.handleQuery();
+          },
           ...formEngineProps
         }}
       />

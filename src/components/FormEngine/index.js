@@ -59,6 +59,7 @@ class FormEngine extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
   getGridForm = ({
+    enterSubmit,
     defaultLabelCol,
     columnCount,
     defaultRules,
@@ -161,6 +162,7 @@ class FormEngine extends PureComponent {
             return <Row key={index} gutter={this.gutter} {...rowProps}>{columns}</Row>;
           })
         }
+        {enterSubmit === true ? <Button htmlType="submit" style={{ display: "none" }}>提交</Button> : undefined}
       </Form>
     );
     return this.getActionForm(formComponent, actionsConfig, resetValues, defaultValues);
@@ -490,6 +492,7 @@ class FormEngine extends PureComponent {
   render() {
     const {
       saveForm,                         // 保存表单Form对象 (form) => ()
+      enterSubmit = false,              // 输入回车提交表单 boolean
       defaultLabelCol,                  // 默认全局的Form.Item labelCol属性(wrapperCol属性是通过labelCol值计算得出)
       actionsConfig = {},               // 表单提交部分配置 boolean | {}
       columnCount = 1,                  // 表单布局列数(支持1、2、3、4、6)
@@ -542,6 +545,7 @@ class FormEngine extends PureComponent {
       <div className={wrapClassName || undefined} style={wrapStyle}>
         {
           this.getGridForm({
+            enterSubmit,
             defaultLabelCol,
             columnCount: columnCountTmp,
             defaultRules,
