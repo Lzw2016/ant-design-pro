@@ -54,7 +54,7 @@ class FormEngine extends PureComponent {
   labelCol = { span: 6 };
 
   // Row gutter
-  gutter = 8;
+  gutter = 0;
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 

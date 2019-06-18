@@ -18,9 +18,12 @@ class PagingQueryPage extends PureComponent {
   // 构造器
   constructor(props) {
     super(props);
-    const { smartHeight } = props;
+    const { smartHeight, initFormIsDown } = props;
     if (smartHeight === true) {
       this.handleHeight = lodash.debounce(this.handleHeight, 100, { maxWait: 350 });
+    }
+    if (initFormIsDown === false || initFormIsDown === true) {
+      this.state.formIsDown = initFormIsDown;
     }
   }
 
@@ -54,7 +57,7 @@ class PagingQueryPage extends PureComponent {
     // 选中数据
     // selectedRowKeys: [],
     // 展开/折叠 down up
-    formIsDown: true,
+    formIsDown: false,
   }
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
@@ -73,10 +76,45 @@ class PagingQueryPage extends PureComponent {
     formStyle,
     showFormReset,
     showFormDownUp,
+    actionsInLastformField,
   }) => {
     let widthTmp = formActionsWidth || 205;
     if (showFormDownUp !== true) widthTmp -= 34;
     if (showFormReset !== true) widthTmp -= 71.81;
+    let actionsConfig = false;
+    if (actionsInLastformField === true && this.useActionsInLastformField !== true) {
+      // console.log("getform --> useActionsInLastformField", this.useActionsInLastformField);
+      this.useActionsInLastformField = true;
+      const formFieldNames = lodash.keys(formFields);
+      // console.log("getform --> formFieldNames", formFieldNames);
+      let lastFormField;
+      if (formFieldNames.length > 0 && formFieldNames[formFieldNames.length - 1]) {
+        lastFormField = formFields[formFieldNames[formFieldNames.length - 1]];
+        if (lastFormField && lastFormField.suffixLabel) lastFormField = undefined;
+      }
+      // console.log("getform --> lastFormField", lastFormField);
+      if (lastFormField) {
+        lastFormField.suffixLabelColSpan = 1;
+        lastFormField.suffixLabel = () => this.getFormActions(showFormReset, showFormDownUp);
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        formFields.actionsConfig = {
+          useFormItem: false,
+          inputRender: () => this.getFormActions(showFormReset, showFormDownUp),
+          decorator: false,
+        };
+      }
+    } else if (this.useActionsInLastformField !== true) {
+      actionsConfig = {
+        render: () => {
+          // resetValues, defaultValues, form, submitLoading
+          return this.getFormActions(showFormReset, showFormDownUp);
+        },
+        placement: "right",
+        width: widthTmp,
+        rightStyle: { padding: "0 0 12px 24px", verticalAlign: "bottom" },
+      };
+    }
     return (
       <FormEngine
         wrappedComponentRef={formEngine => { this.formEngine = formEngine; }}
@@ -90,15 +128,7 @@ class PagingQueryPage extends PureComponent {
         defaultRowProps={defaultRowProps}
         wrapClassName={formClassName || styles.queryForm}
         wrapStyle={formStyle}
-        actionsConfig={{
-          render: () => {
-            // resetValues, defaultValues, form, submitLoading
-            return this.getFormActions(showFormReset, showFormDownUp);
-          },
-          placement: "right",
-          width: widthTmp,
-          rightStyle: { padding: "4px 0 0 24px" },
-        }}
+        actionsConfig={actionsConfig}
         formProps={{
           // 回车就能搜索
           onSubmit: e => {
@@ -128,7 +158,7 @@ class PagingQueryPage extends PureComponent {
             (
               <Tooltip title={formIsDown ? "展开" : "折叠"} placement="top">
                 <Icon
-                  style={{ marginLeft: 12, cursor: "pointer", color: "#1890ff", verticalAlign: "middle", fontSize: 22 }}
+                  style={{ userSelect: "none", marginLeft: 12, cursor: "pointer", color: "#1890ff", verticalAlign: "middle", fontSize: 22 }}
                   type={formIsDown ? "caret-down" : "caret-up"}
                   onClick={this.handFormIsDown}
                 />
@@ -222,7 +252,8 @@ class PagingQueryPage extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   // 表单 展开/折叠
-  handFormIsDown = () => {
+  handFormIsDown = (e) => {
+    if (e) e.preventDefault();
     const { formIsDown } = this.state;
     this.setState({ formIsDown: !formIsDown });
   }
@@ -301,11 +332,11 @@ class PagingQueryPage extends PureComponent {
       formValuesHandle,               // 表单数据处理 (formValues) => (formValues)
       showFormReset = false,          // 是否显示表单[重置]按钮
       showFormDownUp = false,         // 是否显示表单[展开/折叠]指示器
-
+      initFormIsDown = false,         // 查询表单[展开(false)/折叠(true)]默认值
       actionsContent,                 // 操作块内容 ReactNode | (?) => (ReactNode)
       actionsClassName,               // 操作块className
       actionsStyle = {},              // 操作块样式
-
+      actionsInLastformField = false, // 操作块内容位置是否在最后一个表单查询字段的suffixLabel位置
       rowKey = "key",                 // 表格行 key 的取值，可以是字符串或一个函数
       columns = [],                   // 表格列配置
       defaultPagination = {},         // 默认分页数据
@@ -328,7 +359,6 @@ class PagingQueryPage extends PureComponent {
       pagingQueryTableProps = {},     // 分页表格属性
       tableClassName,                 // 数据表格块className
       tableStyle = {},                // 数据表格块样式
-
       wrapClassName,                  // 最外层包装元素的className
       wrapStyle = {},                 // 最外层包装元素的样式
     } = this.props;
@@ -349,6 +379,8 @@ class PagingQueryPage extends PureComponent {
             formStyle,
             showFormReset,
             showFormDownUp,
+            initFormIsDown,
+            actionsInLastformField,
           })
         }
         {/* 操作按钮 */}

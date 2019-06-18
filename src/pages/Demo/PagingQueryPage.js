@@ -41,6 +41,9 @@ class Demo1 extends PureComponent {
             columnCount={3}
             resetValues={values}
             defaultValues={lodash.merge({}, values)}
+            // showFormReset={true}
+            // showFormDownUp={true}
+            // initFormIsDown={true}
             formFields={{
               sysName: {
                 label: "系统名称",
@@ -59,7 +62,7 @@ class Demo1 extends PureComponent {
                 },
               },
               permissionStr: {
-                label: "唯一权限标识",
+                label: "权限标识",
                 InputComponent: InputEnum.Input,
                 inputProp: {
                   placeholder: "请输入唯一权限标识",
@@ -74,7 +77,48 @@ class Demo1 extends PureComponent {
               //     format: "YYYY年MM月DD日",
               //   },
               // },
+              f01: {
+                label: "f01",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "f01",
+                  allowClear: true,
+                },
+              },
+              f02: {
+                label: "f02",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "f02",
+                  allowClear: true,
+                },
+              },
+              f03: {
+                label: "f03",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "f03",
+                  allowClear: true,
+                },
+              },
+              f04: {
+                label: "f04",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "f04",
+                  allowClear: true,
+                },
+              },
+              f05: {
+                label: "f05",
+                InputComponent: InputEnum.Input,
+                inputProp: {
+                  placeholder: "f05",
+                  allowClear: true,
+                },
+              },
             }}
+            actionsInLastformField={true}
             actionsContent={loadingParam => {
               return (
                 <Button.Group>
