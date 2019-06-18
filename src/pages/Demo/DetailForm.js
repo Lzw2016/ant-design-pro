@@ -13,17 +13,6 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 class DemoTest extends PureComponent {
 
   state = {
-    data: {
-      name: "freemenL",
-      deptName: "技术研发部 xxx部门 xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门",
-      dutyType: "早班",
-      startTime: "9:00",
-      endTime: "6:00",
-      onRange: "9:00-9:30",
-      offRange: "6:00-11:59",
-      duration: "1小时",
-      stats: 1,
-    },
     label: {
       name: <span style={{ color: "#4A90E2" }}>班次名称</span>,
       deptName: "所属部门",
@@ -35,6 +24,17 @@ class DemoTest extends PureComponent {
       duration: <span><Icon type="info-circle" /> 午休时间</span>,
       stats: "状态",
     },
+    data: {
+      name: "freemenL",
+      deptName: "技术研发部 xxx部门 xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门xxx部门 xxx部门",
+      dutyType: "早班",
+      startTime: "9:00",
+      endTime: "6:00",
+      onRange: "9:00-9:30",
+      offRange: "6:00-11:59",
+      duration: "1小时",
+      stats: 1,
+    },
     dataTransform: {
       endTime: { style: { color: "red" } },
       duration: (value, key, data) => {
@@ -42,8 +42,8 @@ class DemoTest extends PureComponent {
         console.log("duration | ", data);
         return `${value} [${key}]`;
       },
-      dutyType: { columnCount: 2 },
-      // deptName: { columnCount: 2 ,transform : (value, key, data)=> <span title={value}>{value}</span>},
+      // dutyType: { columnCount: 2 },
+      deptName: { columnCount: 2, transform: (value) => <span title={value}>{value}</span> },
       // startTime: { columnCount: 3 },
       stats: [{ value: 1, label: "成功" }, { value: 0, label: "失败" }]
     },

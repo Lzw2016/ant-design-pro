@@ -114,8 +114,8 @@ class DetailModal extends PureComponent {
       columnCount = 1,            // 数据行数
       labelWidthPercent = 0.35,   // label单元格宽度百分比
       labelSuffix = ":",          // label单元格后缀字符串
+      label = {},                 // label配置(决定显示字段和排序)
       data = {},                  // 需要显示的数据
-      label = {},                 // label配置
       dataTransform = {},         // 数据转换配置
       detailFormProp = {},        // DetailForm 自定义属性
       children,                   // 子组件

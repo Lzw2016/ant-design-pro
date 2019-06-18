@@ -15,17 +15,6 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 class Demo1 extends PureComponent {
 
   state = {
-    data: {
-      name: "freemenL",
-      dutyType: "早班",
-      deptName: "技术研发部 xxx部门 xxx部门 xxx部门",
-      startTime: "9:00",
-      endTime: "6:00",
-      onRange: "9:00-9:30",
-      offRange: "6:00-11:59",
-      duration: "1小时",
-      stats: 1,
-    },
     label: {
       name: <span style={{ color: "#4A90E2" }}>班次名称</span>,
       dutyType: "班次类型",
@@ -36,6 +25,17 @@ class Demo1 extends PureComponent {
       offRange: "下班打卡时间范围",
       duration: <span><Icon type="info-circle" /> 午休时间</span>,
       stats: "状态",
+    },
+    data: {
+      name: "freemenL",
+      dutyType: "早班",
+      deptName: "技术研发部 xxx部门 xxx部门 xxx部门",
+      startTime: "9:00",
+      endTime: "6:00",
+      onRange: "9:00-9:30",
+      offRange: "6:00-11:59",
+      duration: "1小时",
+      stats: 1,
     },
     dataTransform: {
       endTime: { style: { color: "red" } },

@@ -112,7 +112,7 @@ class DetailForm extends PureComponent {
     const trArray = [];
     let tr = [];
     let columnIndex = 0;
-    lodash.forEach(data, (value, key) => {
+    lodash.forEach(label, (labelTmp, key) => {
       if (columnIndex >= columnCount) {
         // 需要换行
         columnIndex = 0;
@@ -123,7 +123,7 @@ class DetailForm extends PureComponent {
       // 生成行列
       let labelTdStyle;
       let valueTdStyle;
-      const labelTmp = label[key] || "";
+      const value = data[key] || "-";
       const dataTransformTmp = dataTransform[key];
       if (columnIndex === columnCount) {
         // 最后一列
@@ -321,8 +321,8 @@ class DetailForm extends PureComponent {
       columnCount = 1,            // 数据行数
       labelWidthPercent = 0.35,   // label单元格宽度百分比
       labelSuffix = ":",          // label单元格后缀字符串
+      label = {},                 // label配置(决定显示字段和排序)
       data = {},                  // 需要显示的数据
-      label = {},                 // label配置
       dataTransform = {},         // 数据转换配置
     } = this.props;
     // const { visible, fileList, uploadResponseData: { excelImportState } } = this.state;
