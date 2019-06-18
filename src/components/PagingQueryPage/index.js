@@ -88,15 +88,16 @@ class PagingQueryPage extends PureComponent {
       // console.log("getform --> formFieldNames", formFieldNames);
       let lastFormField;
       if (formFieldNames.length > 0 && formFieldNames[formFieldNames.length - 1]) {
-        lastFormField = formFieldsTmp[formFieldNames[formFieldNames.length - 1]];
-        if (lastFormField && lastFormField.suffixLabel) lastFormField = undefined;
+        lastFormField = { ...formFieldsTmp[formFieldNames[formFieldNames.length - 1]] };
+        formFieldsTmp[formFieldNames[formFieldNames.length - 1]] = lastFormField;
+        const lastFormFieldRaw = formFields[formFieldNames[formFieldNames.length - 1]];
+        if (lastFormFieldRaw && lastFormFieldRaw.suffixLabel) lastFormField = undefined;
       }
       // console.log("getform --> lastFormField", lastFormField);
       if (lastFormField) {
         lastFormField.suffixLabelColSpan = 1;
         lastFormField.suffixLabel = () => this.getFormActions(showFormReset, showFormDownUp);
       } else {
-        // eslint-disable-next-line no-param-reassign
         formFieldsTmp.actionsConfig = {
           useFormItem: false,
           inputRender: () => this.getFormActions(showFormReset, showFormDownUp),
