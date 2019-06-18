@@ -82,14 +82,13 @@ class PagingQueryPage extends PureComponent {
     if (showFormDownUp !== true) widthTmp -= 34;
     if (showFormReset !== true) widthTmp -= 71.81;
     let actionsConfig = false;
-    if (actionsInLastformField === true && this.useActionsInLastformField !== true) {
-      // console.log("getform --> useActionsInLastformField", this.useActionsInLastformField);
-      this.useActionsInLastformField = true;
-      const formFieldNames = lodash.keys(formFields);
+    const formFieldsTmp = { ...formFields };
+    if (actionsInLastformField === true) {
+      const formFieldNames = lodash.keys(formFieldsTmp);
       // console.log("getform --> formFieldNames", formFieldNames);
       let lastFormField;
       if (formFieldNames.length > 0 && formFieldNames[formFieldNames.length - 1]) {
-        lastFormField = formFields[formFieldNames[formFieldNames.length - 1]];
+        lastFormField = formFieldsTmp[formFieldNames[formFieldNames.length - 1]];
         if (lastFormField && lastFormField.suffixLabel) lastFormField = undefined;
       }
       // console.log("getform --> lastFormField", lastFormField);
@@ -98,13 +97,13 @@ class PagingQueryPage extends PureComponent {
         lastFormField.suffixLabel = () => this.getFormActions(showFormReset, showFormDownUp);
       } else {
         // eslint-disable-next-line no-param-reassign
-        formFields.actionsConfig = {
+        formFieldsTmp.actionsConfig = {
           useFormItem: false,
           inputRender: () => this.getFormActions(showFormReset, showFormDownUp),
           decorator: false,
         };
       }
-    } else if (this.useActionsInLastformField !== true) {
+    } else {
       actionsConfig = {
         render: () => {
           // resetValues, defaultValues, form, submitLoading
@@ -124,7 +123,7 @@ class PagingQueryPage extends PureComponent {
         columnCount={columnCount}
         resetValues={resetValues}
         defaultValues={defaultValues}
-        formFields={formFields}
+        formFields={formFieldsTmp}
         defaultRowProps={defaultRowProps}
         wrapClassName={formClassName || styles.queryForm}
         wrapStyle={formStyle}
