@@ -324,6 +324,14 @@ class DetailForm extends PureComponent {
       label = {},                 // label配置(决定显示字段和排序)
       data = {},                  // 需要显示的数据
       dataTransform = {},         // 数据转换配置
+      dataUrl,                    // 数据请求地址
+      requestMethod = "get",      // 请求提交 Method
+      requestOptions = {},        // 请求 fetch options(选项)
+      requestInterceptor,         // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      getData,                    // 请求响应josn中取数据 (resData, response) => (Array<dataSource>)
+      dataJsonPath,               // 请求响应josn中取数据的JsonPath
+      requestError,               // 请求失败处理 (resData, response, error) => (Object<resData> | undefined | null)
+      requestSuccessful,          // 请求成功回调 (resData, response) => ()
     } = this.props;
     // const { visible, fileList, uploadResponseData: { excelImportState } } = this.state;
     return (
