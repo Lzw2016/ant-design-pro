@@ -18,7 +18,9 @@ class Demo1 extends PureComponent {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <DetailModal />
+          <DetailModal>
+            <a>查看详情</a>
+          </DetailModal>
         </Card>
       </PageHeaderWrapper>
     );
