@@ -10,10 +10,12 @@ import DetailForm from '@/components/DetailForm';
 
 class DetailModal extends PureComponent {
 
-  // // 构造器
-  // constructor(props) {
-  //   super(props);
-  // }
+  // 构造器
+  constructor(props) {
+    super(props);
+    const { initVisible } = props;
+    if (initVisible === true || initVisible === false) this.state.internalVisible = initVisible;
+  }
 
   // // 加载完成
   // componentDidMount() {
@@ -39,38 +41,45 @@ class DetailModal extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
-  getModal = () => {
+  getModal = ({
+    modalWidth,
+    modalTitle,
+    modalFooter,
+    cancelButtonProps,
+    visible,
+    onOk,
+    onCancel,
+    maskClosable,
+    modalProps,
+    columnCount,
+    labelWidthPercent,
+    labelSuffix,
+    data,
+    label,
+    dataTransform,
+    detailFormProp,
+  }) => {
     const { internalVisible } = this.state;
     return (
       <Modal
-        // title="详情"
-        width={800}
-        footer={null}
-        cancelButtonProps={{ style: { display: "none" } }}
-        visible={internalVisible}
-        onOk={() => this.setState({ internalVisible: false })}
-        onCancel={() => this.setState({ internalVisible: false })}
+        width={modalWidth}
+        title={modalTitle}
+        footer={modalFooter}
+        cancelButtonProps={cancelButtonProps || { style: { display: "none" } }}
+        visible={(visible === null || visible === undefined) ? internalVisible : visible}
+        onOk={() => this.handleOk(onOk)}
+        onCancel={() => this.handleCancel(onCancel)}
+        maskClosable={maskClosable}
+        {...modalProps}
       >
         <DetailForm
-          columnCount={2}
-          labelWidthPercent={0.35}
-          labelSuffix=":"
-          data={{}}
-          label={{
-            // id: "主键id",
-            // sysName: "系统(或服务)名称",
-            // title: "权限标题",
-            // permissionStr: "唯一权限标识",
-            // resourcesType: "权限类型",
-            // description: "权限说明",
-            // createAt: "创建时间",
-            // updateAt: "更新时间",
-          }}
-          dataTransform={{
-            // title: { columnCount: 2 },
-            // description: { columnCount: 2 },
-            // resourcesType: ResourcesTypeAyyay,
-          }}
+          columnCount={columnCount}
+          labelWidthPercent={labelWidthPercent}
+          labelSuffix={labelSuffix}
+          data={data}
+          label={label}
+          dataTransform={dataTransform}
+          {...detailFormProp}
         />
       </Modal>
     )
@@ -78,11 +87,38 @@ class DetailModal extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
+  handleOk = (onOk) => {
+    this.setState({ internalVisible: false });
+    if (onOk instanceof Function) onOk();
+  }
+
+  handleCancel = (onCancel) => {
+    this.setState({ internalVisible: false })
+    if (onCancel instanceof Function) onCancel();
+  }
+
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
 
   render() {
     const {
-      children,               // 子组件
+      initVisible = false,        // 初始化是否显示
+      modalWidth = 800,           // 对话框宽度
+      modalTitle = undefined,     // 对话框标题
+      modalFooter = null,         // 对话框页脚
+      cancelButtonProps,          // 对话框取消按钮属性
+      visible,                    // 对话框显示(受控属性)
+      onOk,                       // 对话框确定事件
+      onCancel,                   // 对话框取消事件
+      maskClosable = true,        // 点击蒙层是否允许关闭
+      modalProps = {},            // 对话框属性
+      columnCount = 1,            // 数据行数
+      labelWidthPercent = 0.35,   // label单元格宽度百分比
+      labelSuffix = ":",          // label单元格后缀字符串
+      data = {},                  // 需要显示的数据
+      label = {},                 // label配置
+      dataTransform = {},         // 数据转换配置
+      detailFormProp = {},        // DetailForm 自定义属性
+      children,                   // 子组件
     } = this.props;
     if (children) {
       React.Children.only(children);
@@ -91,7 +127,23 @@ class DetailModal extends PureComponent {
       <Fragment>
         {
           this.getModal({
-
+            initVisible,
+            modalWidth,
+            modalTitle,
+            modalFooter,
+            cancelButtonProps,
+            visible,
+            onOk,
+            onCancel,
+            maskClosable,
+            modalProps,
+            columnCount,
+            labelWidthPercent,
+            labelSuffix,
+            data,
+            label,
+            dataTransform,
+            detailFormProp,
           })
         }
         {React.Children.count(children) > 0 ? <span onClick={() => this.setState({ internalVisible: true })}>{children}</span> : ""}
