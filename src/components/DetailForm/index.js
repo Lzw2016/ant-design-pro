@@ -427,6 +427,7 @@ class DetailForm extends PureComponent {
     if (dataUrl) {
       WrapComponents = Spin;
       wrapComponentsProps.spinning = innerLoading;
+      wrapComponentsProps.delay = 100;
     }
     const dataTmp = (dataUrl) ? innerData : data;
     return (
