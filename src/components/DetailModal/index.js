@@ -69,6 +69,7 @@ class DetailModal extends PureComponent {
     dataJsonPath,
     requestError,
     requestSuccessful,
+    spinProps,
   }) => {
     const { internalVisible } = this.state;
     return (
@@ -106,6 +107,7 @@ class DetailModal extends PureComponent {
           dataJsonPath={dataJsonPath}
           requestError={requestError}
           requestSuccessful={requestSuccessful}
+          spinProps={spinProps}
           {...detailFormProp}
         />
       </Modal>
@@ -153,6 +155,7 @@ class DetailModal extends PureComponent {
       dataJsonPath,               // 请求响应josn中取数据的JsonPath
       requestError,               // 请求失败处理 (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,          // 请求成功回调 (resData, response) => ()
+      spinProps = {},             // Spin自定义属性
       children,                   // 子组件
     } = this.props;
     if (children) {
@@ -187,6 +190,7 @@ class DetailModal extends PureComponent {
             dataJsonPath,
             requestError,
             requestSuccessful,
+            spinProps,
           })
         }
         {React.Children.count(children) > 0 ? <span onClick={() => this.setState({ internalVisible: true })}>{children}</span> : ""}

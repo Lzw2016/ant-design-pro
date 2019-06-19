@@ -422,10 +422,11 @@ class DetailForm extends PureComponent {
       dataJsonPath,               // 请求响应josn中取数据的JsonPath
       requestError,               // 请求失败处理 (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,          // 请求成功回调 (resData, response) => ()
+      spinProps = {},             // Spin自定义属性
     } = this.props;
     const { innerData, innerLoading } = this.state;
     let WrapComponents = Fragment;
-    const wrapComponentsProps = {};
+    const wrapComponentsProps = { ...spinProps };
     if (dataUrl) {
       WrapComponents = Spin;
       wrapComponentsProps.spinning = innerLoading;

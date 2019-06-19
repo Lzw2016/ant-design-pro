@@ -72,7 +72,7 @@ class Demo1 extends PureComponent {
           <br />
           <DetailModal
             maskClosable={false}
-            modalTitle="数据详情"
+            // modalTitle="数据详情"
             columnCount={2}
             labelWidthPercent={0.36}
             labelSuffix=":"
