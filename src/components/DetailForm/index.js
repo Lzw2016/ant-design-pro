@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
-// import { Modal, Upload, Button, message, Alert, Table, Tooltip, Icon } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { Spin } from 'antd';
 import lodash from 'lodash';
+import jsonpath from "jsonpath";
 // import { formatMessage } from 'umi/locale';
 // import classNames from 'classnames';
 import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
@@ -14,11 +15,10 @@ class DetailForm extends PureComponent {
   //   super(props);
   // }
 
-  // // 加载完成
-  // componentDidMount() {
-  //   // this.tick();
-  //   varTypeOfTest();
-  // }
+  // 加载完成
+  componentDidMount() {
+    this.reLoadData();
+  }
 
   // // 组件更新
   // componentDidUpdate(prevProps) {
@@ -32,6 +32,10 @@ class DetailForm extends PureComponent {
 
   // 组件状态
   state = {
+    // 内部加载状态
+    innerLoading: false,
+    // 内部数据
+    innerData: {},
   }
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
@@ -305,6 +309,90 @@ class DetailForm extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
+  // 请求服务端数据
+  fetchData = ({
+    dataUrl,
+    requestMethod,
+    requestOptions,
+    requestInterceptor,
+    getData,
+    dataJsonPath,
+    requestError,
+    requestSuccessful,
+  }) => {
+    if (!dataUrl) return;
+    const fetchOptions = {
+      url: dataUrl,
+      options: { method: (requestMethod || "GET"), ...requestOptions },
+    };
+    // 请求之前的拦截
+    if (requestInterceptor instanceof Function) {
+      const tmp = requestInterceptor(fetchOptions);
+      if (tmp === false) return;
+      if (tmp && tmp.url) {
+        fetchOptions.url = tmp.url;
+      }
+      if (tmp && tmp.options) {
+        fetchOptions.options = tmp.options;
+      }
+    }
+    this.setState({ innerLoading: true });
+    // console.log("fetchData --> ", fetchOptions)
+    fetch(fetchOptions.url, fetchOptions.options)
+      .then(async response => {
+        let resData = await response.json();
+        if (response.status < 200 || response.status >= 400) {
+          if (requestError instanceof Function) resData = requestError(resData, response, undefined);
+        } else if (requestSuccessful instanceof Function) {
+          requestSuccessful(resData, response);
+        }
+        return { resData, response };
+      })
+      .then(({ resData, response }) => {
+        // console.log("fetchData --> resData", resData);
+        let data = resData;
+        if (getData instanceof Function) {
+          data = getData(resData, response);
+        } else if (dataJsonPath) {
+          const dataTmp = jsonpath.query(resData, dataJsonPath);
+          if (varTypeOf(dataTmp) === TypeEnum.array && dataTmp.length >= 1) data = dataTmp[0]
+        }
+        // console.log("fetchData --> data", data);
+        this.setState({ innerData: data, innerLoading: false });
+      })
+      .catch(err => {
+        let resData;
+        if (requestError instanceof Function) resData = requestError(undefined, undefined, err);
+        this.setState({ innerData: (resData || {}), innerLoading: false });
+      });
+  }
+
+  // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
+
+  // 重新加载数据
+  reLoadData = () => {
+    const {
+      dataUrl,
+      requestMethod = "get",
+      requestOptions = {},
+      requestInterceptor,
+      getData,
+      dataJsonPath,
+      requestError,
+      requestSuccessful,
+    } = this.props;
+    this.fetchData({
+      dataUrl,
+      requestMethod,
+      requestOptions,
+      requestInterceptor,
+      getData,
+      dataJsonPath,
+      requestError,
+      requestSuccessful,
+    });
+  }
+
   render() {
     const {
       borderColor = "#e8e8e8",    // 边框颜色 rgb(216, 236, 252)
@@ -328,75 +416,92 @@ class DetailForm extends PureComponent {
       requestMethod = "get",      // 请求提交 Method
       requestOptions = {},        // 请求 fetch options(选项)
       requestInterceptor,         // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
-      getData,                    // 请求响应josn中取数据 (resData, response) => (Array<dataSource>)
+      getData,                    // 请求响应josn中取数据 (resData, response) => (Object<data>)
       dataJsonPath,               // 请求响应josn中取数据的JsonPath
       requestError,               // 请求失败处理 (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,          // 请求成功回调 (resData, response) => ()
     } = this.props;
-    // const { visible, fileList, uploadResponseData: { excelImportState } } = this.state;
+    const { innerData, innerLoading } = this.state;
+    let WrapComponents = Fragment;
+    const wrapComponentsProps = {};
+    if (dataUrl) {
+      WrapComponents = Spin;
+      wrapComponentsProps.spinning = innerLoading;
+    }
+    const dataTmp = (dataUrl) ? innerData : data;
     return (
       <div style={{ ...style }}>
-        {/* 详情表格头部标题 */}
-        {
-          title ?
-            (title instanceof Function) ?
-              title(data)
-              : (
-                <div
-                  style={{
-                    border: `1px solid ${borderColor}`,
-                    borderBottom: 0,
-                    padding: "8px 8px",
-                    fontWeight: "bold",
-                    borderRadius: "4px 4px 0 0",
-                    fontSize: 16,
-                  }}
-                >
-                  {title}
-                </div>
-              )
-            : ''
-        }
-        {/* 详情表格 */}
-        {
-          this.getTable({
-            borderColor,
-            backgroundColor,
-            tableStyle: (style.width && (lodash.isFinite(style.width) || `${style.width}`.toLowerCase().endsWith("px"))) ? { ...tableStyle, width: style.width } : tableStyle,
-            tbodyStyle,
-            trStyle,
-            tdStyle,
-            labelStyle,
-            dataStyle,
-            columnCount,
-            labelWidthPercent,
-            labelSuffix,
-            data,
-            label,
-            dataTransform,
-          })
-        }
-        {/* 详情表格尾部 */}
-        {
-          footer ?
-            (footer instanceof Function) ?
-              footer(data)
-              : (
-                <div
-                  style={{
-                    border: `1px solid ${borderColor}`,
-                    borderTop: 0,
-                    padding: "8px 8px",
-                    fontWeight: "bold",
-                    borderRadius: "0 0 4px 4px",
-                    fontSize: 16,
-                  }}
-                >
-                  {footer}
-                </div>
-              )
-            : ''
-        }
+        <WrapComponents {...wrapComponentsProps}>
+          {/* 详情表格头部标题 */}
+          {
+            title ?
+              (title instanceof Function) ?
+                title(dataTmp)
+                : (
+                  <div
+                    style={{
+                      border: `1px solid ${borderColor}`,
+                      borderBottom: 0,
+                      padding: "8px 8px",
+                      fontWeight: "bold",
+                      borderRadius: "4px 4px 0 0",
+                      fontSize: 16,
+                    }}
+                  >
+                    {title}
+                  </div>
+                )
+              : ''
+          }
+          {/* 详情表格 */}
+          {
+            this.getTable({
+              borderColor,
+              backgroundColor,
+              tableStyle: (style.width && (lodash.isFinite(style.width) || `${style.width}`.toLowerCase().endsWith("px"))) ? { ...tableStyle, width: style.width } : tableStyle,
+              tbodyStyle,
+              trStyle,
+              tdStyle,
+              labelStyle,
+              dataStyle,
+              columnCount,
+              labelWidthPercent,
+              labelSuffix,
+              data: dataTmp,
+              label,
+              dataTransform,
+              dataUrl,
+              requestMethod,
+              requestOptions,
+              requestInterceptor,
+              getData,
+              dataJsonPath,
+              requestError,
+              requestSuccessful,
+            })
+          }
+          {/* 详情表格尾部 */}
+          {
+            footer ?
+              (footer instanceof Function) ?
+                footer(dataTmp)
+                : (
+                  <div
+                    style={{
+                      border: `1px solid ${borderColor}`,
+                      borderTop: 0,
+                      padding: "8px 8px",
+                      fontWeight: "bold",
+                      borderRadius: "0 0 4px 4px",
+                      fontSize: 16,
+                    }}
+                  >
+                    {footer}
+                  </div>
+                )
+              : ''
+          }
+        </WrapComponents>
       </div>
     )
   }

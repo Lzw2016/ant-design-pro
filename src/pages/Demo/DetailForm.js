@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Icon } from 'antd';
+import { Card, Icon, Button } from 'antd';
 import { connect } from 'dva';
 import DetailForm from '@/components/DetailForm'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -54,11 +54,31 @@ class DemoTest extends PureComponent {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
+          <Button
+            type="primary"
+            onClick={() => {
+              if (this.detailForm1) this.detailForm1.reLoadData();
+            }}
+          >
+            刷新
+          </Button>
+          <DetailForm
+            ref={detailForm => { this.detailForm1 = detailForm; }}
+            style={{ width: 800 }}
+            title="表格标题"
+            footer="表格尾部"
+            columnCount={4}
+            labelWidthPercent={0.36}
+            labelSuffix=":"
+            label={label}
+            dataTransform={dataTransform}
+            dataUrl="/api/query_page/detail_data"
+          />
+          <br />
+          <br />
+
           <DetailForm
             style={{ width: "65%" }}
-            // style={{ width: 800 }}
-            // title="表格标题"
-            // footer="表格尾部"
             tableStyle={{}}
             tbodyStyle={{}}
             columnCount={4}
