@@ -23,9 +23,12 @@ class DetailModal extends PureComponent {
   //   varTypeOfTest();
   // }
 
+  // // 组件更新之前
+  // componentWillUpdate(nextProps, nextState) {
+  // }
+
   // // 组件更新
   // componentDidUpdate(prevProps) {
-  //   // const { target } = this.props;
   // }
 
   // // 组件卸载之前
@@ -58,6 +61,14 @@ class DetailModal extends PureComponent {
     label,
     dataTransform,
     detailFormProp,
+    dataUrl,
+    requestMethod,
+    requestOptions,
+    requestInterceptor,
+    getData,
+    dataJsonPath,
+    requestError,
+    requestSuccessful,
   }) => {
     const { internalVisible } = this.state;
     return (
@@ -73,12 +84,28 @@ class DetailModal extends PureComponent {
         {...modalProps}
       >
         <DetailForm
+          ref={detailForm => {
+            this.detailForm = detailForm;
+            if (this.detailForm && this.loadData !== true) {
+              this.loadData = true;
+              this.detailForm.reLoadData();
+            }
+          }}
           columnCount={columnCount}
           labelWidthPercent={labelWidthPercent}
           labelSuffix={labelSuffix}
           data={data}
           label={label}
           dataTransform={dataTransform}
+          defaultLoadData={false}
+          dataUrl={dataUrl}
+          requestMethod={requestMethod}
+          requestOptions={requestOptions}
+          requestInterceptor={requestInterceptor}
+          getData={getData}
+          dataJsonPath={dataJsonPath}
+          requestError={requestError}
+          requestSuccessful={requestSuccessful}
           {...detailFormProp}
         />
       </Modal>
@@ -118,6 +145,14 @@ class DetailModal extends PureComponent {
       data = {},                  // 需要显示的数据
       dataTransform = {},         // 数据转换配置
       detailFormProp = {},        // DetailForm 自定义属性
+      dataUrl,                    // 数据请求地址
+      requestMethod = "get",      // 请求提交 Method
+      requestOptions = {},        // 请求 fetch options(选项)
+      requestInterceptor,         // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      getData,                    // 请求响应josn中取数据 (resData, response) => (Object<data>)
+      dataJsonPath,               // 请求响应josn中取数据的JsonPath
+      requestError,               // 请求失败处理 (resData, response, error) => (Object<resData> | undefined | null)
+      requestSuccessful,          // 请求成功回调 (resData, response) => ()
       children,                   // 子组件
     } = this.props;
     if (children) {
@@ -144,6 +179,14 @@ class DetailModal extends PureComponent {
             label,
             dataTransform,
             detailFormProp,
+            dataUrl,
+            requestMethod,
+            requestOptions,
+            requestInterceptor,
+            getData,
+            dataJsonPath,
+            requestError,
+            requestSuccessful,
           })
         }
         {React.Children.count(children) > 0 ? <span onClick={() => this.setState({ internalVisible: true })}>{children}</span> : ""}

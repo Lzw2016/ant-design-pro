@@ -17,7 +17,8 @@ class DetailForm extends PureComponent {
 
   // 加载完成
   componentDidMount() {
-    this.reLoadData();
+    const { defaultLoadData = true } = this.props;
+    if (defaultLoadData === true) this.reLoadData();
   }
 
   // // 组件更新
@@ -412,6 +413,7 @@ class DetailForm extends PureComponent {
       label = {},                 // label配置(决定显示字段和排序)
       data = {},                  // 需要显示的数据
       dataTransform = {},         // 数据转换配置
+      defaultLoadData = true,     // 是否默认加载数据
       dataUrl,                    // 数据请求地址
       requestMethod = "get",      // 请求提交 Method
       requestOptions = {},        // 请求 fetch options(选项)
@@ -471,6 +473,7 @@ class DetailForm extends PureComponent {
               data: dataTmp,
               label,
               dataTransform,
+              defaultLoadData,
               dataUrl,
               requestMethod,
               requestOptions,

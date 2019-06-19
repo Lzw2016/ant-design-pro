@@ -56,7 +56,7 @@ class Demo1 extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <DetailModal
-            initVisible={true}
+            // initVisible={true}
             maskClosable={false}
             modalTitle="数据详情"
             columnCount={2}
@@ -65,6 +65,20 @@ class Demo1 extends PureComponent {
             data={data}
             label={label}
             dataTransform={dataTransform}
+          >
+            <a>查看详情</a>
+          </DetailModal>
+          <br />
+          <br />
+          <DetailModal
+            maskClosable={false}
+            modalTitle="数据详情"
+            columnCount={2}
+            labelWidthPercent={0.36}
+            labelSuffix=":"
+            label={label}
+            dataTransform={dataTransform}
+            dataUrl="/api/query_page/detail_data"
           >
             <a>查看详情</a>
           </DetailModal>
