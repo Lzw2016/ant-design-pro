@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable func-names */
 import httpProxy from 'http-proxy';
-import { ProxyMap } from './proxy.map';
+import { ProxyMap, defaultPrefix } from './proxy.map';
 
 // 创建代理服务器
 const proxy = httpProxy.createProxyServer({
@@ -65,4 +65,8 @@ function proxyFnc(ctx) {
   proxy.web(req, res, { target: url, changeOrigin: true });
 }
 
-export default proxyFnc;
+export {
+  proxy,
+  proxyFnc,
+  defaultPrefix,
+};

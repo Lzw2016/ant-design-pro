@@ -1,5 +1,7 @@
 const ProxyMap = {
-  sepu: 'http://121.196.220.221:8088',
+  template: 'http://127.0.0.1:18080',
 };
 
-export { ProxyMap };
+const defaultPrefix = "http://127.0.0.1:18080";
+
+export { ProxyMap, defaultPrefix };

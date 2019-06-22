@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
 import Koa from 'koa';
 import Router from 'koa-router';
@@ -5,7 +6,7 @@ import KoaStatic from 'koa-static';
 // import send from 'koa-send';
 // import path from 'path';
 import errorHandler from './error-handler';
-import proxy from './proxy';
+import { proxy, proxyFnc, defaultPrefix } from './proxy';
 
 const app = new Koa();
 const router = new Router();
@@ -21,7 +22,14 @@ router
     ctx.body = ctx.request.query.str;
   })
   // 接口代理
-  .all('/proxy/*', proxy);
+  .all('/proxy/*', proxyFnc)
+  .all("/*", ctx => {
+    ctx.respond = false;
+    const { req, res } = ctx;
+    const url = `${defaultPrefix}${ctx.originalUrl}`;
+    console.log("当前请求:", ctx.originalUrl, " | 使用默认代理前缀:", defaultPrefix, " | url=", url);
+    proxy.web(req, res, { target: url, changeOrigin: true });
+  });
 // 自定义处理
 // .get('/*', async (ctx) => {
 //   if (ctx.path === '/') {
