@@ -1,4 +1,4 @@
-FROM 172.16.29.104:8850/node:10.15.2-alpine as dev
+FROM 192.168.31.5:15000/node:10.15.2-alpine as dev
 
 ADD ./server /app
 WORKDIR /app
