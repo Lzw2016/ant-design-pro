@@ -62,6 +62,7 @@ export default [
           { path: '/entry/form-engine-04', name: 'form-engine-04', icon: 'table', component: './Demo/FormEngine04' },
           { path: '/entry/form-modal', name: 'form-modal', icon: 'table', component: './Demo/FormModal' },
           { path: '/entry/modal-table-select', name: 'modal-table-select', icon: 'table', component: './Demo/ModalTableSelect' },
+          { path: '/entry/input-table-select', name: 'input-table-select', icon: 'table', component: './Demo/InputTableSelect' },
         ],
       },
       // 数据展示

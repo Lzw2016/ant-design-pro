@@ -16,6 +16,7 @@ export default {
   "menu.entry.form-engine-04": "表单引擎(提交)",
   "menu.entry.form-modal": "对话框表单",
   "menu.entry.modal-table-select": "对话框表格选择",
+  "menu.entry.input-table-select": "输入框表格选择",
 
   "menu.show": "数据展示",
   "menu.show.detail-form": "详情数据表格",
