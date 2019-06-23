@@ -213,6 +213,7 @@ class PagingQueryTable extends PureComponent {
     }
     // console.log("handleChange --> queryParam", queryParam);
     this.fetchData({
+      reStartQuery: false,
       queryParam,
       dataUrl,
       requestMethod,
@@ -234,6 +235,7 @@ class PagingQueryTable extends PureComponent {
 
   // 请求服务端数据
   fetchData = ({
+    reStartQuery,
     queryParam = {},
     dataUrl,
     requestMethod,
@@ -262,7 +264,7 @@ class PagingQueryTable extends PureComponent {
     };
     // 请求之前的拦截
     if (requestInterceptor instanceof Function) {
-      const tmp = requestInterceptor(fetchOptions);
+      const tmp = requestInterceptor(fetchOptions, reStartQuery);
       if (tmp === false) return;
       if (tmp && tmp.url) {
         fetchOptions.url = tmp.url;
@@ -339,7 +341,7 @@ class PagingQueryTable extends PureComponent {
   reloadDataSource = (resetPagination = false) => {
     const {
       dataUrl,
-      requestMethod = "get",
+      requestMethod = "GET",
       requestOptions = {},
       requestInterceptor,
       responseFilter,
@@ -357,6 +359,7 @@ class PagingQueryTable extends PureComponent {
     // const
     // 初始化加载数据
     this.fetchData({
+      reStartQuery: resetPagination,
       queryParam: (resetPagination === true ? { pageNo: 0 } : {}),
       dataUrl,
       requestMethod,
@@ -394,9 +397,9 @@ class PagingQueryTable extends PureComponent {
       orderFieldMapping,              // 全局排序映射关系 { "columnsDataIndex_1": "orderFieldParam_1", "columnsDataIndex_2": "orderFieldParam_2", ... }
       defaultLoadData = true,         // 是否初始化就加载数据
       dataUrl,                        // 表格数据请求地址
-      requestMethod = "get",          // 请求提交 Method
+      requestMethod = "GET",          // 请求提交 Method
       requestOptions = {},            // 请求 fetch options(选项)
-      requestInterceptor,             // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
+      requestInterceptor,             // 请求之前的拦截 ({ url, options }, reStartQuery) => (boolean | {url, options })
       responseFilter,                 // 响应数据拦截 (Object<resData>, response) => (Object<resData> | undefined | null)
       requestError,                   // 请求失败处理   (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,              // 请求成功回调 (resData, response) => ()

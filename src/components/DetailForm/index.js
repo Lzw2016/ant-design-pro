@@ -374,7 +374,7 @@ class DetailForm extends PureComponent {
   reLoadData = () => {
     const {
       dataUrl,
-      requestMethod = "get",
+      requestMethod = "GET",
       requestOptions = {},
       requestInterceptor,
       getData,
@@ -415,7 +415,7 @@ class DetailForm extends PureComponent {
       dataTransform = {},         // 数据转换配置
       defaultLoadData = true,     // 是否默认加载数据
       dataUrl,                    // 数据请求地址
-      requestMethod = "get",      // 请求提交 Method
+      requestMethod = "GET",      // 请求提交 Method
       requestOptions = {},        // 请求 fetch options(选项)
       requestInterceptor,         // 请求之前的拦截 ({ url, options }) => (boolean | {url, options })
       getData,                    // 请求响应josn中取数据 (resData, response) => (Object<data>)

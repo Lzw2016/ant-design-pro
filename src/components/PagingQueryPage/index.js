@@ -226,7 +226,7 @@ class PagingQueryPage extends PureComponent {
         dataUrl={dataUrl}
         requestMethod={requestMethod}
         requestOptions={requestOptions}
-        requestInterceptor={({ url, options }) => this.handleRequestInterceptor({ originalParams: { url, options }, formValuesHandle, requestInterceptor })}
+        requestInterceptor={({ url, options }, reStartQuery) => this.handleRequestInterceptor({ originalParams: { url, options }, reStartQuery, formValuesHandle, requestInterceptor })}
         responseFilter={responseFilter}
         requestError={requestError}
         requestSuccessful={requestSuccessful}
@@ -261,6 +261,7 @@ class PagingQueryPage extends PureComponent {
   // 表单请求数据处理
   handleRequestInterceptor = ({
     originalParams: { url, options },
+    reStartQuery,
     formValuesHandle,
     requestInterceptor
   }) => {
@@ -285,7 +286,7 @@ class PagingQueryPage extends PureComponent {
       // console.log(`requestInterceptor --> queryObject `, queryObject);
       result.url = `${path}?${stringify(queryObject)}`;
       // console.log(`requestInterceptor --> result.url `, result.url);
-      if (requestInterceptor instanceof Function) tmp = requestInterceptor(result, path, queryString, formData);
+      if (requestInterceptor instanceof Function) tmp = requestInterceptor(result, reStartQuery, path, queryString, formData);
     });
     if (tmp === false) return false;
     if (tmp && tmp.url) result.url = tmp.url;
@@ -333,19 +334,19 @@ class PagingQueryPage extends PureComponent {
       showFormReset = false,          // 是否显示表单[重置]按钮
       showFormDownUp = false,         // 是否显示表单[展开/折叠]指示器
       initFormIsDown = false,         // 查询表单[展开(false)/折叠(true)]默认值
+      actionsInLastformField = false, // 操作块内容位置是否在最后一个表单查询字段的suffixLabel位置
       actionsContent,                 // 操作块内容 ReactNode | (?) => (ReactNode)
       actionsClassName,               // 操作块className
       actionsStyle = {},              // 操作块样式
-      actionsInLastformField = false, // 操作块内容位置是否在最后一个表单查询字段的suffixLabel位置
       rowKey = "key",                 // 表格行 key 的取值，可以是字符串或一个函数
       columns = [],                   // 表格列配置
       defaultPagination = {},         // 默认分页数据
       defaultData,                    // 默认表格数据 array
       defaultLoadData = true,         // 是否初始化就加载数据
       dataUrl,                        // 表格数据请求地址
-      requestMethod = "get",          // 请求提交 Method
+      requestMethod = "GET",          // 请求提交 Method
       requestOptions = {},            // 请求 fetch options(选项)
-      requestInterceptor,             // 请求之前的拦截 ({ url, options }, path, queryString, formValues) => (boolean | {url, options })
+      requestInterceptor,             // 请求之前的拦截 ({ url, options }, reStartQuery, path, queryString, formValues) => (boolean | {url, options })
       responseFilter,                 // 响应数据拦截 (Object<resData>, response) => (Object<resData> | undefined | null)
       requestError,                   // 请求失败处理   (resData, response, error) => (Object<resData> | undefined | null)
       requestSuccessful,              // 请求成功回调 (resData, response) => ()

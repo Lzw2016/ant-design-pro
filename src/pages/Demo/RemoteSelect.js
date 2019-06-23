@@ -49,7 +49,7 @@ class DemoTest extends PureComponent {
                 url="/api/remote/input/string"
                 searchParamName="key"
                 searchQueryString={{ num: 6 }}
-                requestOptions={{ method: "get" }}
+                requestOptions={{ method: "GET" }}
               />
             </Col>
             <Col span={6}>
