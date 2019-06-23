@@ -105,7 +105,7 @@ class ModalTableSelect extends PureComponent {
                   onOk([rowKeys], [record]);
                 }}
               >
-                {/* <spa style={{ display: "inline-block", width: 14 }} /> */}
+                {/* <span style={{ display: "inline-block", width: 14 }} /> */}
                 {selected === true ? <Icon type="caret-right" /> : undefined}选择
               </a>
             )

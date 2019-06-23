@@ -91,7 +91,7 @@ class Demo1 extends PureComponent {
           >
             <Button type="primary">多选</Button>
           </ModalTableSelect>
-          <spa style={{ display: "inline-block", width: 32 }} />
+          <span style={{ display: "inline-block", width: 32 }} />
           <ModalTableSelect
             defaultSelectedRowKeys={selectedRowKeys}
             defaultSelectedRows={selectedRows}
