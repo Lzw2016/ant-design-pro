@@ -65,6 +65,16 @@ export default [
           { path: '/entry/input-table-select', name: 'input-table-select', icon: 'table', component: './Demo/InputTableSelect' },
         ],
       },
+      // 编辑器
+      {
+        path: '/text-editor',
+        name: 'text-editor',
+        icon: 'form',
+        routes: [
+          { path: '/text-editor/markdown-editor', name: 'markdown-editor', icon: 'table', component: './Demo/MarkdownEditor' },
+          { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
+        ],
+      },
       // 数据展示
       {
         path: '/show',
