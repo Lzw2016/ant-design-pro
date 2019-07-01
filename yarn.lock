@@ -11227,6 +11227,11 @@ mute-stream@0.0.7:
   resolved "http://registry.npm.taobao.org/mute-stream/download/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
+n-zepto@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/n-zepto/download/n-zepto-1.2.0.tgz#8ad522bf30fa48ac37013aee0d1354fcd8f585a8"
+  integrity sha1-itUivzD6SKw3ATruDRNU/Nj1hag=
+
 nan@^2.9.2:
   version "2.13.1"
   resolved "http://registry.npm.taobao.org/nan/download/nan-2.13.1.tgz#a15bee3790bde247e8f38f1d446edcdaeb05f2dd"
@@ -17537,6 +17542,11 @@ walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+wangeditor@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npm.taobao.org/wangeditor/download/wangeditor-3.1.1.tgz#fbd3c1d4976923c9edebb85b29d30b35512ad039"
+  integrity sha1-+9PB1JdpI8nt67hbKdMLNVEq0Dk=
 
 warning@4.x, warning@^4.0.1, warning@^4.0.2, warning@^4.0.3, warning@~4.0.2, warning@~4.0.3:
   version "4.0.3"
