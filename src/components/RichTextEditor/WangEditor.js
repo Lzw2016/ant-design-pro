@@ -17,25 +17,30 @@ class WangEditor extends PureComponent {
 
   // 加载完成
   componentDidMount() {
-    // console.log("componentDidMount -> ", window.wangEditor, " | ", null);
     if (Editor && !Editor.fullscreen) {
       Editor.fullscreen = {
         // editor create之后调用
         init: editorSelector => {
-          console.log("editorSelector -> ", editorSelector.querySelectorAll('.w-e-toolbar')[0]);
-
-          // editorSelector.querySelectorAll('.w-e-toolbar')[0].appendChild((
-          //   <div className="w-e-menu">
-          //     <a className="_wangEditor_btn_fullscreen" href="###">全屏</a>
-          //   </div>
-          // ));
-          // onclick="window.wangEditor.fullscreen.toggleFullscreen('${editorSelector}')"
-
-          // console.log("editorSelector -> ", `${editorSelector} .w-e-toolbar`);
-
-          // $(`${editorSelector} .w-e-toolbar`).append(`<div class="w-e-menu">
-          //   <a class="_wangEditor_btn_fullscreen" href="###" onclick="window.wangEditor.fullscreen.toggleFullscreen('${editorSelector}')">全屏</a>
-          // </div>`);
+          let toolbar = editorSelector.querySelectorAll('.w-e-toolbar');
+          if (toolbar.length <= 0) return;
+          toolbar = toolbar[0];
+          console.log("fullscreen --> | toolbar ", toolbar);
+          const i = document.createElement("i");
+          i.classList.add("_wangeditor_btn_fullscreen");
+          i.innerHTML = `
+            <svg width="21" height="21" viewBox="0 0 1024 1024">
+              <path fill="currentColor" d="M189.75 428.89a36.87 36.87 0 0 0 36.84-36.85V228.12h164a36.85 36.85 0 1 0 0-73.7H189.75a36.82 36.82 0 0 0-36.8 36.85v200.8a36.83 36.83 0 0 0 36.8 36.82zM834.26 595.06a36.82 36.82 0 0 0-36.8 36.84v164H633.41a36.85 36.85 0 0 0 0 73.7h200.85a36.87 36.87 0 0 0 36.84-36.85V631.9a36.86 36.86 0 0 0-36.84-36.84zM797.46 228.12v179.31a36.82 36.82 0 1 0 73.64 0V191.24a36.86 36.86 0 0 0-36.84-36.85H602.33a36.85 36.85 0 0 0 0 73.7zM421.62 795.9H226.54V616.56a36.82 36.82 0 1 0-73.64 0v216.19a36.83 36.83 0 0 0 36.85 36.85h231.87a36.85 36.85 0 0 0 0-73.7z"></path>
+              <path fill="currentColor" d="M306.5 307.94m32.95 0l345.1 0q32.95 0 32.95 32.95l0 342.22q0 32.95-32.95 32.95l-345.1 0q-32.95 0-32.95-32.95l0-342.22q0-32.95 32.95-32.95Z"></path>
+            </svg>
+          `;
+          const fullscreen = document.createElement("div");
+          fullscreen.style.padding = "5px 7px 5px 6px";
+          fullscreen.classList.add("w-e-menu");
+          fullscreen.appendChild(i)
+          fullscreen.addEventListener("click", () => {
+            console.log("fullscreen --> | click");
+          });
+          toolbar.appendChild(fullscreen)
         },
         toggleFullscreen: editorSelector => {
           $(editorSelector).toggleClass('fullscreen-editor');
@@ -89,16 +94,16 @@ class WangEditor extends PureComponent {
     // 配置编辑区域的 z-index, 默认为10000
     this.editor.customConfig.zIndex = 100;
     // 多语言
-    this.editor.customConfig.lang = {
-      '设置标题': 'title',
-      '正文': 'p',
-      '链接文字': 'link text',
-      '链接': 'link',
-      '上传图片': 'upload image',
-      '上传': 'upload',
-      '创建': 'init'
-      // 还可自定添加更多
-    };
+    // this.editor.customConfig.lang = {
+    //   '设置标题': 'title',
+    //   '正文': 'p',
+    //   '链接文字': 'link text',
+    //   '链接': 'link',
+    //   '上传图片': 'upload image',
+    //   '上传': 'upload',
+    //   '创建': 'init'
+    //   // 还可自定添加更多
+    // };
     // 关闭粘贴样式的过滤
     // this.editor.customConfig.pasteFilterStyle = false;
     // 忽略粘贴内容中的图片
