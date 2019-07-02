@@ -4,7 +4,7 @@ import { Card, Button } from 'antd';
 // import moment from 'moment';
 // import { connect } from 'dva';
 // import { InputEnum } from '@/components/FormEngine';
-import { WangEditor } from '@/components/RichTextEditor';
+import { WangEditor, Neditor } from '@/components/RichTextEditor';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './Log.less'
@@ -29,6 +29,10 @@ class Demo1 extends PureComponent {
           <br />
           <br />
           <WangEditor style={{ width: "calc(100% - 50px)" }} />
+          <br />
+          <br />
+          <br />
+          <Neditor style={{ width: "calc(100% - 50px)" }} />
         </Card>
       </PageHeaderWrapper>
     )
