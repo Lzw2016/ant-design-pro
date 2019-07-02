@@ -28,7 +28,11 @@ class Demo1 extends PureComponent {
           <br />
           <br />
           <br />
-          <WangEditor style={{ width: "calc(100% - 50px)" }} />
+          <WangEditor
+            defaultValue="默认值123 😁"
+            defaultFullscreen={false}
+            style={{ width: "calc(100% - 50px)" }}
+          />
           <br />
           <br />
           <br />
