@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
 // import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
@@ -15,10 +15,19 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // }))
 class Demo1 extends PureComponent {
 
+  state = {
+    count: 0,
+  }
+
   render() {
+    const { count } = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
+          <Button onClick={() => this.setState({ count: count + 1 })}>{count}</Button>
+          <br />
+          <br />
+          <br />
           <WangEditor style={{ width: "calc(100% - 50px)" }} />
         </Card>
       </PageHeaderWrapper>

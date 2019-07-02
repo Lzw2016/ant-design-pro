@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
 // import { Modal, Icon } from 'antd';
-import $ from 'n-zepto';
 import Editor from 'wangeditor'
 // import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
@@ -17,42 +16,7 @@ class WangEditor extends PureComponent {
 
   // 加载完成
   componentDidMount() {
-    if (Editor && !Editor.fullscreen) {
-      Editor.fullscreen = {
-        // editor create之后调用
-        init: editorSelector => {
-          let toolbar = editorSelector.querySelectorAll('.w-e-toolbar');
-          if (toolbar.length <= 0) return;
-          toolbar = toolbar[0];
-          console.log("fullscreen --> | toolbar ", toolbar);
-          const i = document.createElement("i");
-          i.classList.add("_wangeditor_btn_fullscreen");
-          i.innerHTML = `
-            <svg width="21" height="21" viewBox="0 0 1024 1024">
-              <path fill="currentColor" d="M189.75 428.89a36.87 36.87 0 0 0 36.84-36.85V228.12h164a36.85 36.85 0 1 0 0-73.7H189.75a36.82 36.82 0 0 0-36.8 36.85v200.8a36.83 36.83 0 0 0 36.8 36.82zM834.26 595.06a36.82 36.82 0 0 0-36.8 36.84v164H633.41a36.85 36.85 0 0 0 0 73.7h200.85a36.87 36.87 0 0 0 36.84-36.85V631.9a36.86 36.86 0 0 0-36.84-36.84zM797.46 228.12v179.31a36.82 36.82 0 1 0 73.64 0V191.24a36.86 36.86 0 0 0-36.84-36.85H602.33a36.85 36.85 0 0 0 0 73.7zM421.62 795.9H226.54V616.56a36.82 36.82 0 1 0-73.64 0v216.19a36.83 36.83 0 0 0 36.85 36.85h231.87a36.85 36.85 0 0 0 0-73.7z"></path>
-              <path fill="currentColor" d="M306.5 307.94m32.95 0l345.1 0q32.95 0 32.95 32.95l0 342.22q0 32.95-32.95 32.95l-345.1 0q-32.95 0-32.95-32.95l0-342.22q0-32.95 32.95-32.95Z"></path>
-            </svg>
-          `;
-          const fullscreen = document.createElement("div");
-          fullscreen.style.padding = "5px 7px 5px 6px";
-          fullscreen.classList.add("w-e-menu");
-          fullscreen.appendChild(i)
-          fullscreen.addEventListener("click", () => {
-            console.log("fullscreen --> | click");
-          });
-          toolbar.appendChild(fullscreen)
-        },
-        toggleFullscreen: editorSelector => {
-          $(editorSelector).toggleClass('fullscreen-editor');
-          if ($(`${editorSelector} ._wangEditor_btn_fullscreen`).text() === '全屏') {
-            $(`${editorSelector} ._wangEditor_btn_fullscreen`).text('退出全屏');
-          } else {
-            $(`${editorSelector} ._wangEditor_btn_fullscreen`).text('全屏');
-          }
-        }
-      };
-    }
-
+    this.initFullscreenPlugin();
     if (!this.editorElem) return;
     if (this.editor) return;
     if (this.toolbarElem) {
@@ -215,7 +179,65 @@ class WangEditor extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
+  // 初始化全屏插件
+  initFullscreenPlugin = () => {
+    if (Editor && !Editor.fullscreen) {
+      Editor.fullscreen = {
+        init: editorSelector => {
+          let toolbar = editorSelector.querySelectorAll('.w-e-toolbar');
+          if (toolbar.length <= 0) return;
+          toolbar = toolbar[0];
+          // console.log("fullscreen --> | toolbar ", toolbar);
+          const i = document.createElement("i");
+          i.classList.add("wangeditor-btn-fullscreen");
+          i.innerHTML = `
+            <svg width="21" height="21" viewBox="0 0 1024 1024">
+              <path fill="currentColor" d="M189.75 428.89a36.87 36.87 0 0 0 36.84-36.85V228.12h164a36.85 36.85 0 1 0 0-73.7H189.75a36.82 36.82 0 0 0-36.8 36.85v200.8a36.83 36.83 0 0 0 36.8 36.82zM834.26 595.06a36.82 36.82 0 0 0-36.8 36.84v164H633.41a36.85 36.85 0 0 0 0 73.7h200.85a36.87 36.87 0 0 0 36.84-36.85V631.9a36.86 36.86 0 0 0-36.84-36.84zM797.46 228.12v179.31a36.82 36.82 0 1 0 73.64 0V191.24a36.86 36.86 0 0 0-36.84-36.85H602.33a36.85 36.85 0 0 0 0 73.7zM421.62 795.9H226.54V616.56a36.82 36.82 0 1 0-73.64 0v216.19a36.83 36.83 0 0 0 36.85 36.85h231.87a36.85 36.85 0 0 0 0-73.7z"></path>
+              <path fill="currentColor" d="M306.5 307.94m32.95 0l345.1 0q32.95 0 32.95 32.95l0 342.22q0 32.95-32.95 32.95l-345.1 0q-32.95 0-32.95-32.95l0-342.22q0-32.95 32.95-32.95Z"></path>
+            </svg>
+          `;
+          const fullscreen = document.createElement("div");
+          fullscreen.style.padding = "5px 7px 5px 6px";
+          fullscreen.classList.add("w-e-menu");
+          fullscreen.appendChild(i)
+          toolbar.appendChild(fullscreen)
+          fullscreen.addEventListener("click", () => Editor.fullscreen.toggleFullscreen(editorSelector));
+        },
+        toggleFullscreen: editorSelector => {
+          editorSelector.classList.toggle(styles.fullscreen);
+          editorSelector.classList.toggle(styles['fullscreen-editor']);
+          editorSelector.classList.toggle(styles['fullscreen-active']);
+        }
+      };
+    }
+  }
+
+  // 返回编辑器
   getWangEditor = ({
+    // debug,
+    // defaultValue,
+    // value,
+    // onchange,
+    // onchangeTimeout,
+    // menus,
+    // zIndex,
+    // lang,
+    // pasteFilterStyle,
+    // pasteIgnoreImg,
+    // pasteTextHandle,
+    // linkImgCallback,
+    // linkCheck,
+    // linkImgCheck,
+    // onfocus,
+    // onblur,
+    // colors,
+    // emotions,
+    // fontNames,
+    // uploadImgShowBase64,
+    // uploadImgServer,
+    // showLinkImg,
+    // fullscreen,
+    // fullscreenClassName,
     className,
     style,
   }) => {
@@ -224,7 +246,7 @@ class WangEditor extends PureComponent {
         {/* <div ref={(toolbarElem) => { this.toolbarElem = toolbarElem }} /> */}
         <div
           ref={(editorElem) => { this.editorElem = editorElem }}
-          className={classNames(className, styles['wang-editor'], styles.fullscreen)}
+          className={classNames(className, styles['wang-editor'])}
           style={{ textAlign: 'left', ...style }}
         />
       </Fragment>
@@ -237,14 +259,62 @@ class WangEditor extends PureComponent {
 
   render() {
     const {
-
+      debug,                        // 启用调试
+      defaultValue,                 // 输入框默认内容
+      value,                        // 输入框内容
+      onchange,                     // 输入内容花生变化事件 (html) => ()
+      onchangeTimeout,              // onchange 触发的延迟时间(单位ms)，默认为 200ms
+      menus,                        // 自定义菜单 Array<String>
+      zIndex,                       // 配置编辑区域的 z-index, 默认为10000
+      lang,                         // 多语言配置
+      pasteFilterStyle,             // 配置粘贴样式过滤
+      pasteIgnoreImg,               // 忽略粘贴内容中的图片
+      pasteTextHandle,              // 自定义处理粘贴的文本内容 (content) => (content)
+      linkImgCallback,              // 插入网络图片的回调 (url) => ()
+      linkCheck,                    // 插入链接的校验 (text, link) => (boolean)
+      linkImgCheck,                 // 插入网络图片的校验 (src) => (boolean)
+      onfocus,                      // 得到焦点事件 () => ()
+      onblur,                       // 失去焦点事件 (html) => ()
+      colors,                       // 自定义配置颜色（字体颜色、背景色）Array
+      emotions,                     // 配置表情 Array
+      fontNames,                    // 配置字体 Array
+      uploadImgShowBase64 = true,   // 使用base64保存上传图片
+      uploadImgServer,              // 上传图片文件服务器api地址
+      showLinkImg,                  // 隐藏“网络图片”tab
+      fullscreen = false,           // 默认是否全屏
+      fullscreenClassName,          // 全屏的自定义样式
       className,                    // 最外层包装元素的className
       style = {},                   // 最外层包装元素的样式
     } = this.props;
+    // console.log("render --> ");
     return (
       <Fragment>
         {
           this.getWangEditor({
+            debug,
+            defaultValue,
+            value,
+            onchange,
+            onchangeTimeout,
+            menus,
+            zIndex,
+            lang,
+            pasteFilterStyle,
+            pasteIgnoreImg,
+            pasteTextHandle,
+            linkImgCallback,
+            linkCheck,
+            linkImgCheck,
+            onfocus,
+            onblur,
+            colors,
+            emotions,
+            fontNames,
+            uploadImgShowBase64,
+            uploadImgServer,
+            showLinkImg,
+            fullscreen,
+            fullscreenClassName,
             className,
             style,
           })
