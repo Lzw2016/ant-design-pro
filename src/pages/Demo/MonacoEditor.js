@@ -3,6 +3,7 @@ import { Card, Button } from 'antd';
 // import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
+// import ZH_cn from "monaco-editor/min/vs/editor/editor.main.nls.zh-cn";
 import MonacoEditor from 'react-monaco-editor';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
@@ -64,6 +65,9 @@ const config = {
               theme="vs-dark"
               value={code}
               options={options}
+              // requireConfig={{
+              //   'vs/nls': { availableLanguages: { '*': 'zh-cn' } }
+              // }}
               editorDidMount={(editor) => editor.focus()}
             />
           </div>
