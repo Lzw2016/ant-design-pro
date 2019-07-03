@@ -7,7 +7,7 @@ import { Card, Button } from 'antd';
 import { WangEditor, Neditor } from '@/components/RichTextEditor';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
-// import styles from './Log.less'
+// import styles from './RichTextEditor.less';
 
 // @connect(({ DemoTestModel, loading }) => ({
 //   DemoTestModel,
@@ -31,6 +31,8 @@ class Demo1 extends PureComponent {
           <WangEditor
             defaultValue="默认值123 😁"
             defaultFullscreen={false}
+            textContainerStyle={{ height: "450px" }}
+            // className={styles["wang-editor"]}
             style={{ width: "calc(100% - 50px)" }}
           />
           <br />

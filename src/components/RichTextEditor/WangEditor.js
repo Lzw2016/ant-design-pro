@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 // import { Modal, Icon } from 'antd';
 import Editor from 'wangeditor'
-// import lodash from 'lodash';
+import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
 // import PagingQueryPage from "@/components/PagingQueryPage";
 import classNames from 'classnames';
@@ -43,6 +43,7 @@ class WangEditor extends PureComponent {
       showLinkImg,
       defaultFullscreen,
       fullscreenClassName,
+      textContainerStyle,
     } = this.props;
     this.initFullscreenPlugin(defaultFullscreen, fullscreenClassName);
     if (!this.editorElem) return;
@@ -168,6 +169,14 @@ class WangEditor extends PureComponent {
     this.editor.create();
     // 初始化全屏插件
     Editor.fullscreen.init(this.editorElem);
+    // 设置样式
+    if (textContainerStyle && this.editor.$textElem && this.editor.$textElem.length && this.editor.$textElem.length > 0 && this.editor.$textElem[0].parentNode) {
+      // console.log("this.editor.$textElem[0].parentNode", this.editor.$textElem[0].parentNode);
+      lodash.forEach(textContainerStyle, (v, k) => {
+        // console.log("textContainerStyle --> k ", k, v);
+        this.editor.$textElem[0].parentNode.style[k] = v;
+      });
+    }
     // 禁用/启用编辑器
     if (disable === false || disable === true) this.editor.$textElem.attr('contenteditable', disable);
     // 设置内容
@@ -257,7 +266,7 @@ class WangEditor extends PureComponent {
     const {
       debug,                        // 启用调试
       defaultValue,                 // 输入框默认内容
-      value,                        // 输入框内容
+      value,                        // 输入框内容(受控属性)
       disable,                      // 禁用编辑器
       onchange,                     // 输入内容花生变化事件 (html) => ()
       onchangeTimeout,              // onchange 触发的延迟时间(单位ms)，默认为 200ms
@@ -280,6 +289,7 @@ class WangEditor extends PureComponent {
       showLinkImg,                  // 隐藏“网络图片”tab
       defaultFullscreen = false,    // 默认是否全屏
       fullscreenClassName,          // 全屏的自定义样式
+      textContainerStyle,           // 编辑器容器样式(主要用于设置高度)
       className,                    // 最外层包装元素的className
       style = {},                   // 最外层包装元素的样式
     } = this.props;
@@ -317,6 +327,7 @@ class WangEditor extends PureComponent {
             showLinkImg,
             defaultFullscreen,
             fullscreenClassName,
+            textContainerStyle,
             className,
             style,
           })
