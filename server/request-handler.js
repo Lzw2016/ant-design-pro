@@ -14,7 +14,20 @@ const router = new Router();
 // 错误处理
 app.use(errorHandler);
 // 静态文件处理
-app.use(KoaStatic('./dist', { index: 'index.html', gzip: true, maxage: 1000 * 60 * 60 * 24 * 30 }));
+app.use(KoaStatic('./dist', {
+  index: 'index.html',
+  gzip: true,
+  maxage: 1000 * 60 * 60 * 24 * 30,
+  setHeaders: (res, path, stats) => {
+    let flag = true;
+    const suffixArray = ["/index.html", "/favicon.png"].filter(suffix => path.indexOf(suffix, path.length - suffix.length) !== -1);
+    if (suffixArray && suffixArray.length > 0) {
+      flag = false;
+      res.setHeader('Cache-Control', 'max-age=0,must-revalidate');
+    }
+    console.log("静态文件: ", path, " | size: ", stats ? (stats.size || '-') : '-', " | ", flag === true ? "[use maxage]" : "[no maxage]");
+  },
+}));
 
 router
   // 健康检查
