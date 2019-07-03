@@ -106,7 +106,7 @@ const PageHeaderWrapper = ({
                             </div>
                           </div>
                         </div>
-                      ) : undefined
+                      ) : <span />
                   }
                 </PageHeader>
               </div>
