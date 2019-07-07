@@ -75,6 +75,7 @@ export default [
           { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
           { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
           { path: '/text-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
+          { path: '/text-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
         ],
       },
       // 数据展示

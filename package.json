@@ -94,6 +94,7 @@
     "braft-editor": "^2.3.7",
     "react-monaco-editor": "^0.26.2",
     "react-codemirror2": "^6.0.0",
+    "codemirror": "^5.48.0",
     "react-json-view": "^1.19.1",
     "wangeditor": "^3.1.1"
   },

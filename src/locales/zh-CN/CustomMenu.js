@@ -23,6 +23,7 @@ export default {
   "menu.text-editor.rich-text-editor": "富文本",
   "menu.text-editor.rich-text-editor2": "富文本2",
   "menu.text-editor.monaco-editor": "代码(monaco)",
+  "menu.text-editor.code-mirror-editor": "代码(CodeMirror)",
 
   "menu.show": "数据展示",
   "menu.show.detail-form": "详情数据表格",
