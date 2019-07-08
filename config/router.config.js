@@ -65,7 +65,7 @@ export default [
           { path: '/entry/input-table-select', name: 'input-table-select', icon: 'table', component: './Demo/InputTableSelect' },
         ],
       },
-      // 编辑器
+      // 富文本编辑器
       {
         path: '/text-editor',
         name: 'text-editor',
@@ -74,8 +74,17 @@ export default [
           { path: '/text-editor/markdown-editor', name: 'markdown-editor', icon: 'table', component: './Demo/MarkdownEditor' },
           { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
           { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
-          { path: '/text-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
-          { path: '/text-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
+        ],
+      },
+      // 代码编辑器
+      {
+        path: '/code-editor',
+        name: 'code-editor',
+        icon: 'form',
+        routes: [
+          { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
+          { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
+          { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/SyntaxHighlighter' },
         ],
       },
       // 数据展示

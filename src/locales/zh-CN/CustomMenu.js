@@ -18,12 +18,15 @@ export default {
   "menu.entry.modal-table-select": "对话框表格选择",
   "menu.entry.input-table-select": "输入框表格选择",
 
-  "menu.text-editor": "编辑器",
+  "menu.text-editor": "文本编辑器",
   "menu.text-editor.markdown-editor": "Markdown",
   "menu.text-editor.rich-text-editor": "富文本",
   "menu.text-editor.rich-text-editor2": "富文本2",
-  "menu.text-editor.monaco-editor": "代码(monaco)",
-  "menu.text-editor.code-mirror-editor": "代码(CodeMirror)",
+
+  "menu.code-editor": "代码编辑器",
+  "menu.code-editor.monaco-editor": "代码(monaco)",
+  "menu.code-editor.code-mirror-editor": "代码(CodeMirror)",
+  "menu.code-editor.syntax-highlighter": "代码高亮",
 
   "menu.show": "数据展示",
   "menu.show.detail-form": "详情数据表格",

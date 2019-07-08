@@ -3,24 +3,20 @@ import { Card, Button } from 'antd';
 // import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
-// import ZH_cn from "monaco-editor/min/vs/editor/editor.main.nls.zh-cn";
-import { UnControlled as CodeMirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
+// import SyntaxHighlighter from 'react-syntax-highlighter';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import TomorrowNightEighties from 'react-syntax-highlighter/dist/esm/styles/hljs/tomorrow-night-eighties';
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
-import styles from './CodeMirrorEditor.less';
+// import styles from './CodeMirrorEditor.less';
 
-// @connect(({ DemoTestModel, loading }) => ({
-//   DemoTestModel,
-//   loading: loading.effects['DemoTestModel/findByPage'],
-// }))
+SyntaxHighlighter.registerLanguage('javascript', js);
 class Demo1 extends PureComponent {
-
   state = {
     count: 0,
-    code: `// type your code...
+    code: `
+// type your code...
 import pxToViewPort from 'postcss-px-to-viewport';
 
 const config = {
@@ -37,17 +33,12 @@ const config = {
     }),
   ],
 };
-    `,
+
+`,
   }
 
   render() {
     const { count, code } = this.state;
-    const options = {
-      mode: 'javascript',
-      theme: 'material',
-      lineNumbers: true,
-      // height: "100%",
-    };
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
@@ -56,11 +47,23 @@ const config = {
           <br />
           <br />
           <div style={{ width: "calc(100% - 50px)", height: 450 }}>
-            <CodeMirror
-              className={styles['code-mirror']}
-              value={code}
-              options={options}
-            />
+            {/* <SyntaxHighlighter
+              style={TomorrowNightEighties}
+              showLineNumbers={true}
+              language='javascript'
+              customStyle={{ height: 350, marginTop: 20 }}
+            >
+              {code}
+            </SyntaxHighlighter> */}
+
+            <SyntaxHighlighter
+              style={TomorrowNightEighties}
+              customStyle={{ height: "100%" }}
+              language="javascript"
+              showLineNumbers={true}
+            >
+              {code}
+            </SyntaxHighlighter>
           </div>
         </Card>
       </PageHeaderWrapper>
