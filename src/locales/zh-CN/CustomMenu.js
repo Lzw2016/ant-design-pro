@@ -19,7 +19,8 @@ export default {
   "menu.entry.input-table-select": "输入框表格选择",
 
   "menu.text-editor": "文本编辑器",
-  "menu.text-editor.markdown-editor": "Markdown",
+  "menu.text-editor.markdown-slate": "Markdown(slate)",
+  "menu.text-editor.markdown-easymde": "Markdown(Easy)",
   "menu.text-editor.rich-text-editor": "富文本",
   "menu.text-editor.rich-text-editor2": "富文本2",
 

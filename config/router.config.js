@@ -71,7 +71,8 @@ export default [
         name: 'text-editor',
         icon: 'form',
         routes: [
-          { path: '/text-editor/markdown-editor', name: 'markdown-editor', icon: 'table', component: './Demo/MarkdownEditor' },
+          { path: '/text-editor/markdown-slate', name: 'markdown-slate', icon: 'table', component: './Demo/SlateMarkdown' },
+          { path: '/text-editor/markdown-easymde', name: 'markdown-easymde', icon: 'table', component: './Demo/EasyMDEMarkdown' },
           { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
           { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
         ],
