@@ -52,7 +52,7 @@
   ],
   "dependencies": {
     "@antv/data-set": "^0.10.1",
-    "antd": "^3.19.7",
+    "antd": "^3.20.1",
     "bizcharts": "3.5.2-beta.1",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
@@ -93,6 +93,9 @@
     "qrcode.react": "^0.9.3",
     "wangeditor": "^3.1.1",
     "braft-editor": "^2.3.7",
+    "braft-extensions": "^0.0.18",
+    "prismjs": "^1.16.0",
+    "draft-js-prism": "^1.0.6",
     "react-monaco-editor": "^0.26.2",
     "react-codemirror2": "6.0.0",
     "codemirror": "5.48.0",

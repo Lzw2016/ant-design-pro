@@ -15,8 +15,7 @@ SyntaxHighlighter.registerLanguage('javascript', js);
 class Demo1 extends PureComponent {
   state = {
     count: 0,
-    code: `
-// type your code...
+    code: `// type your code...
 import pxToViewPort from 'postcss-px-to-viewport';
 
 const config = {
