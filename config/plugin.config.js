@@ -35,7 +35,22 @@ export default config => {
   config.module
     // 某些模块编译不过在这里排除
     .rule('css-in-node_modules')
-    .exclude.add(monacoDir).end()
+    .exclude.add(monacoDir).add(path.resolve(__dirname, '../node_modules/editor.md')).end()
+    .end()
+    .rule('css')
+    .exclude.add(path.resolve(__dirname, '../node_modules/editor.md')).end()
+    .end()
+    .rule('cssModulesExcludes_0')
+    .exclude.add(path.resolve(__dirname, '../node_modules/editor.md')).end()
+    .end()
+    .rule('cssModulesExcludes_1')
+    .exclude.add(path.resolve(__dirname, '../node_modules/editor.md')).end()
+    .end()
+    .rule('cssModulesExcludes_2')
+    .exclude.add(path.resolve(__dirname, '../node_modules/editor.md')).end()
+    .end()
+    .rule('cssModulesExcludes_3')
+    .exclude.add(path.resolve(__dirname, '../node_modules/editor.md')).end()
     .end()
     // 使用自定义的编译方式进行编译
     .rule('monaco-editor')
@@ -44,7 +59,15 @@ export default config => {
     .use('style-loader').loader('style-loader').end()
     .use('css-loader').loader('css-loader').end()
     .end()
-  // console.log(config.toString());
+  // 写入webpack配置
+  // const FS = require("fs");
+  // FS.writeFile("./webpack-config.json", config.toString(), error => {
+  //   if (error) {
+  //     console.log("写入文件失败,原因是" + error.message);
+  //     return;
+  //   }
+  //   console.log("写入成功");
+  // });
   // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
   if (
     process.env.ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ||
