@@ -5,7 +5,7 @@ import { Card, Button } from 'antd';
 // import { connect } from 'dva';
 // import { Editor } from 'slate-react';
 import 'jquery/dist/jquery';
-import 'editor.md/editormd';
+import editormd from 'editor.md/editormd';
 import 'editor.md/css/editormd.css';
 // import MarkdownEditor from '@/components/MarkdownEditor';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -24,7 +24,12 @@ class Demo1 extends PureComponent {
 
   // 加载完成
   componentDidMount() {
-
+    // console.log("editormd->", editormd);
+    var editor = editormd("test-editor", {
+      // width  : "100%",
+      // height : "100%",
+      // path: "editormd/lib/"
+    });
   }
 
   render() {
