@@ -4,6 +4,7 @@ import MergeLessPlugin from 'antd-pro-merge-less';
 import AntDesignThemePlugin from 'antd-theme-webpack-plugin';
 import path from 'path';
 import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
+import webpack from 'webpack';
 
 function getModulePackageName(module) {
   if (!module.context) return null;
@@ -26,11 +27,11 @@ function getModulePackageName(module) {
 
 export default config => {
   // Monaco 编辑器插件 available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-  config.plugin('monaco-editor-webpack-plugin').use(
-    new MonacoWebpackPlugin({
-      languages: ['json', 'javascript', 'typescript']
-    })
-  );
+  config.plugin('monaco-editor-webpack-plugin').use(MonacoWebpackPlugin, [
+    {
+      languages: ['json', 'javascript', 'typescript'],
+    },
+  ]);
   const monacoDir = path.resolve(__dirname, '../node_modules/monaco-editor');
   config.module
     // 某些模块编译不过在这里排除
@@ -44,15 +45,14 @@ export default config => {
     .use('style-loader').loader('style-loader').end()
     .use('css-loader').loader('css-loader').end()
     .end()
-  // 写入webpack配置
-  const FS = require("fs");
-  FS.writeFile("./webpack-config.json", config.toString(), error => {
-    if (error) {
-      console.log("写入文件失败,原因是" + error.message);
-      return;
-    }
-    console.log("写入成功");
-  });
+  // ProvidePlugin - 自动加载模块，而不必到处 import 或 require
+  config.plugin('provide-plugin').use(webpack.ProvidePlugin, [
+    {
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+    },
+  ]);
   // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
   if (
     process.env.ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ||
@@ -109,4 +109,13 @@ export default config => {
         },
       },
     });
+  // 写入webpack配置
+  const FS = require("fs");
+  FS.writeFile("./webpack-config.json", config.toString(), error => {
+    if (error) {
+      console.log("写入文件失败,原因是" + error.message);
+      return;
+    }
+    console.log("写入成功");
+  });
 };
