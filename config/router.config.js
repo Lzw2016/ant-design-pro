@@ -73,7 +73,7 @@ export default [
         routes: [
           // { path: '/text-editor/markdown-toast', name: 'markdown-toast', icon: 'table', component: './Demo/ToastMarkdown' },
           // { path: '/text-editor/markdown-easymde', name: 'markdown-easymde', icon: 'table', component: './Demo/EasyMDEMarkdown' },
-          // { path: '/text-editor/markdown-editor.md', name: 'markdown-editor.md', icon: 'table', component: './Demo/Markdown' },
+          { path: '/text-editor/markdown-editor.md', name: 'markdown-editor.md', icon: 'table', component: './Demo/EditorMD' },
           { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/WangEditor' },
           // { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
         ],
