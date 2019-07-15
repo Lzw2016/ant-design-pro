@@ -110,12 +110,12 @@ export default config => {
       },
     });
   // 写入webpack配置
-  // const FS = require("fs");
-  // FS.writeFile("./webpack-config.json", config.toString(), error => {
-  //   if (error) {
-  //     console.log("写入文件失败,原因是" + error.message);
-  //     return;
-  //   }
-  //   console.log("写入成功");
-  // });
+  const FS = require("fs");
+  FS.writeFile("./webpack-config.json", config.toString(), error => {
+    if (error) {
+      console.log("写入文件失败,原因是" + error.message);
+      return;
+    }
+    console.log("写入成功");
+  });
 };

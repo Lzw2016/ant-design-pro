@@ -36,6 +36,9 @@ export default {
   "menu.show.paging-query-table": "分页查询表格",
   "menu.show.paging-query-page": "分页查询页面",
 
+  "menu.other": "其它",
+  "menu.other.iframe": "iframe页面",
+
   "menu.translate": "多语言翻译",
   "menu.translate.baidu": "百度翻译",
 };

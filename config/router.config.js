@@ -101,6 +101,15 @@ export default [
           { path: '/show/paging-query-page', name: 'paging-query-page', icon: 'table', component: './Demo/PagingQueryPage' },
         ],
       },
+      // 其它
+      {
+        path: '/other',
+        name: 'other',
+        icon: 'form',
+        routes: [
+          { path: '/other/iframe', name: 'iframe', icon: 'table', component: './Demo/IFramePage' },
+        ],
+      },
       // 多语言翻译开发工具
       {
         path: '/translate',
