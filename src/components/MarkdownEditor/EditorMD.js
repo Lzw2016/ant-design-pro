@@ -38,7 +38,7 @@ class EditorMD extends PureComponent {
         ref={frame => { this.frame = frame; }}
         onload={this.handleInit}
         src="/iframe-page/editot.md-standard.html"
-        style={{ height: 600 }}
+        style={{ height: 600, border: "1px solid #ddd" }}
       />
     )
   }
@@ -51,8 +51,17 @@ class EditorMD extends PureComponent {
       this.init = true;
       this.frameWindow = this.frame.getIFrameWindow();
       this.frameElement = this.frame.getIFrameElement();
-      this.frameWindow.initEditor();
+      this.frameWindow.initEditor({
+        onload: () => {
+          this.frame.setLoading(false);
+          this.editor = this.frameWindow.getEditor();
+          this.editor.fullscreen();
+        },
+      });
+
     }
+    // eslint-disable-next-line consistent-return
+    return true;
   }
 
 

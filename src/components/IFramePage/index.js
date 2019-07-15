@@ -72,9 +72,10 @@ class IFramePage extends PureComponent {
   }
 
   handleLoad = () => {
-    this.setState({ loading: false });
     const { onload } = this.props;
-    if (onload instanceof Function) onload();
+    let result = null;
+    if (onload instanceof Function) result = onload();
+    if (result !== true) this.setState({ loading: false });
   }
 
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
@@ -110,6 +111,11 @@ class IFramePage extends PureComponent {
     }
   }
 
+  // 设置loading状态
+  setLoading = (loading) => {
+    this.setState({ loading: !!loading });
+  }
+
   // 通过 postMessage 通信
   postMessage = (message, targetOrigin, transfer) => {
     const { iframeID } = this.state;
@@ -125,7 +131,7 @@ class IFramePage extends PureComponent {
   render() {
     const {
       src,                          // 内嵌页面地址(非受控属性，最好不要变化)
-      onload,                       // 完成加载时的事件 () => ()
+      onload,                       // 完成加载时的事件 () => boolean(返回true继续保持加载状态)
       iframeProps = {},             // iframe属性
       spinProps = {},               // Spin组件属性
       className,                    // 最外层包装元素的className

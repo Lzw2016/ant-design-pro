@@ -19,49 +19,101 @@
   var editor;
 
   // 初始化编辑器
-  function initEditor() {
-    editor = editormd(editorId, {
-      path: 'editor.md/lib/',
-      width: "100%",
-      height: 740,
-      theme: "dark",
-      previewTheme: "dark",
-      editorTheme: "pastel-on-dark",
-      markdown: "",
-      codeFold: true,
-      //syncScrolling : false,
-      saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
-      searchReplace: true,
-      //watch : false,                // 关闭实时预览
-      htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
-      //toolbar  : false,             //关闭工具栏
-      //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
-      emoji: true,
-      taskList: true,
-      tocm: true,         // Using [TOCM]
-      tex: true,                   // 开启科学公式TeX语言支持，默认关闭
-      flowChart: true,             // 开启流程图支持，默认关闭
-      sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
-      //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
-      //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
-      //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
-      //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
-      //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
-      imageUpload: true,
-      imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-      imageUploadURL: "./php/upload.php",
-      onload: function () {
-        console.log('onload', this);
-        this.fullscreen();
-        //this.unwatch();
-        //this.watch().fullscreen();
+  function initEditor(config) {
+    // 默认配置
+    var defaultConfig = {
+      mode: "gfm",                        //gfm or markdown
+      name: "",                           // Form element name
+      value: "",                          // value for CodeMirror, if mode not gfm/markdown
+      theme: "",                          // 编辑器顶部工具栏主题 "" | dark
+      editorTheme: "default",             // 编辑器主题 default | pastel-on-dark | ...
+      previewTheme: "",                   // 预览主题 "" | dark
+      markdown: "",                       // Markdown文本内容
+      appendMarkdown: "",                 // if in init textarea value not empty, append markdown to textarea
+      width: "100%",                      // 组件宽度
+      height: 300,                        // 组件高度
+      path: 'editor.md/lib/',             // 依赖静态文件地址
+      pluginPath: "",                     // If this empty, default use settings.path + "../plugins/"
+      delay: 300,                         // 延时解析markdown到html,单位: ms
+      autoLoadModules: true,              // 自动加载相关模块文件
+      watch: true,                        // 预览属性
+      placeholder: "",                    // 输入框 placeholder 属性
+      gotoLine: true,                     // 支持跳行
+      codeFold: false,                    // 支持代码折叠
+      autoHeight: false,                  // 自动高度
+      autoFocus: true,                    // 自动获取焦点
+      autoCloseTags: true,                // 支持自动关闭标签
+      searchReplace: true,                // 支持搜索替换
+      syncScrolling: true,                // 滚动配置 true | false | "single", default true
+      readOnly: false,                    // 是否只读
+      tabSize: 4,                         // tab转空格数量
+      indentUnit: 4,                      // 缩进空格数量
+      lineNumbers: true,                  // 显示行号
+      lineWrapping: false,                // 是否自动换行
+      autoCloseBrackets: true,            // 自动关闭括号
+      showTrailingSpace: true,            // 显示行尾空格
+      matchBrackets: true,                // 括号匹配
+      indentWithTabs: true,               // 缩进和制表符
+      styleSelectedText: true,            // 选择文本样式
+      matchWordHighlight: true,           // 匹配单词高亮显示 true | false | "onselected"
+      styleActiveLine: true,              // 高亮当前行
+      dialogLockScreen: true,             // 对话框锁屏
+      dialogShowMask: true,               // 对话框遮罩
+      dialogDraggable: true,              // 对话框支持拖动
+      dialogMaskBgColor: "#fff",          // 对话框遮罩颜色
+      dialogMaskOpacity: 0.1,             // 对话框遮罩透明值
+      fontSize: "13px",                   // 字体大小
+      saveHTMLToTextarea: false,          // save HTML To Textarea
+      disabledKeyMaps: [],                // 禁用快捷键
 
-        //this.setMarkdown("#PHP");
-        //this.width("100%");
-        //this.height(480);
-        //this.resize("100%", 640);
-      }
-    });
+      onload: function () { },            // onload
+      onresize: function () { },          // onresize
+      onchange: function () { },          // onchange
+      onwatch: null,                      // onwatch
+      onunwatch: null,                    // onunwatch
+      onpreviewing: function () { },      // onpreviewing
+      onpreviewed: function () { },       // onpreviewed
+      onfullscreen: function () { },      // onfullscreen
+      onfullscreenExit: function () { },  // onfullscreenExit
+      onscroll: function () { },          // onscroll
+      onpreviewscroll: function () { },   // onpreviewscroll
+
+      imageUpload: true,                 // 支持上传图片
+      imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+      imageUploadURL: "",               // 图片上传服务端地址
+      crossDomainUpload: false,         // 支持跨域上传
+      uploadCallbackURL: "",            // 上传回调地址
+
+      toc: true,                        // Table of contents
+      tocm: false,                      // Using [TOCM], auto create ToC dropdown menu
+      tocTitle: "",                     // for ToC dropdown menu btn
+      tocDropdown: false,               // tocDropdown
+      tocContainer: "",                 // tocContainer
+      tocStartLevel: 1,                 // Said from H1 to create ToC
+      htmlDecode: false,                // Open the HTML tag identification
+      pageBreak: true,                  // Enable parse page break [========]
+      atLink: true,                     // for @link
+      emailLink: true,                  // for email address auto link
+      taskList: false,                  // Enable Github Flavored Markdown task lists
+      emoji: true,                      // :emoji: , Support Github emoji, Twitter Emoji (Twemoji);
+      // Support FontAwesome icon emoji :fa-xxx: > Using fontAwesome icon web fonts;
+      // Support Editor.md logo icon emoji :editormd-logo: :editormd-logo-1x: > 1~8x;
+      tex: false,                       // TeX(LaTeX), based on KaTeX
+      flowChart: false,                 // flowChart.js only support IE9+
+      sequenceDiagram: false,           // sequenceDiagram.js only support IE9+
+      previewCodeHighlight: true,       // 预览支持代码高亮
+
+      toolbar: true,                    // 显示或者隐藏工具栏
+      toolbarAutoFixed: true,           // 在窗口滚动自动定位
+      toolbarIcons: "full",             // 工具栏按钮数量 "full" | "simple" | "mini"
+      toolbarTitles: {},                // toolbarTitles
+      // toolbarHandlers: {},
+      // toolbarCustomIcons: {},
+      // toolbarIconsClass: {},
+      // toolbarIconTexts: {},
+      // lang: {}
+    };
+    editor = editormd(editorId, $.extend(true, defaultConfig, config));
   }
 
   // 获得编辑器对象
