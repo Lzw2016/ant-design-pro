@@ -20,10 +20,10 @@ export default {
 
   "menu.text-editor": "文本编辑器",
   "menu.text-editor.markdown-toast": "Markdown(toast)",
-  "menu.text-editor.markdown-easymde": "Markdown(Easy)",
-  "menu.text-editor.markdown-editor.md": "Markdown(editor.md)",
-  "menu.text-editor.rich-text-editor": "富文本",
-  "menu.text-editor.rich-text-editor2": "富文本2",
+  "menu.text-editor.markdown-easymde": "SimpleMDE(EasyMDE)",
+  "menu.text-editor.markdown-editor.md": "editor.md",
+  "menu.text-editor.rich-text-editor": "WangEditor",
+  "menu.text-editor.rich-text-editor2": "富文本",
 
   "menu.code-editor": "代码编辑器",
   "menu.code-editor.monaco-editor": "代码(monaco)",

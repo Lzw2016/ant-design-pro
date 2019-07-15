@@ -6,7 +6,7 @@ import lodash from 'lodash';
 // import PagingQueryPage from "@/components/PagingQueryPage";
 import classNames from 'classnames';
 import { varTypeOf, TypeEnum } from "../_utils/varTypeOf";
-import styles from './WangEditor.less'
+import styles from './index.less'
 
 class WangEditor extends PureComponent {
 
