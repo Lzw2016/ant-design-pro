@@ -71,11 +71,11 @@ export default [
         name: 'text-editor',
         icon: 'form',
         routes: [
-          { path: '/text-editor/markdown-toast', name: 'markdown-toast', icon: 'table', component: './Demo/ToastMarkdown' },
-          { path: '/text-editor/markdown-easymde', name: 'markdown-easymde', icon: 'table', component: './Demo/EasyMDEMarkdown' },
-          { path: '/text-editor/markdown-editor.md', name: 'markdown-editor.md', icon: 'table', component: './Demo/Markdown' },
-          { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
-          { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
+          // { path: '/text-editor/markdown-toast', name: 'markdown-toast', icon: 'table', component: './Demo/ToastMarkdown' },
+          // { path: '/text-editor/markdown-easymde', name: 'markdown-easymde', icon: 'table', component: './Demo/EasyMDEMarkdown' },
+          // { path: '/text-editor/markdown-editor.md', name: 'markdown-editor.md', icon: 'table', component: './Demo/Markdown' },
+          // { path: '/text-editor/rich-text-editor', name: 'rich-text-editor', icon: 'table', component: './Demo/RichTextEditor' },
+          // { path: '/text-editor/rich-text-editor2', name: 'rich-text-editor2', icon: 'table', component: './Demo/RichTextEditor2' },
         ],
       },
       // 代码编辑器
@@ -84,9 +84,9 @@ export default [
         name: 'code-editor',
         icon: 'form',
         routes: [
-          { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
-          { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
-          { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/SyntaxHighlighter' },
+          // { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
+          // { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
+          // { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/SyntaxHighlighter' },
         ],
       },
       // 数据展示
