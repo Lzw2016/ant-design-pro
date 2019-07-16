@@ -30,7 +30,7 @@ body {
   margin: auto;
   /*max-width: 1600px;*/
   box-sizing: border-box;
-  padding: 45px 380px 50px 50px;
+  padding: 45px 380px 50px 25px;
 }
 
 .content {
