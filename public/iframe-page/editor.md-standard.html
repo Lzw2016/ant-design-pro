@@ -5,24 +5,86 @@
   <meta charset="utf-8" />
   <title>editor.md</title>
   <link rel="stylesheet" href="editor.md/css/editormd.min.css" />
-  <link rel="stylesheet" href="../css/editormd.css" />
+  <style>
+    .editormd {
+      border: none;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 
-<body>
+<body style="margin: 0;">
   <div id="editormd"></div>
 </body>
 
 <script src="jquery/jquery-3.4.1.min.js"></script>
+<script src="lodash/lodash.min.js"></script>
 <script src="editor.md/editormd.min.js"></script>
 <script type="text/javascript">
+  // 设置工具栏按钮
+  editormd.toolbarModes = {
+    full: [
+      "undo", "redo", "|",
+      "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+      "list-ul", "list-ol", "hr", "|",
+      "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
+      "goto-line", "watch", "preview", "myFullscreen", "clear", "search", "|",
+      "help", "info"
+    ],
+    simple: [
+      "undo", "redo", "|",
+      "bold", "del", "italic", "quote", "uppercase", "lowercase", "|",
+      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+      "list-ul", "list-ol", "hr", "|",
+      "watch", "preview", "myFullscreen", "|",
+      "help", "info"
+    ],
+    mini: [
+      "undo", "redo", "|",
+      "watch", "preview", "|",
+      "help", "info"
+    ]
+  };
+
+  // 重写全屏功能
+  var innerFullscreen = editormd.fn.fullscreen;
+  editormd.prototype.innerFullscreen = innerFullscreen;
+  editormd.fn.innerFullscreen = innerFullscreen;
+  editormd.fn.fullscreen = function () {
+    var _this = this;
+    var state = this.state;
+    var editor = this.editor;
+    var preview = this.preview;
+    var toolbar = this.toolbar;
+    var settings = this.settings;
+    var fullscreenClass = this.classPrefix + "fullscreen";
+    if (toolbar) {
+      toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
+    }
+    if (!editor.hasClass(fullscreenClass)) {
+      state.fullscreen = true;
+      $("html,body").css("overflow", "hidden");
+      editor.css({
+        // width: $(window).width(),
+        // height: $(window).height()
+        width: "100%",
+        height: "100%"
+      }).addClass(fullscreenClass);
+      this.resize();
+      $.proxy(settings.onfullscreen, this)();
+    }
+    return this;
+  }
+  editormd.prototype.fullscreen = editormd.fn.fullscreen;
+
   var editorId = "editormd";
   var editor;
-
   // 初始化编辑器
   function initEditor(config) {
     // 默认配置
     var defaultConfig = {
-      mode: "gfm",                        //gfm or markdown
+      mode: "gfm",                        // gfm or markdown
       name: "",                           // Form element name
       value: "",                          // value for CodeMirror, if mode not gfm/markdown
       theme: "",                          // 编辑器顶部工具栏主题 "" | dark
@@ -107,9 +169,32 @@
       toolbarAutoFixed: true,           // 在窗口滚动自动定位
       toolbarIcons: "full",             // 工具栏按钮数量 "full" | "simple" | "mini"
       toolbarTitles: {},                // toolbarTitles
-      // toolbarHandlers: {},
+      toolbarHandlers: {
+        myFullscreen: function (cm, icon, cursor, selection) {
+          // cm         CodeMirror对象
+          // icon       图标按钮jQuery元素对象
+          // cursor     CodeMirror的光标对象，可获取光标所在行和位置
+          // selection  编辑器选中的文本
+          var fullscreen = !icon.parent().hasClass("active");
+          if (config.fullscreen) {
+            var escHandle = function (event) {
+              if (!event.shiftKey && event.keyCode === 27 && fullscreen === true) {
+                config.fullscreen(false);
+              }
+            };
+            config.fullscreen(fullscreen);
+            if (fullscreen === true) {
+              $(window).bind("keyup", escHandle);
+            } else {
+              $(window).unbind("keyup", escHandle);
+            }
+          }
+        }
+      },
       // toolbarCustomIcons: {},
-      // toolbarIconsClass: {},
+      toolbarIconsClass: {
+        myFullscreen: "fa-arrows-alt",
+      },
       // toolbarIconTexts: {},
       // lang: {}
     };
@@ -120,6 +205,21 @@
   function getEditor() {
     return editor;
   }
+
+  // // 大小发生变化 - 需要优化
+  // window.addEventListener(
+  //   'resize',
+  //   _.debounce(
+  //     function () {
+  //       if (!editor) return;
+  //       if (editor.state && editor.state.fullscreen === true) {
+  //         editor.innerFullscreen().innerFullscreen();
+  //       }
+  //     },
+  //     100,
+  //     { maxWait: 350 }
+  //   )
+  // );
 </script>
 
 </html>

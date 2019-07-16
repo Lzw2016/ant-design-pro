@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 // import { Modal, Icon } from 'antd';
 // import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
+import { TypeEnum, varTypeOf } from '@/components/_utils/varTypeOf';
 import IFramePage from '@/components/IFramePage';
 // import PagingQueryPage from "@/components/PagingQueryPage";
 // import classNames from 'classnames';
@@ -28,61 +29,133 @@ class EditorMD extends PureComponent {
   //   // clearTimeout(this.timer);
   // }
 
+  state = {
+    myFullscreen: false,
+  }
+
   // -------------------------------------------------------------------------------------------------------------- 动态UI相关
 
   getEditorMD = ({
-
+    width,
+    height,
+    framePageProps,
+    editorMDProps,
   }) => {
+    const { myFullscreen } = this.state;
+    const styleTmp = { ...(framePageProps.style || {}), width, height, border: "1px solid #ddd" };
+    if (myFullscreen === true) {
+      styleTmp.width = "100%";
+      styleTmp.height = "100%";
+      styleTmp.position = "fixed";
+      styleTmp.top = 0;
+      styleTmp.left = 0;
+      styleTmp.border = "none";
+      styleTmp.margin = "0 auto";
+      styleTmp.zIndex = 99999;
+    }
     return (
       <IFramePage
         ref={frame => { this.frame = frame; }}
-        onload={this.handleInit}
-        src="/iframe-page/editot.md-standard.html"
-        style={{ height: 600, border: "1px solid #ddd" }}
+        onload={() => this.handleInit(editorMDProps)}
+        src="/iframe-page/editor.md-standard.html"
+        {...framePageProps}
+        style={styleTmp}
       />
     )
   }
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
-  handleInit = () => {
-    if (this.init === true) return;
+  handleInit = (editorMDProps) => {
+    if (this.init === true) return false;
     if (this.frame && this.frame.getIFrameWindow) {
       this.init = true;
       this.frameWindow = this.frame.getIFrameWindow();
       this.frameElement = this.frame.getIFrameElement();
       this.frameWindow.initEditor({
+        ...editorMDProps,
         onload: () => {
           this.frame.setLoading(false);
           this.editor = this.frameWindow.getEditor();
+          // 编辑器全屏
           this.editor.fullscreen();
+          if (editorMDProps.onload instanceof Function) editorMDProps.onload();
         },
       });
-
     }
-    // eslint-disable-next-line consistent-return
-    return true;
+    return false;
   }
-
 
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
 
+  // 获取编辑器对象
+  getEditor = () => {
+    return this.editor;
+  }
+
+  // 全屏/退出全屏
+  fullscreen = (fullscreen) => {
+    const { myFullscreen } = this.state;
+    const newFullscreen = varTypeOf(fullscreen) === TypeEnum.boolean ? fullscreen : !myFullscreen;
+    this.setState({ myFullscreen: newFullscreen });
+    if (this.editor && this.editor.toolbar && myFullscreen !== newFullscreen) {
+      this.editor.toolbar.find(".fa[name=myFullscreen]").parent().toggleClass("active");
+    }
+  }
+
+  // 读取文本
+  getValue = () => {
+    let value;
+    if (this.editor) {
+      value = this.editor.getValue();
+    }
+    return value;
+  }
+
+  // 设置内容
+  setValue = (value = "") => {
+    if (this.editor) {
+      this.editor.setValue(value || "");
+    }
+  }
+
+  // 读取HTML内容
+  getHTML = () => {
+    let html;
+    if (this.editor) {
+      html = this.editor.getHTML();
+    }
+    return html;
+  }
+
+  // 读取Markdown内容
+  getMarkdown = () => {
+    let markdown;
+    if (this.editor) {
+      markdown = this.editor.getMarkdown();
+    }
+    return markdown;
+  }
+
   render() {
     const {
-      src,                          // 内嵌页面地址(非受控属性，最好不要变化)
-      onload,                       // 完成加载时的事件 () => ()
-      iframeProps = {},             // iframe属性
-      spinProps = {},               // Spin组件属性
-      className,                    // 最外层包装元素的className
-      style = {},                   // 最外层包装元素的样式
-      iframeClassName,              // iframe元素的className
-      iframeStyle = {},             // iframe元素的样式
+      width = "100%",               // IFramePage 宽
+      height = 300,                 // IFramePage 高
+      framePageProps = {},          // IFramePage 组件属性
+      editorMDProps = {},           // editor.md 配置属性
     } = this.props;
+    if (width) editorMDProps.width = width;
+    if (height) editorMDProps.height = varTypeOf(height) === TypeEnum.number ? (height - 2) : height;
+    // 自定义全屏/退出全屏逻辑
+    editorMDProps.fullscreen = this.fullscreen;
     return (
       <Fragment>
         {
           this.getEditorMD({
-
+            width,
+            height,
+            framePageProps,
+            editorMDProps,
           })
         }
       </Fragment>

@@ -48,6 +48,7 @@ class IFramePage extends PureComponent {
       <iframe
         id={iframeID}
         name={iframeID}
+        key={iframeID}
         title="iframe"
         src={src}
         className={iframeClassName}

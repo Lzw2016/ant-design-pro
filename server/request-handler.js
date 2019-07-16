@@ -20,7 +20,7 @@ app.use(KoaStatic('./dist', {
   maxage: 1000 * 60 * 60 * 24 * 30,
   setHeaders: (res, path, stats) => {
     let flag = true;
-    const suffixArray = ["/index.html", "/favicon.png"].filter(suffix => path.indexOf(suffix, path.length - suffix.length) !== -1);
+    const suffixArray = ["/index.html", "/favicon.png", ".html"].filter(suffix => path.indexOf(suffix, path.length - suffix.length) !== -1);
     if (suffixArray && suffixArray.length > 0) {
       flag = false;
       res.setHeader('Cache-Control', 'max-age=0,must-revalidate');
