@@ -17,9 +17,9 @@
   <div id="editormd"></div>
 </body>
 
-<script src="jquery/jquery-3.4.1.min.js"></script>
-<script src="lodash/lodash.min.js"></script>
-<script src="editor.md/editormd.min.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.4.1.min.js"></script>
+<!-- <script type="text/javascript" src="lodash/lodash.min.js"></script> -->
+<script type="text/javascript" src="editor.md/editormd.min.js"></script>
 <script type="text/javascript">
   // 设置工具栏按钮
   editormd.toolbarModes = {
@@ -179,6 +179,7 @@
           if (config.fullscreen) {
             var escHandle = function (event) {
               if (!event.shiftKey && event.keyCode === 27 && fullscreen === true) {
+                $(window).unbind("keyup", escHandle);
                 config.fullscreen(false);
               }
             };
@@ -195,8 +196,13 @@
       toolbarIconsClass: {
         myFullscreen: "fa-arrows-alt",
       },
-      // toolbarIconTexts: {},
-      // lang: {}
+      toolbarIconTexts: {
+      },
+      lang: {
+        toolbar: {
+          myFullscreen: "全屏（按ESC还原）"
+        }
+      }
     };
     editor = editormd(editorId, $.extend(true, defaultConfig, config));
   }
