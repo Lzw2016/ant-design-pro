@@ -3806,7 +3806,7 @@ var domUtils = (dom.domUtils = {
     }
     try {
         var value = domUtils.getStyle(element, styleName) ||
-            (window.getComputedStyle 
+            (window.getComputedStyle
                 ? domUtils.getWindow(element).getComputedStyle(element, "").getPropertyValue(styleName)
                 : (element.currentStyle || element.style)[utils.cssStyleToDomStyle(styleName)]);
     } catch (e) {
@@ -7603,7 +7603,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, "g");
           ".view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n" +
           //设置默认字体和字号
           //font-family不能呢随便改，在safari下fillchar会有解析问题
-          "body{margin:8px;font-family:sans-serif;font-size:16px;}" +
+          "body{margin:8px;font-family:sans-serif;font-size:16px;height:100% !important;}" +
           //设置placeholder
           "body.empty:before{content:attr(placeholder);position:absolute;color:#999;}"+
           //设置段落间距
@@ -13907,7 +13907,7 @@ UE.plugins["paragraph"] = function () {
                 (para.style.padding = parent.style.padding);
             }
 
-            //trace:1706 选择的就是h1-6要删除 
+            //trace:1706 选择的就是h1-6要删除
             if (
               attrs &&
               /h\d/i.test(parent.tagName) &&
@@ -18069,11 +18069,11 @@ UE.plugins["list"] = function() {
 
            orgFocus = me.focus;
            orgBlur = me.blur;
- 
+
            me.focus = function(){
              sourceEditor.focus();
            };
- 
+
            me.blur = function(){
              orgBlur.call(me);
              sourceEditor.blur();

@@ -42,7 +42,8 @@ class Demo1 extends PureComponent {
           <br />
           <NEditor
             ref={neditor => { this.neditor = neditor; }}
-            height={300}
+            width="calc(100% - 50px)"
+            height={600}
             // height="100%"
             neditorProps={{
               initialContent: value,

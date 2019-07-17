@@ -85,15 +85,12 @@ class NEditor extends PureComponent {
   //   return this.editor;
   // }
 
-  // // 全屏/退出全屏
-  // fullscreen = (fullscreen) => {
-  //   const { myFullscreen } = this.state;
-  //   const newFullscreen = varTypeOf(fullscreen) === TypeEnum.boolean ? fullscreen : !myFullscreen;
-  //   this.setState({ myFullscreen: newFullscreen });
-  //   if (this.editor && this.editor.toolbar && myFullscreen !== newFullscreen) {
-  //     this.editor.toolbar.find(".fa[name=myFullscreen]").parent().toggleClass("active");
-  //   }
-  // }
+  // 全屏/退出全屏
+  fullscreen = (fullscreen) => {
+    const { myFullscreen } = this.state;
+    const newFullscreen = varTypeOf(fullscreen) === TypeEnum.boolean ? fullscreen : !myFullscreen;
+    this.setState({ myFullscreen: newFullscreen });
+  }
 
   render() {
     const {
@@ -105,7 +102,7 @@ class NEditor extends PureComponent {
     if (width) neditorProps.width = width;
     if (height) neditorProps.height = varTypeOf(height) === TypeEnum.number ? (height - 2) : height;
     // 自定义全屏/退出全屏逻辑
-    // neditorProps.fullscreen = this.fullscreen;
+    neditorProps.fullscreenFunc = this.fullscreen;
     return (
       <Fragment>
         {
