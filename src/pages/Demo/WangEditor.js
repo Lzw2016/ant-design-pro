@@ -4,7 +4,7 @@ import { Card, Button } from 'antd';
 // import moment from 'moment';
 // import { connect } from 'dva';
 // import { InputEnum } from '@/components/FormEngine';
-import WangEditor from '@/components/WangEditor';
+import { WangEditor } from '@/components/RichTextEditor';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './RichTextEditor.less';
