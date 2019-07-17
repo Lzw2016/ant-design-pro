@@ -97,7 +97,7 @@ class NEditor extends PureComponent {
       width = "100%",               // IFramePage 宽
       height = 300,                 // IFramePage 高
       framePageProps = {},          // IFramePage 组件属性
-      neditorProps = {},           // editor.md 配置属性
+      neditorProps = {},            // editor.md 配置属性
     } = this.props;
     if (width) neditorProps.width = width;
     if (height) neditorProps.height = varTypeOf(height) === TypeEnum.number ? (height - 2) : height;
