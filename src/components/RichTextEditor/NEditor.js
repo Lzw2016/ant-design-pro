@@ -73,17 +73,17 @@ class NEditor extends PureComponent {
       this.frameWindow = this.frame.getIFrameWindow();
       this.frameElement = this.frame.getIFrameElement();
       // 初始化编辑器
-      this.frameWindow.initEditor(neditorProps);
+      this.editor = this.frameWindow.initEditor(neditorProps);
     }
     return false;
   }
 
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
 
-  // // 获取编辑器对象
-  // getEditor = () => {
-  //   return this.editor;
-  // }
+  // 获取编辑器对象
+  getEditor = () => {
+    return this.editor;
+  }
 
   // 全屏/退出全屏
   fullscreen = (fullscreen) => {
@@ -91,6 +91,47 @@ class NEditor extends PureComponent {
     const newFullscreen = varTypeOf(fullscreen) === TypeEnum.boolean ? fullscreen : !myFullscreen;
     this.setState({ myFullscreen: newFullscreen });
   }
+
+  // 获取纯文本内容
+  getContentTxt = () => this.frameWindow.getContentTxt();
+
+  // 获取保留格式的文本内容
+  getPlainTxt = () => this.frameWindow.getPlainTxt();
+
+  // 获得整个html的内容
+  getAllHtml = () => this.frameWindow.getAllHtml();
+
+  // 获取纯文本内容
+  getContentTxt = () => this.frameWindow.getContentTxt();
+
+  // 写入内容
+  setContent = (content, isAppendTo = false) => this.frameWindow.setContent(content, isAppendTo);
+
+  // 不可编辑
+  setDisabled = () => this.frameWindow.setDisabled();
+
+  // 可以编辑
+  setEnabled = () => this.frameWindow.setEnabled();
+
+  // 判断是否有内容
+  hasContent = () => this.frameWindow.hasContent();
+
+  setFocus = () => this.frameWindow.setFocus();
+
+  // 销毁编辑器
+  deleteEditor = () => this.frameWindow.deleteEditor();
+
+  // 获取草稿箱内容
+  getLocalData = () => this.frameWindow.getLocalData();
+
+  // 清空草稿箱
+  clearLocalData = () => this.frameWindow.clearLocalData();
+
+  insertHtml = () => this.frameWindow.insertHtml();
+
+  isFocus = () => this.frameWindow.isFocus();
+
+  setblur = () => this.frameWindow.setblur();
 
   render() {
     const {

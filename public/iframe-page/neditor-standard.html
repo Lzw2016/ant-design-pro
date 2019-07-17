@@ -195,18 +195,17 @@
       editor.setPlaceholder(config.placeholder);
     }
     $(".edui-for-myfullscreen .edui-icon").html(fullscreenIcon.join(""));
+    return editor;
   }
 
   // ---------------------------------------------------------------------------
 
-  function isFocus(e) {
-    UE.dom.domUtils.preventDefault(e)
+  function isFocus() {
     return editor.isFocus()
   }
 
-  function setblur(e) {
+  function setblur() {
     editor.blur();
-    UE.dom.domUtils.preventDefault(e)
   }
 
   function insertHtml(value) {

@@ -28,11 +28,11 @@ class Demo1 extends PureComponent {
               this.setState({ count: count + 1 });
               if (!this.neditor) return;
               // eslint-disable-next-line no-console
-              console.log("getValue", this.neditor.getValue());
+              console.log("getAllHtml", this.neditor.getAllHtml());
               // eslint-disable-next-line no-console
-              console.log("getHTML", this.neditor.getHTML());
+              console.log("getPlainTxt", this.neditor.getPlainTxt());
               // eslint-disable-next-line no-console
-              console.log("getMarkdown", this.neditor.getMarkdown());
+              console.log("getContentTxt", this.neditor.getContentTxt());
             }}
           >
             {count}
