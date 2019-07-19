@@ -10,7 +10,7 @@ steps:
     image: docker:git
     commands:
       - echo "### $DRONE_GIT_HTTP_URL -> $DRONE_BRANCH"
-      - git clone http://192.168.31.5:13000/lizw/ant-design-pro.git ./
+      - git clone http://172.18.1.1:13000/lizw/ant-design-pro.git ./
       - git checkout base-2.x
       # - git clone $DRONE_GIT_HTTP_URL ./
       # - git checkout $DRONE_BRANCH
@@ -47,8 +47,8 @@ steps:
   - name: 构建镜像[Docker]
     image: plugins/docker
     settings:
-      registry: '192.168.31.5:15000'
-      repo: '192.168.31.5:15000/nodejs-service/ant-design-pro'
+      registry: '172.18.1.1:15000'
+      repo: '172.18.1.1:15000/nodejs-service/ant-design-pro'
       # bip: true
       insecure: true
       dockerfile: ./Dockerfile
@@ -61,7 +61,7 @@ steps:
   - name: 启动容器[SSH-Docker]
     image: appleboy/drone-ssh
     settings:
-      host: 192.168.31.5
+      host: 172.18.1.1
       port: 22
       username:
         from_secret: sshUsername
@@ -74,11 +74,11 @@ steps:
         - echo "------------------< 删除容器 >------------------"
         - docker rm -v ant-design-pro
         - echo "------------------< 删除旧镜像 >------------------"
-        - docker rmi 192.168.31.5:15000/nodejs-service/pant-design-pro:0.0.1-SNAPSHOT
+        - docker rmi 172.18.1.1:15000/nodejs-service/pant-design-pro:0.0.1-SNAPSHOT
         - echo "------------------< 拉取新镜像 >------------------"
-        - docker pull 192.168.31.5:15000/nodejs-service/ant-design-pro:0.0.1-SNAPSHOT
+        - docker pull 172.18.1.1:15000/nodejs-service/ant-design-pro:0.0.1-SNAPSHOT
         - echo "------------------< 运行新镜像 >------------------"
-        - docker run --name ant-design-pro -d -p 19080:9066 192.168.31.5:15000/nodejs-service/ant-design-pro:0.0.1-SNAPSHOT
+        - docker run --name ant-design-pro -d -p 19080:9066 172.18.1.1:15000/nodejs-service/ant-design-pro:0.0.1-SNAPSHOT
         - exit
 
   - name: 发送通知[Email]
