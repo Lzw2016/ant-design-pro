@@ -69,15 +69,18 @@ class MonacoEditor extends PureComponent {
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
   handleInit = (monacoProps) => {
-    if (this.init === true) return false;
+    if (this.init === true) return true;
     if (this.frame && this.frame.getIFrameWindow) {
       this.init = true;
       this.frameWindow = this.frame.getIFrameWindow();
       this.frameElement = this.frame.getIFrameElement();
       // 初始化编辑器
-      this.frameWindow.initEditor(monacoProps, (editor) => { this.editor = editor; });
+      this.frameWindow.initEditor(monacoProps, (editor) => {
+        this.editor = editor;
+        this.frame.setLoading(false);
+      });
     }
-    return false;
+    return true;
   }
 
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
