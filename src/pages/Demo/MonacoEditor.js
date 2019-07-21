@@ -30,13 +30,9 @@ public class JavaTester {
           <Button
             onClick={() => {
               this.setState({ count: count + 1 });
-              if (!this.neditor) return;
+              if (!this.monaco) return;
               // eslint-disable-next-line no-console
-              console.log("getAllHtml", this.neditor.getAllHtml());
-              // eslint-disable-next-line no-console
-              console.log("getPlainTxt", this.neditor.getPlainTxt());
-              // eslint-disable-next-line no-console
-              console.log("getContentTxt", this.neditor.getContentTxt());
+              console.log("getValue", this.monaco.getValue());
             }}
           >
             {count}
@@ -45,7 +41,7 @@ public class JavaTester {
           <br />
           <br />
           <MonacoEditor
-            ref={neditor => { this.neditor = neditor; }}
+            ref={monaco => { this.monaco = monaco; }}
             width="calc(100% - 50px)"
             height={600}
             // height="100%"

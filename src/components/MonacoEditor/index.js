@@ -97,6 +97,18 @@ class MonacoEditor extends PureComponent {
     this.setState({ myFullscreen: newFullscreen });
   }
 
+  // 设置值
+  setValue = (value) => this.frameWindow.setValue(value);
+
+  // 获取值
+  getValue = () => this.frameWindow.getValue();
+
+  // 设置主题 vs、vs-dark、hc-black
+  setTheme = (theme) => this.frameWindow.setTheme(theme);
+
+  // 改变属性
+  updateOptions = (config) => this.frameWindow.updateOptions(config);
+
   render() {
     const {
       width = "100%",               // IFramePage 宽
