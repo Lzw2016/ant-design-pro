@@ -52,9 +52,6 @@ public class JavaTester {
               lineNumbers: true,
               readOnly: false,
               contextmenu: true,
-              minimap: {
-                enabled: false
-              },
             }}
           />
         </Card>
