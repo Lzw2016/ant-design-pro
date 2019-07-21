@@ -16,7 +16,7 @@
       top: 0;
     }
 
-    .fullscreen {
+    .fullscreen[data-theme=vs-dark] {
       z-index: 9999;
       position: absolute;
       top: 8px;
@@ -25,20 +25,39 @@
       color: #999;
     }
 
-    .fullscreen:hover {
+    .fullscreen[data-theme=vs-dark]:hover {
       cursor: pointer;
       color: #ddd;
     }
 
-    .active {
+    .active[data-theme=vs-dark] {
       color: #fff !important;
+      font-size: 18px;
+    }
+
+    .fullscreen[data-theme=vs] {
+      z-index: 9999;
+      position: absolute;
+      top: 8px;
+      right: 24px;
+      padding: 5px;
+      color: #888;
+    }
+
+    .fullscreen[data-theme=vs]:hover {
+      cursor: pointer;
+      color: #555;
+    }
+
+    .active[data-theme=vs] {
+      color: #111 !important;
       font-size: 18px;
     }
   </style>
 </head>
 
 <body style="margin: 0;">
-  <i title="全屏/取消全屏" class="monaco-editor-background fa fa-arrows-alt fullscreen"></i>
+  <i title="全屏/取消全屏" class="monaco-editor-background fa fa-arrows-alt fullscreen" data-theme="vs"></i>
   <div id="container" class="monaco-editor"></div>
 </body>
 
@@ -109,8 +128,14 @@
           enabled: false
         }
       };
+      options = $.extend(true, options, config);
+      if (options.theme === "vs") {
+        $(".fullscreen").attr("data-theme", "vs");
+      } else {
+        $(".fullscreen").attr("data-theme", "vs-dark");
+      }
       // 创建编辑器
-      editor = monaco.editor.create(document.getElementById('container'), $.extend(true, options, config));
+      editor = monaco.editor.create(document.getElementById('container'), options);
       if (setEditorFunc) setEditorFunc(editor);
     });
   }
