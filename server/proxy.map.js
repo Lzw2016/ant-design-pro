@@ -1,7 +1,7 @@
 const ProxyMap = {
-  template: 'http://192.168.31.5:18080',
+  template: 'http://172.18.1.1:18080',
 };
 
-const defaultPrefix = "http://192.168.31.5:18080";
+const defaultPrefix = "http://172.18.1.1:18080";
 
 export { ProxyMap, defaultPrefix };
