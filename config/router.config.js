@@ -65,6 +65,18 @@ export default [
           { path: '/entry/input-table-select', name: 'input-table-select', icon: 'table', component: './Demo/InputTableSelect' },
         ],
       },
+      // 数据展示
+      {
+        path: '/show',
+        name: 'show',
+        icon: 'snippets',
+        routes: [
+          { path: '/show/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
+          { path: '/show/detail-modal', name: 'detail-modal', icon: 'table', component: './Demo/DetailModal' },
+          { path: '/show/paging-query-table', name: 'paging-query-table', icon: 'table', component: './Demo/PagingQueryTable' },
+          { path: '/show/paging-query-page', name: 'paging-query-page', icon: 'table', component: './Demo/PagingQueryPage' },
+        ],
+      },
       // 富文本编辑器
       {
         path: '/text-editor',
@@ -84,21 +96,9 @@ export default [
         name: 'code-editor',
         icon: 'form',
         routes: [
-          // { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
+          { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
           // { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
           // { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/SyntaxHighlighter' },
-        ],
-      },
-      // 数据展示
-      {
-        path: '/show',
-        name: 'show',
-        icon: 'snippets',
-        routes: [
-          { path: '/show/detail-form', name: 'detail-form', icon: 'table', component: './Demo/DetailForm' },
-          { path: '/show/detail-modal', name: 'detail-modal', icon: 'table', component: './Demo/DetailModal' },
-          { path: '/show/paging-query-table', name: 'paging-query-table', icon: 'table', component: './Demo/PagingQueryTable' },
-          { path: '/show/paging-query-page', name: 'paging-query-page', icon: 'table', component: './Demo/PagingQueryPage' },
         ],
       },
       // 其它
