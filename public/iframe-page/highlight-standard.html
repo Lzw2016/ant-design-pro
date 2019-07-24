@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>highlight</title>
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <!-- <link rel="stylesheet" href="highlight/styles/monokai-sublime.css"> -->
+  <link rel="stylesheet" href="highlight/styles/atom-one-dark.css">
+  <!-- <link rel="stylesheet" href="highlight/styles/atom-one-light.css"> -->
+  <style>
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 19px;
+      letter-spacing: 0px;
+    }
+
+    /* for block of numbers */
+    .hljs-ln-numbers {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      text-align: center;
+      color: #ccc;
+      border-right: 1px solid #CCC;
+      vertical-align: top;
+      padding-right: 5px !important;
+
+      /* your custom style here */
+    }
+
+    /* for block of code */
+    .hljs-ln-code {
+      padding-left: 10px !important;
+    }
+  </style>
+</head>
+
+<body style="margin: 0;">
+  <div style="text-align: center;">
+    <pre style="width: 1000px;text-align: left;display: inline-block;font-size: 16px;">
+      <code class="java">package org.clever.template;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.ApplicationContext;
+
+import java.util.TimeZone;
+
+/**
+  * 应用启动类
+  * Created by lzw on 2017/2/25.
+  */
+@Slf4j
+@EnableDiscoveryClient
+@EnableFeignClients(basePackages = {"org.clever.security.client"})
+@SpringBootApplication(scanBasePackages = {"org.clever"})
+public class StartApp {
+
+    public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+        ApplicationContext ctx = SpringApplication.run(StartApp.class, args);
+        log.info("### 服务启动完成 === " + ctx);
+    }
+}
+
+
+
+
+
+
+
+      </code>
+    </pre>
+  </div>
+
+</body>
+
+<script type="text/javascript" src="highlight/highlight.pack.all.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>
+<script type="text/javascript">
+  hljs.configure({
+    // 4 spaces
+    // tabReplace: '    ',
+    // don't append class prefix
+    // classPrefix: ''
+    // useBR: false,
+    // languages: []
+  })
+  hljs.initHighlightingOnLoad();
+  hljs.initLineNumbersOnLoad();
+</script>
+
+</html>
