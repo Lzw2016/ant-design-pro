@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="codemirror/addon/fold/foldgutter.css">
   <link rel="stylesheet" href="codemirror/addon/dialog/dialog.css">
   <link rel="stylesheet" href="codemirror/theme/monokai.css">
+  <!-- <link rel="stylesheet" href="codemirror/theme/dracula.css"> -->
   <style>
     .code-mirror-editor {
       width: 100%;
@@ -19,7 +20,6 @@
     }
 
     .CodeMirror {
-      height: auto;
       font-family: Consolas, "Courier New", monospace;
       font-weight: normal;
       font-size: 14px;
@@ -34,11 +34,20 @@
       line-height: 19px;
       letter-spacing: 0px;
     }
+
+    .CodeMirror pre {
+      padding: 0 4px 0 8px;
+    }
+
+    .CodeMirror-linenumber {
+      padding: 0 5px 0 5px;
+      border-right: 1px solid #CCC;
+    }
   </style>
 </head>
 
 <body style="margin: 0;">
-  <div id="code" class="code-mirror-editor"></div>
+  <div id="code-editor" class="code-mirror-editor"></div>
 </body>
 
 <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
@@ -64,17 +73,22 @@
   }
   value += "}\n\n// The implementation of joinLines\n";
   value += CodeMirror.commands.joinLines.toString().replace(/^function\s*\(/, "function joinLines(").replace(/\n  /g, "\n") + "\n";
-  var editor = CodeMirror(document.getElementById('code'), {
-    value: value,
+
+  // 初始化编辑器
+  var editor = CodeMirror(document.getElementById('code-editor'), {
     lineNumbers: true,
-    mode: "javascript",
-    keyMap: "sublime",
-    autoCloseBrackets: true,
     matchBrackets: true,
-    showCursorWhenSelecting: true,
+    styleActiveLine: true,
+    indentUnit: 2,
+    smartIndent: true,
+    autoCloseBrackets: true,
+    readOnly: false,
+    keyMap: "sublime",
     theme: "monokai",
-    tabSize: 2
+    value: value,
+    mode: "javascript"
   });
+  editor.setSize("100%", "100%");
 </script>
 
 </html>
