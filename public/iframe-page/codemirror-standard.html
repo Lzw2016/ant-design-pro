@@ -233,6 +233,7 @@
       link.rel = 'stylesheet';
       link.href = themeOpt.url;
       head.appendChild(link);
+      themeOpt.loaded = true;
     }
     // 设置主题
     editor.setOption("theme", theme);
@@ -396,9 +397,10 @@
       script.src = modeOpt.url;
       script.onload = script.onreadystatechange = function () {
         if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+          modeOpt.loaded = true;
+          script.onload = script.onreadystatechange = null;
           // 设置模式
           editor.setOption("mode", mode);
-          script.onload = script.onreadystatechange = null;
         }
       };
       head.appendChild(script);
@@ -417,14 +419,53 @@
 
   // 测试
   initEditor({ fullscreen: function () { } }, null);
+  setTheme("eclipse");
+  setMode(codeTypeMap.javascript.mode, codeTypeMap.javascript.js);
+
+  var codeHtml = [];
+  codeHtml.push('// 设置编辑器代码语言');
+  codeHtml.push('function setMode(mode, js) {');
+  codeHtml.push('  if (modeArray.indexOf(js) === -1) return;');
+  codeHtml.push('  // 动态加载 js');
+  codeHtml.push('  var modeOpt = modeJsUrlMap[js];');
+  codeHtml.push('  if (modeOpt.loaded !== true) {');
+  codeHtml.push('    var head = document.getElementsByTagName("head")[0];');
+  codeHtml.push('    var script = document.createElement("script");');
+  codeHtml.push('    script.type = "text / javascript";');
+  codeHtml.push('    script.src = modeOpt.url;');
+  codeHtml.push('    script.onload = script.onreadystatechange = function () {');
+  codeHtml.push('      if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {');
+  codeHtml.push('        modeOpt.loaded = true;');
+  codeHtml.push('        script.onload = script.onreadystatechange = null;');
+  codeHtml.push('        // 设置模式');
+  codeHtml.push('        editor.setOption("mode", mode);');
+  codeHtml.push('      }');
+  codeHtml.push('    };');
+  codeHtml.push('    head.appendChild(script);');
+  codeHtml.push('  }');
+  codeHtml.push('};');
+  codeHtml.push('');
+  codeHtml.push('// 设置code内容');
+  codeHtml.push('function setValue(value) {');
+  codeHtml.push('  editor.setValue(value || "");');
+  codeHtml.push('}');
+  codeHtml.push('');
+  codeHtml.push('// 读取code内容');
+  codeHtml.push('function getValue() {');
+  codeHtml.push('  return editor.getValue();');
+  codeHtml.push('}');
+  codeHtml.push('');
+  codeHtml.push('');
+  codeHtml.push('');
+  setValue(codeHtml.join('\n'));
+
   setTimeout(
     function () {
-      setTheme("eclipse");
+      setTheme("monokai");
       setMode(codeTypeMap.javascript.mode, codeTypeMap.javascript.js);
     },
     1000 * 5
   );
-
 </script>
 
 </html>
