@@ -82,11 +82,6 @@ export default {
     'primary-color': primaryColor,
   },
   proxy: {
-    '/editor-md': {
-      target: 'http://editor.md.ipandao.com/',
-      changeOrigin: true,
-      pathRewrite: { '^/editor-md': '' },
-    },
     '/baidu': {
       target: 'http://api.fanyi.baidu.com/',
       changeOrigin: true,
