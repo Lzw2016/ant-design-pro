@@ -97,8 +97,8 @@ export default [
         icon: 'form',
         routes: [
           { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
-          // { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirrorEditor' },
-          // { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/SyntaxHighlighter' },
+          { path: 'http://ant.msvc.top/iframe-page/codemirror-standard.html', name: 'code-mirror-editor', icon: 'table', target: '_blank' },
+          { path: 'http://ant.msvc.top/iframe-page/highlight-standard.html', name: 'syntax-highlighter', icon: 'table', target: '_blank' },
         ],
       },
       // 其它
@@ -129,6 +129,13 @@ export default [
           { path: '/editor/mind', name: 'mind', component: './Editor/GGEditor/Mind' },
           { path: '/editor/koni', name: 'koni', component: './Editor/GGEditor/Koni' },
         ],
+      },
+      // 文档
+      {
+        name: "hlep-doc",
+        icon: 'question-circle',
+        path: 'http://doc.msvc.top/docs/antd-react',
+        target: '_blank',
       },
       // 个人帐号中心
       {

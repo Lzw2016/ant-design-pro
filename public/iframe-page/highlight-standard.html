@@ -45,41 +45,7 @@
 <body style="margin: 0;">
   <div style="text-align: center;">
     <pre style="width: 1000px;text-align: left;display: inline-block;font-size: 16px;">
-      <code class="java">package org.clever.template;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationContext;
-
-import java.util.TimeZone;
-
-/**
-  * 应用启动类
-  * Created by lzw on 2017/2/25.
-  */
-@Slf4j
-@EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"org.clever.security.client"})
-@SpringBootApplication(scanBasePackages = {"org.clever"})
-public class StartApp {
-
-    public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
-        ApplicationContext ctx = SpringApplication.run(StartApp.class, args);
-        log.info("### 服务启动完成 === " + ctx);
-    }
-}
-
-
-
-
-
-
-
-      </code>
+      <code class="java" id="code"></code>
     </pre>
   </div>
 
@@ -88,6 +54,39 @@ public class StartApp {
 <script type="text/javascript" src="highlight/highlight.pack.all.js"></script>
 <script type="text/javascript" src="highlight/highlightjs-line-numbers.min.js"></script>
 <script type="text/javascript">
+  var code = [];
+  code.push('package org.clever.template;');
+  code.push('');
+  code.push('import lombok.extern.slf4j.Slf4j;');
+  code.push('import org.springframework.boot.SpringApplication;');
+  code.push('import org.springframework.boot.autoconfigure.SpringBootApplication;');
+  code.push('import org.springframework.cloud.client.discovery.EnableDiscoveryClient;');
+  code.push('import org.springframework.cloud.openfeign.EnableFeignClients;');
+  code.push('import org.springframework.context.ApplicationContext;');
+  code.push('');
+  code.push('import java.util.TimeZone;');
+  code.push('');
+  code.push('/**');
+  code.push('  * 应用启动类');
+  code.push('  * Created by lzw on 2017/2/25.');
+  code.push('  */');
+  code.push('@Slf4j');
+  code.push('@EnableDiscoveryClient');
+  code.push('@EnableFeignClients(basePackages = {"org.clever.security.client"})');
+  code.push('@SpringBootApplication(scanBasePackages = {"org.clever"})');
+  code.push('public class StartApp {');
+  code.push('');
+  code.push('    public static void main(String[] args) {');
+  code.push('        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));');
+  code.push('        ApplicationContext ctx = SpringApplication.run(StartApp.class, args);');
+  code.push('        log.info("### 服务启动完成 === " + ctx);');
+  code.push('    }');
+  code.push('}');
+  code.push('');
+  code.push('');
+  code.push('');
+  code.push('');
+  document.getElementById("code").innerHTML = code.join("\n");
   hljs.configure({
     // 4 spaces
     // tabReplace: '    ',

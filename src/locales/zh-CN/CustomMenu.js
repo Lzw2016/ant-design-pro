@@ -26,9 +26,9 @@ export default {
   "menu.text-editor.neditor": "NEditor",
 
   "menu.code-editor": "代码编辑器",
-  "menu.code-editor.monaco-editor": "代码(monaco)",
-  "menu.code-editor.code-mirror-editor": "代码(CodeMirror)",
-  "menu.code-editor.syntax-highlighter": "代码高亮",
+  "menu.code-editor.monaco-editor": "Monaco",
+  "menu.code-editor.code-mirror-editor": "CodeMirror",
+  "menu.code-editor.syntax-highlighter": "Highlight",
 
   "menu.show": "数据展示",
   "menu.show.detail-form": "详情数据表格",
@@ -41,4 +41,6 @@ export default {
 
   "menu.translate": "多语言翻译",
   "menu.translate.baidu": "百度翻译",
+
+  "menu.hlep-doc": "帮助文档",
 };
