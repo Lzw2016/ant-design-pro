@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="codemirror/lib/codemirror.css">
   <link rel="stylesheet" href="codemirror/theme/monokai.css">
-  <link rel="stylesheet" href="codemirror/addon/fold/foldgutter.css">
   <link rel="stylesheet" href="codemirror/addon/dialog/dialog.css">
+  <link rel="stylesheet" href="codemirror/addon/fold/foldgutter.css">
+  <link rel="stylesheet" href="codemirror/addon/scroll/simplescrollbars.css">
+  <link rel="stylesheet" href="codemirror/addon/search/matchesonscrollbar.css">
   <style>
     .code-mirror-editor {
       width: 100%;
@@ -23,7 +25,7 @@
       z-index: 5;
       position: absolute;
       top: 8px;
-      right: 24px;
+      right: 16px;
       padding: 5px;
       color: #999;
     }
@@ -82,7 +84,11 @@
     }
 
     .CodeMirror-gutters {
-      border-right: 1px solid #CCC !important;
+      border-right: 1px solid #999 !important;
+    }
+
+    .CodeMirror pre.CodeMirror-placeholder {
+      color: #888;
     }
   </style>
 </head>
@@ -94,19 +100,28 @@
 
 <script type="text/javascript" src="jquery/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
-<script type="text/javascript" src="codemirror/addon/search/searchcursor.js"></script>
-<script type="text/javascript" src="codemirror/addon/search/search.js"></script>
+<script type="text/javascript" src="codemirror/addon/comment/comment.js"></script>
 <script type="text/javascript" src="codemirror/addon/dialog/dialog.js"></script>
+<script type="text/javascript" src="codemirror/addon/display/placeholder.js"></script>
+<script type="text/javascript" src="codemirror/addon/display/autorefresh.js"></script>
 <script type="text/javascript" src="codemirror/addon/edit/matchbrackets.js"></script>
 <script type="text/javascript" src="codemirror/addon/edit/closebrackets.js"></script>
-<script type="text/javascript" src="codemirror/addon/comment/comment.js"></script>
-<script type="text/javascript" src="codemirror/addon/wrap/hardwrap.js"></script>
+<script type="text/javascript" src="codemirror/addon/edit/matchtags.js"></script>
+<script type="text/javascript" src="codemirror/addon/edit/trailingspace.js"></script>
+<script type="text/javascript" src="codemirror/addon/edit/closetag.js"></script>
 <script type="text/javascript" src="codemirror/addon/fold/foldcode.js"></script>
 <script type="text/javascript" src="codemirror/addon/fold/brace-fold.js"></script>
-<!-- <script type="text/javascript" src="codemirror/keymap/sublime.js"></script> -->
-
+<script type="text/javascript" src="codemirror/addon/scroll/simplescrollbars.js"></script>
+<script type="text/javascript" src="codemirror/addon/scroll/annotatescrollbar.js"></script>
+<script type="text/javascript" src="codemirror/addon/search/search.js"></script>
+<script type="text/javascript" src="codemirror/addon/search/jump-to-line.js"></script>
+<script type="text/javascript" src="codemirror/addon/search/matchesonscrollbar.js"></script>
+<script type="text/javascript" src="codemirror/addon/search/searchcursor.js"></script>
+<script type="text/javascript" src="codemirror/addon/selection/active-line.js"></script>
+<script type="text/javascript" src="codemirror/addon/selection/selection-pointer.js"></script>
+<script type="text/javascript" src="codemirror/addon/wrap/hardwrap.js"></script>
+<script type="text/javascript" src="codemirror/keymap/sublime.js"></script>
 <script type="text/javascript">
-
   var editor;
   var fullscreenFunc;
   // 全屏/取消全屏
@@ -134,7 +149,7 @@
     if (config) {
       fullscreenFunc = config.fullscreen;
     }
-    editor = CodeMirror(document.getElementById('code-editor'), {
+    var options = {
       lineNumbers: true,
       matchBrackets: true,
       styleActiveLine: true,
@@ -142,75 +157,85 @@
       smartIndent: true,
       autoCloseBrackets: true,
       readOnly: false,
+      placeholder: "输入代码...",
       value: "",
+      scrollbarStyle: "overlay",
+      selectionPointer: true,
+      keyMap: "sublime"
+      // continueLineComment: true,
       // theme: "monokai",
-      // mode: "javascript",
-      // keyMap: "sublime"
-    });
-    editor.setOption("theme", "monokai");
+      // mode: codeTypeMap.JavaScript.mode,
+      // modeJs: codeTypeMap.JavaScript.js,
+    };
+    options = $.extend(true, options, config);
+    editor = CodeMirror(document.getElementById('code-editor'), options);
     editor.setSize("100%", "100%");
     if (setEditorFunc) setEditorFunc(editor);
+    // 设置主题
+    setTheme(options.theme || "monokai", true);
+    // 设置模式(代码语言)
+    setMode(options.mode || codeTypeMap.JavaScript.mode, options.modeJs || codeTypeMap.JavaScript.js);
     return editor;
   }
 
   var themeUrlMap = {
-    "3024-day": { theme: "3024-day", url: "codemirror/theme/3024-day.css" },
-    "3024-night": { theme: "3024-night", url: "codemirror/theme/3024-night.css" },
-    "abcdef": { theme: "abcdef", url: "codemirror/theme/abcdef.css" },
-    "ambiance-mobile": { theme: "ambiance-mobile", url: "codemirror/theme/ambiance-mobile.css" },
-    "ambiance": { theme: "ambiance", url: "codemirror/theme/ambiance.css" },
-    "base16-dark": { theme: "base16-dark", url: "codemirror/theme/base16-dark.css" },
-    "base16-light": { theme: "base16-light", url: "codemirror/theme/base16-light.css" },
-    "bespin": { theme: "bespin", url: "codemirror/theme/bespin.css" },
-    "blackboard": { theme: "blackboard", url: "codemirror/theme/blackboard.css" },
-    "cobalt": { theme: "cobalt", url: "codemirror/theme/cobalt.css" },
-    "colorforth": { theme: "colorforth", url: "codemirror/theme/colorforth.css" },
-    "darcula": { theme: "darcula", url: "codemirror/theme/darcula.css" },
-    "dracula": { theme: "dracula", url: "codemirror/theme/dracula.css" },
-    "duotone-dark": { theme: "duotone-dark", url: "codemirror/theme/duotone-dark.css" },
-    "duotone-light": { theme: "duotone-light", url: "codemirror/theme/duotone-light.css" },
-    "eclipse": { theme: "eclipse", url: "codemirror/theme/eclipse.css" },
-    "elegant": { theme: "elegant", url: "codemirror/theme/elegant.css" },
-    "erlang-dark": { theme: "erlang-dark", url: "codemirror/theme/erlang-dark.css" },
-    "gruvbox-dark": { theme: "gruvbox-dark", url: "codemirror/theme/gruvbox-dark.css" },
-    "hopscotch": { theme: "hopscotch", url: "codemirror/theme/hopscotch.css" },
-    "icecoder": { theme: "icecoder", url: "codemirror/theme/icecoder.css" },
-    "idea": { theme: "idea", url: "codemirror/theme/idea.css" },
-    "isotope": { theme: "isotope", url: "codemirror/theme/isotope.css" },
-    "lesser-dark": { theme: "lesser-dark", url: "codemirror/theme/lesser-dark.css" },
-    "liquibyte": { theme: "liquibyte", url: "codemirror/theme/liquibyte.css" },
-    "lucario": { theme: "lucario", url: "codemirror/theme/lucario.css" },
-    "material": { theme: "material", url: "codemirror/theme/material.css" },
-    "mbo": { theme: "mbo", url: "codemirror/theme/mbo.css" },
-    "mdn-like": { theme: "mdn-like", url: "codemirror/theme/mdn-like.css" },
-    "midnight": { theme: "midnight", url: "codemirror/theme/midnight.css" },
-    "monokai": { theme: "monokai", url: "codemirror/theme/monokai.css", loaded: true },
-    "neat": { theme: "neat", url: "codemirror/theme/neat.css" },
-    "neo": { theme: "neo", url: "codemirror/theme/neo.css" },
-    "night": { theme: "night", url: "codemirror/theme/night.css" },
-    "nord": { theme: "nord", url: "codemirror/theme/nord.css" },
-    "oceanic-next": { theme: "oceanic-next", url: "codemirror/theme/oceanic-next.css" },
-    "panda-syntax": { theme: "panda-syntax", url: "codemirror/theme/panda-syntax.css" },
-    "paraiso-dark": { theme: "paraiso-dark", url: "codemirror/theme/paraiso-dark.css" },
-    "paraiso-light": { theme: "paraiso-light", url: "codemirror/theme/paraiso-light.css" },
-    "pastel-on-dark": { theme: "pastel-on-dark", url: "codemirror/theme/pastel-on-dark.css" },
-    "railscasts": { theme: "railscasts", url: "codemirror/theme/railscasts.css" },
-    "rubyblue": { theme: "rubyblue", url: "codemirror/theme/rubyblue.css" },
-    "seti": { theme: "seti", url: "codemirror/theme/seti.css" },
-    "shadowfox": { theme: "shadowfox", url: "codemirror/theme/shadowfox.css" },
-    "solarized": { theme: "solarized", url: "codemirror/theme/solarized.css" },
-    "ssms": { theme: "ssms", url: "codemirror/theme/ssms.css" },
-    "the-matrix": { theme: "the-matrix", url: "codemirror/theme/the-matrix.css" },
-    "tomorrow-night-bright": { theme: "tomorrow-night-bright", url: "codemirror/theme/tomorrow-night-bright.css" },
-    "tomorrow-night-eighties": { theme: "tomorrow-night-eighties", url: "codemirror/theme/tomorrow-night-eighties.css" },
-    "ttcn": { theme: "ttcn", url: "codemirror/theme/ttcn.css" },
-    "twilight": { theme: "twilight", url: "codemirror/theme/twilight.css" },
-    "vibrant-ink": { theme: "vibrant-ink", url: "codemirror/theme/vibrant-ink.css" },
-    "xq-dark": { theme: "xq-dark", url: "codemirror/theme/xq-dark.css" },
-    "xq-light": { theme: "xq-light", url: "codemirror/theme/xq-light.css" },
-    "yeti": { theme: "yeti", url: "codemirror/theme/yeti.css" },
-    "yonce": { theme: "yonce", url: "codemirror/theme/yonce.css" },
-    "zenburn": { theme: "zenburn", url: "codemirror/theme/zenburn.css" }
+    "3024-day": { theme: "3024-day", url: "codemirror/theme/3024-day.css", fullscreen: "light" },
+    "3024-night": { theme: "3024-night", url: "codemirror/theme/3024-night.css", fullscreen: "dark" },
+    "abcdef": { theme: "abcdef", url: "codemirror/theme/abcdef.css", fullscreen: "dark" },
+    "ambiance-mobile": { theme: "ambiance-mobile", url: "codemirror/theme/ambiance-mobile.css", fullscreen: "dark" },
+    "ambiance": { theme: "ambiance", url: "codemirror/theme/ambiance.css", fullscreen: "dark" },
+    "base16-dark": { theme: "base16-dark", url: "codemirror/theme/base16-dark.css", fullscreen: "dark" },
+    "base16-light": { theme: "base16-light", url: "codemirror/theme/base16-light.css", fullscreen: "light" },
+    "bespin": { theme: "bespin", url: "codemirror/theme/bespin.css", fullscreen: "dark" },
+    "blackboard": { theme: "blackboard", url: "codemirror/theme/blackboard.css", fullscreen: "dark" },
+    "cobalt": { theme: "cobalt", url: "codemirror/theme/cobalt.css", fullscreen: "dark" },
+    "colorforth": { theme: "colorforth", url: "codemirror/theme/colorforth.css", fullscreen: "dark" },
+    "darcula": { theme: "darcula", url: "codemirror/theme/darcula.css", fullscreen: "dark" },
+    "dracula": { theme: "dracula", url: "codemirror/theme/dracula.css", fullscreen: "dark" },
+    "duotone-dark": { theme: "duotone-dark", url: "codemirror/theme/duotone-dark.css", fullscreen: "dark" },
+    "duotone-light": { theme: "duotone-light", url: "codemirror/theme/duotone-light.css", fullscreen: "light" },
+    "eclipse": { theme: "eclipse", url: "codemirror/theme/eclipse.css", fullscreen: "light", },
+    "elegant": { theme: "elegant", url: "codemirror/theme/elegant.css", fullscreen: "light" },
+    "erlang-dark": { theme: "erlang-dark", url: "codemirror/theme/erlang-dark.css", fullscreen: "dark" },
+    "gruvbox-dark": { theme: "gruvbox-dark", url: "codemirror/theme/gruvbox-dark.css", fullscreen: "dark" },
+    "hopscotch": { theme: "hopscotch", url: "codemirror/theme/hopscotch.css", fullscreen: "dark" },
+    "icecoder": { theme: "icecoder", url: "codemirror/theme/icecoder.css", fullscreen: "dark" },
+    "idea": { theme: "idea", url: "codemirror/theme/idea.css", fullscreen: "light" },
+    "isotope": { theme: "isotope", url: "codemirror/theme/isotope.css", fullscreen: "dark" },
+    "lesser-dark": { theme: "lesser-dark", url: "codemirror/theme/lesser-dark.css", fullscreen: "dark" },
+    "liquibyte": { theme: "liquibyte", url: "codemirror/theme/liquibyte.css", fullscreen: "dark" },
+    "lucario": { theme: "lucario", url: "codemirror/theme/lucario.css", fullscreen: "dark" },
+    "material": { theme: "material", url: "codemirror/theme/material.css", fullscreen: "dark" },
+    "mbo": { theme: "mbo", url: "codemirror/theme/mbo.css", fullscreen: "dark" },
+    "mdn-like": { theme: "mdn-like", url: "codemirror/theme/mdn-like.css", fullscreen: "light" },
+    "midnight": { theme: "midnight", url: "codemirror/theme/midnight.css", fullscreen: "dark" },
+    "monokai": { theme: "monokai", url: "codemirror/theme/monokai.css", loaded: true, fullscreen: "dark" },
+    "neat": { theme: "neat", url: "codemirror/theme/neat.css", fullscreen: "light" },
+    "neo": { theme: "neo", url: "codemirror/theme/neo.css", fullscreen: "light" },
+    "night": { theme: "night", url: "codemirror/theme/night.css", fullscreen: "dark" },
+    "nord": { theme: "nord", url: "codemirror/theme/nord.css", fullscreen: "dark" },
+    "oceanic-next": { theme: "oceanic-next", url: "codemirror/theme/oceanic-next.css", fullscreen: "dark" },
+    "panda-syntax": { theme: "panda-syntax", url: "codemirror/theme/panda-syntax.css", fullscreen: "dark" },
+    "paraiso-dark": { theme: "paraiso-dark", url: "codemirror/theme/paraiso-dark.css", fullscreen: "dark" },
+    "paraiso-light": { theme: "paraiso-light", url: "codemirror/theme/paraiso-light.css", fullscreen: "light" },
+    "pastel-on-dark": { theme: "pastel-on-dark", url: "codemirror/theme/pastel-on-dark.css", fullscreen: "dark" },
+    "railscasts": { theme: "railscasts", url: "codemirror/theme/railscasts.css", fullscreen: "dark" },
+    "rubyblue": { theme: "rubyblue", url: "codemirror/theme/rubyblue.css", fullscreen: "dark" },
+    "seti": { theme: "seti", url: "codemirror/theme/seti.css", fullscreen: "dark" },
+    "shadowfox": { theme: "shadowfox", url: "codemirror/theme/shadowfox.css", fullscreen: "dark" },
+    "solarized": { theme: "solarized", url: "codemirror/theme/solarized.css", fullscreen: "light" },
+    "ssms": { theme: "ssms", url: "codemirror/theme/ssms.css", fullscreen: "light" },
+    "the-matrix": { theme: "the-matrix", url: "codemirror/theme/the-matrix.css", fullscreen: "dark" },
+    "tomorrow-night-bright": { theme: "tomorrow-night-bright", url: "codemirror/theme/tomorrow-night-bright.css", fullscreen: "dark" },
+    "tomorrow-night-eighties": { theme: "tomorrow-night-eighties", url: "codemirror/theme/tomorrow-night-eighties.css", fullscreen: "dark" },
+    "ttcn": { theme: "ttcn", url: "codemirror/theme/ttcn.css", fullscreen: "light" },
+    "twilight": { theme: "twilight", url: "codemirror/theme/twilight.css", fullscreen: "dark" },
+    "vibrant-ink": { theme: "vibrant-ink", url: "codemirror/theme/vibrant-ink.css", fullscreen: "dark" },
+    "xq-dark": { theme: "xq-dark", url: "codemirror/theme/xq-dark.css", fullscreen: "dark" },
+    "xq-light": { theme: "xq-light", url: "codemirror/theme/xq-light.css", fullscreen: "light" },
+    "yeti": { theme: "yeti", url: "codemirror/theme/yeti.css", fullscreen: "light" },
+    "yonce": { theme: "yonce", url: "codemirror/theme/yonce.css", fullscreen: "dark" },
+    "zenburn": { theme: "zenburn", url: "codemirror/theme/zenburn.css", fullscreen: "dark" }
   };
   var themeArray = [
     "3024-day", "3024-night", "abcdef", "ambiance-mobile", "ambiance", "base16-dark", "base16-light", "bespin", "blackboard", "cobalt", "colorforth",
@@ -220,12 +245,14 @@
     "tomorrow-night-bright", "tomorrow-night-eighties", "ttcn", "twilight", "vibrant-ink", "xq-dark", "xq-light", "yeti", "yonce", "zenburn"
   ];
   // 设置编辑器主题
-  function setTheme(theme) {
+  function setTheme(theme, force) {
     if (themeArray.indexOf(theme) === -1) return;
     var oldTheme = editor.getOption("theme");
-    if (theme === oldTheme) return;
+    if (theme === oldTheme && force !== true) return;
     // 动态加载 css
     var themeOpt = themeUrlMap[theme];
+    // dark light
+    $(".fullscreen").attr("data-theme", themeOpt.fullscreen || "dark");
     if (themeOpt.loaded !== true) {
       var head = document.getElementsByTagName('head')[0];
       var link = document.createElement('link');
@@ -240,15 +267,64 @@
   };
 
   var codeTypeMap = {
-    java: { mode: "text/x-java", js: "clike" },
-    csharp: { mode: "text/x-csharp", js: "clike" },
-    xml: { mode: "application/xml", js: "xml" },
-    html: { mode: "text/html", js: "xml" },
-    css: { mode: "text/css", js: "css" },
-    javascript: { mode: "text/javascript", js: "javascript" },
-    jsp: { mode: "application/x-jsp", js: "htmlembedded" },
-    mysql: { mode: "text/x-mysql", js: "sql" },
-    json: { mode: "application/json", js: "javascript" }
+    C: { mode: "text/x-csrc", js: "clike" },
+    "C++": { mode: "text/x-c++src", js: "clike" },
+    "C#": { mode: "text/x-csharp", js: "clike" },
+    Java: { mode: "text/x-java", js: "clike" },
+    "Objective-C": { mode: "text/x-objectivec", js: "clike" },
+    Scala: { mode: "text/x-scala", js: "clike" },
+    Squirrel: { mode: "text/x-squirrel", js: "clike" },
+    Ceylon: { mode: "text/x-ceylon", js: "clike" },
+    Kotlin: { mode: "text/x-kotlin", js: "clike" },
+    CSS: { mode: "text/css", js: "css" },
+    SCSS: { mode: "text/x-scss", js: "css" },
+    Less: { mode: "text/x-less", js: "css" },
+    Django: { mode: "text/x-django", js: "django" },
+    Erlang: { mode: "text/x-erlang", js: "erlang" },
+    Go: { mode: "text/x-go", js: "go" },
+    Groovy: { mode: "text/x-groovy", js: "groovy" },
+    "ASP.NET": { mode: "application/x-aspx", js: "htmlembedded" },
+    EJS: { mode: "application/x-ejs", js: "htmlembedded" },
+    JSP: { mode: "application/x-jsp", js: "htmlembedded" },
+    ERB: { mode: "application/x-erb", js: "htmlembedded" },
+    "HTML-CSS-JS": { mode: "text/html", js: "htmlmixed" },
+    HTTP: { mode: "message/http", js: "http" },
+    JavaScript: { mode: "text/javascript", js: "javascript" },
+    Json: { mode: "application/json", js: "javascript" },
+    TypeScript: { mode: "text/typescript", js: "javascript" },
+    Lua: { mode: "text/x-lua", js: "lua" },
+    Markdown: { mode: "text/x-markdown", js: "markdown" },
+    Nginx: { mode: "text/x-nginx-conf", js: "nginx" },
+    "HTML-PHP": { mode: "application/x-httpd-php", js: "php" },
+    PHP: { mode: "text/x-php", js: "php" },
+    PowerShell: { mode: "application/x-powershell", js: "powershell" },
+    Protobuf: { mode: "text/x-protobuf", js: "protobuf" },
+    Python: { mode: "text/x-python", js: "python" },
+    Cython: { mode: "text/x-cython", js: "python" },
+    R: { mode: "text/x-rsrc", js: "r" },
+    Ruby: { mode: "text/x-ruby", js: "ruby" },
+    Rust: { mode: "text/x-rustsrc", js: "rust" },
+    Sass: { mode: "text/x-sass", js: "sass" },
+    Shell: { mode: "text/x-sh", js: "shell" },
+    Solr: { mode: "text/x-solr", js: "solr" },
+    SQL: { mode: "text/x-sql", js: "sql" },
+    MySql: { mode: "text/x-mysql", js: "sql" },
+    MariaDB: { mode: "text/x-mariadb", js: "sql" },
+    Cassandra: { mode: "text/x-cassandra", js: "sql" },
+    PLSQL: { mode: "text/x-plsql", js: "sql" },
+    MSSql: { mode: "text/x-mssql", js: "sql" },
+    PGSql: { mode: "text/x-pgsql", js: "sql" },
+    HIVE: { mode: "text/x-hive", js: "sql" },
+    GQL: { mode: "text/x-gql", js: "sql" },
+    GPSql: { mode: "text/x-gpsql", js: "sql" },
+    Esper: { mode: "text/x-esper", js: "sql" },
+    Swift: { mode: "text/x-swift", js: "swift" },
+    "VB.NET": { mode: "text/x-vb", js: "vb" },
+    Velocity: { mode: "text/velocity", js: "velocity" },
+    Vue: { mode: "text/x-vue", js: "vue" },
+    XML: { mode: "application/xml", js: "xml" },
+    HTML: { mode: "text/html", js: "xml" },
+    YAML: { mode: "text/x-yaml", js: "yaml" }
     // 不全，根据官网添加 https://codemirror.net/mode/index.html
   };
   var modeJsUrlMap = {
@@ -416,56 +492,6 @@
   function getValue() {
     return editor.getValue();
   }
-
-  // 测试
-  initEditor({ fullscreen: function () { } }, null);
-  setTheme("eclipse");
-  setMode(codeTypeMap.javascript.mode, codeTypeMap.javascript.js);
-
-  var codeHtml = [];
-  codeHtml.push('// 设置编辑器代码语言');
-  codeHtml.push('function setMode(mode, js) {');
-  codeHtml.push('  if (modeArray.indexOf(js) === -1) return;');
-  codeHtml.push('  // 动态加载 js');
-  codeHtml.push('  var modeOpt = modeJsUrlMap[js];');
-  codeHtml.push('  if (modeOpt.loaded !== true) {');
-  codeHtml.push('    var head = document.getElementsByTagName("head")[0];');
-  codeHtml.push('    var script = document.createElement("script");');
-  codeHtml.push('    script.type = "text / javascript";');
-  codeHtml.push('    script.src = modeOpt.url;');
-  codeHtml.push('    script.onload = script.onreadystatechange = function () {');
-  codeHtml.push('      if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {');
-  codeHtml.push('        modeOpt.loaded = true;');
-  codeHtml.push('        script.onload = script.onreadystatechange = null;');
-  codeHtml.push('        // 设置模式');
-  codeHtml.push('        editor.setOption("mode", mode);');
-  codeHtml.push('      }');
-  codeHtml.push('    };');
-  codeHtml.push('    head.appendChild(script);');
-  codeHtml.push('  }');
-  codeHtml.push('};');
-  codeHtml.push('');
-  codeHtml.push('// 设置code内容');
-  codeHtml.push('function setValue(value) {');
-  codeHtml.push('  editor.setValue(value || "");');
-  codeHtml.push('}');
-  codeHtml.push('');
-  codeHtml.push('// 读取code内容');
-  codeHtml.push('function getValue() {');
-  codeHtml.push('  return editor.getValue();');
-  codeHtml.push('}');
-  codeHtml.push('');
-  codeHtml.push('');
-  codeHtml.push('');
-  setValue(codeHtml.join('\n'));
-
-  setTimeout(
-    function () {
-      setTheme("monokai");
-      setMode(codeTypeMap.javascript.mode, codeTypeMap.javascript.js);
-    },
-    1000 * 5
-  );
 </script>
 
 </html>

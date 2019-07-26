@@ -96,7 +96,8 @@ export default [
         icon: 'form',
         routes: [
           { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
-          { path: 'http://ant.msvc.top/iframe-page/codemirror-standard.html', name: 'code-mirror-editor', icon: 'table', target: '_blank' },
+          { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirror' },
+          // { path: 'http://ant.msvc.top/iframe-page/codemirror-standard.html', name: 'code-mirror-editor', icon: 'table', target: '_blank' },
           { path: 'http://ant.msvc.top/iframe-page/highlight-standard.html', name: 'syntax-highlighter', icon: 'table', target: '_blank' },
         ],
       },
