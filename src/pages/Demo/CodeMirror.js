@@ -85,7 +85,7 @@ public class RebateSale extends BaseSale {
             // height="100%"
             codeMirrorProps={{
               value,
-              theme: "eclipse", // monokai eclipse
+              theme: "darcula", // monokai eclipse darcula
               mode: "text/x-java",
               modeJs: "clike",
             }}
