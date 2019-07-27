@@ -5,10 +5,57 @@
   <meta charset="utf-8" />
   <title>highlight</title>
   <link rel="icon" href="/favicon.png" type="image/x-icon">
-  <!-- <link rel="stylesheet" href="highlight/styles/monokai-sublime.css"> -->
-  <link rel="stylesheet" href="highlight/styles/atom-one-dark.css">
-  <!-- <link rel="stylesheet" href="highlight/styles/atom-one-light.css"> -->
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" />
   <style>
+    .code-highlight {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 0 !important;
+      border: none !important;
+      border-top: none !important;
+      border-bottom: none !important;
+    }
+
+    .fullscreen {
+      z-index: 5;
+      position: absolute;
+      top: 8px;
+      right: 24px;
+    }
+
+    .fullscreen[data-theme=dark] i {
+      padding: 5px;
+      color: #999;
+    }
+
+    .fullscreen[data-theme=dark] i:hover {
+      cursor: pointer;
+      color: #ddd;
+    }
+
+    .fullscreen[data-theme=dark] .active {
+      color: #fff !important;
+      /* font-size: 18px; */
+    }
+
+    .fullscreen[data-theme=light] i {
+      padding: 5px;
+      color: #888;
+    }
+
+    .fullscreen[data-theme=light] i:hover {
+      cursor: pointer;
+      color: #555;
+    }
+
+    .fullscreen[data-theme=light] .active {
+      color: #111 !important;
+      /* font-size: 18px; */
+    }
+
     code {
       font-family: Consolas, "Courier New", monospace;
       font-weight: normal;
@@ -43,60 +90,194 @@
 </head>
 
 <body style="margin: 0;">
-  <div style="text-align: center;">
-    <pre style="width: 1000px;text-align: left;display: inline-block;font-size: 16px;">
-      <code class="java" id="code"></code>
-    </pre>
+  <div class="fullscreen" data-theme="dark">
+    <i id="clipboardBtn" title="复制" class="fa fa-clipboard"></i>
+    <i id="fullscreenBtn" title="全屏/取消全屏" class="fa fa-arrows-alt"></i>
   </div>
-
+  <div class="hljs code-highlight">
+    <pre style="margin: 0;"><code id="code" class="java"></code></pre>
+  </div>
 </body>
 
+<script type="text/javascript" src="jquery/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="clipboard.js/clipboard.min.js"></script>
 <script type="text/javascript" src="highlight/highlight.pack.all.js"></script>
 <script type="text/javascript" src="highlight/highlightjs-line-numbers.min.js"></script>
 <script type="text/javascript">
-  var code = [];
-  code.push('package org.clever.template;');
-  code.push('');
-  code.push('import lombok.extern.slf4j.Slf4j;');
-  code.push('import org.springframework.boot.SpringApplication;');
-  code.push('import org.springframework.boot.autoconfigure.SpringBootApplication;');
-  code.push('import org.springframework.cloud.client.discovery.EnableDiscoveryClient;');
-  code.push('import org.springframework.cloud.openfeign.EnableFeignClients;');
-  code.push('import org.springframework.context.ApplicationContext;');
-  code.push('');
-  code.push('import java.util.TimeZone;');
-  code.push('');
-  code.push('/**');
-  code.push('  * 应用启动类');
-  code.push('  * Created by lzw on 2017/2/25.');
-  code.push('  */');
-  code.push('@Slf4j');
-  code.push('@EnableDiscoveryClient');
-  code.push('@EnableFeignClients(basePackages = {"org.clever.security.client"})');
-  code.push('@SpringBootApplication(scanBasePackages = {"org.clever"})');
-  code.push('public class StartApp {');
-  code.push('');
-  code.push('    public static void main(String[] args) {');
-  code.push('        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));');
-  code.push('        ApplicationContext ctx = SpringApplication.run(StartApp.class, args);');
-  code.push('        log.info("### 服务启动完成 === " + ctx);');
-  code.push('    }');
-  code.push('}');
-  code.push('');
-  code.push('');
-  code.push('');
-  code.push('');
-  document.getElementById("code").innerHTML = code.join("\n");
-  hljs.configure({
-    // 4 spaces
-    // tabReplace: '    ',
-    // don't append class prefix
-    // classPrefix: ''
-    // useBR: false,
-    // languages: []
-  })
-  hljs.initHighlightingOnLoad();
-  hljs.initLineNumbersOnLoad();
+  // 复制按钮功能
+  var clipboard = new ClipboardJS("#clipboardBtn", {
+    target: function () {
+      return document.getElementById("code");
+    }
+    // text: function () {
+    //   return $("#code").text();
+    // }
+  });
+  clipboard.on('success', function (e) { });
+  clipboard.on('error', function (e) { });
+  // 全屏/取消全屏
+  var fullscreenFunc;
+  function fullscreen(full) {
+    var node = $("#fullscreenBtn");
+    if (full === true) {
+      node.addClass("active");
+    } else if (full === false) {
+      node.removeClass("active");
+    } else {
+      node.toggleClass("active");
+    }
+  }
+  // 全屏事件
+  $("#fullscreenBtn").on("click", function () {
+    if (fullscreenFunc) {
+      fullscreen();
+      fullscreenFunc();
+    }
+  });
+
+  // 初始化编辑器
+  function initEditor(config) {
+    if (config) {
+      fullscreenFunc = config.fullscreen;
+    }
+    var options = {
+      // 4 spaces
+      // tabReplace: '    ',
+      // don't append class prefix
+      // classPrefix: ''
+      // useBR: false,
+      // languages: []
+    };
+    options = $.extend(true, options, config);
+    // 设置内容
+    $("#code").html(options.value || "");
+    // 设置主题
+    setTheme(options.theme || "atom-one-dark");
+    hljs.configure(options);
+    hljs.initHighlighting();
+    hljs.initLineNumbersOnLoad();
+    // hljs.initLineNumbers();
+  }
+
+  var themeUrlMap = {
+    "a11y-dark": { theme: "a11y-dark", url: "highlight/styles/a11y-dark.css", fullscreen: "dark" },
+    "a11y-light": { theme: "a11y-light", url: "highlight/styles/a11y-light.css", fullscreen: "light" },
+    "agate": { theme: "agate", url: "highlight/styles/agate.css", fullscreen: "dark" },
+    "an-old-hope": { theme: "an-old-hope", url: "highlight/styles/an-old-hope.css", fullscreen: "dark" },
+    "androidstudio": { theme: "androidstudio", url: "highlight/styles/androidstudio.css", fullscreen: "dark" },
+    "arduino-light": { theme: "arduino-light", url: "highlight/styles/arduino-light.css", fullscreen: "light" },
+    "arta": { theme: "arta", url: "highlight/styles/arta.css", fullscreen: "dark" },
+    "ascetic": { theme: "ascetic", url: "highlight/styles/ascetic.css", fullscreen: "light" },
+    "atelier-cave-dark": { theme: "atelier-cave-dark", url: "highlight/styles/atelier-cave-dark.css", fullscreen: "dark" },
+    "atelier-cave-light": { theme: "atelier-cave-light", url: "highlight/styles/atelier-cave-light.css", fullscreen: "light" },
+    "atelier-dune-dark": { theme: "atelier-dune-dark", url: "highlight/styles/atelier-dune-dark.css", fullscreen: "dark" },
+    "atelier-dune-light": { theme: "atelier-dune-light", url: "highlight/styles/atelier-dune-light.css", fullscreen: "light" },
+    "atelier-estuary-dark": { theme: "atelier-estuary-dark", url: "highlight/styles/atelier-estuary-dark.css", fullscreen: "dark" },
+    "atelier-estuary-light": { theme: "atelier-estuary-light", url: "highlight/styles/atelier-estuary-light.css", fullscreen: "light" },
+    "atelier-forest-dark": { theme: "atelier-forest-dark", url: "highlight/styles/atelier-forest-dark.css", fullscreen: "dark" },
+    "atelier-forest-light": { theme: "atelier-forest-light", url: "highlight/styles/atelier-forest-light.css", fullscreen: "light" },
+    "atelier-heath-dark": { theme: "atelier-heath-dark", url: "highlight/styles/atelier-heath-dark.css", fullscreen: "dark" },
+    "atelier-heath-light": { theme: "atelier-heath-light", url: "highlight/styles/atelier-heath-light.css", fullscreen: "light" },
+    "atelier-lakeside-dark": { theme: "atelier-lakeside-dark", url: "highlight/styles/atelier-lakeside-dark.css", fullscreen: "dark" },
+    "atelier-lakeside-light": { theme: "atelier-lakeside-light", url: "highlight/styles/atelier-lakeside-light.css", fullscreen: "light" },
+    "atelier-plateau-dark": { theme: "atelier-plateau-dark", url: "highlight/styles/atelier-plateau-dark.css", fullscreen: "dark" },
+    "atelier-plateau-light": { theme: "atelier-plateau-light", url: "highlight/styles/atelier-plateau-light.css", fullscreen: "light" },
+    "atelier-savanna-dark": { theme: "atelier-savanna-dark", url: "highlight/styles/atelier-savanna-dark.css", fullscreen: "dark" },
+    "atelier-savanna-light": { theme: "atelier-savanna-light", url: "highlight/styles/atelier-savanna-light.css", fullscreen: "light" },
+    "atelier-seaside-dark": { theme: "atelier-seaside-dark", url: "highlight/styles/atelier-seaside-dark.css", fullscreen: "dark" },
+    "atelier-seaside-light": { theme: "atelier-seaside-light", url: "highlight/styles/atelier-seaside-light.css", fullscreen: "light" },
+    "atelier-sulphurpool-dark": { theme: "atelier-sulphurpool-dark", url: "highlight/styles/atelier-sulphurpool-dark.css", fullscreen: "dark" },
+    "atelier-sulphurpool-light": { theme: "atelier-sulphurpool-light", url: "highlight/styles/atelier-sulphurpool-light.css", fullscreen: "light" },
+    "atom-one-dark-reasonable": { theme: "atom-one-dark-reasonable", url: "highlight/styles/atom-one-dark-reasonable.css", fullscreen: "dark" },
+    "atom-one-dark": { theme: "atom-one-dark", url: "highlight/styles/atom-one-dark.css", fullscreen: "dark" },
+    "atom-one-light": { theme: "atom-one-light", url: "highlight/styles/atom-one-light.css", fullscreen: "light" },
+    "brown-paper": { theme: "brown-paper", url: "highlight/styles/brown-paper.css", fullscreen: "light" },
+    "codepen-embed": { theme: "codepen-embed", url: "highlight/styles/codepen-embed.css", fullscreen: "dark" },
+    "color-brewer": { theme: "color-brewer", url: "highlight/styles/color-brewer.css", fullscreen: "light" },
+    "darcula": { theme: "darcula", url: "highlight/styles/darcula.css", fullscreen: "dark" },
+    "dark": { theme: "dark", url: "highlight/styles/dark.css", fullscreen: "dark" },
+    "darkula": { theme: "darkula", url: "highlight/styles/darkula.css", fullscreen: "dark" },
+    "default": { theme: "default", url: "highlight/styles/default.css", fullscreen: "light" },
+    "docco": { theme: "docco", url: "highlight/styles/docco.css", fullscreen: "light" },
+    "dracula": { theme: "dracula", url: "highlight/styles/dracula.css", fullscreen: "dark" },
+    "far": { theme: "far", url: "highlight/styles/far.css", fullscreen: "dark" },
+    "foundation": { theme: "foundation", url: "highlight/styles/foundation.css", fullscreen: "light" },
+    "github-gist": { theme: "github-gist", url: "highlight/styles/github-gist.css", fullscreen: "light" },
+    "github": { theme: "github", url: "highlight/styles/github.css", fullscreen: "light" },
+    "gml": { theme: "gml", url: "highlight/styles/gml.css", fullscreen: "dark" },
+    "googlecode": { theme: "googlecode", url: "highlight/styles/googlecode.css", fullscreen: "light" },
+    "grayscale": { theme: "grayscale", url: "highlight/styles/grayscale.css", fullscreen: "light" },
+    "gruvbox-dark": { theme: "gruvbox-dark", url: "highlight/styles/gruvbox-dark.css", fullscreen: "dark" },
+    "gruvbox-light": { theme: "gruvbox-light", url: "highlight/styles/gruvbox-light.css", fullscreen: "light" },
+    "hopscotch": { theme: "hopscotch", url: "highlight/styles/hopscotch.css", fullscreen: "dark" },
+    "hybrid": { theme: "hybrid", url: "highlight/styles/hybrid.css", fullscreen: "dark" },
+    "idea": { theme: "idea", url: "highlight/styles/idea.css", fullscreen: "light" },
+    "ir-black": { theme: "ir-black", url: "highlight/styles/ir-black.css", fullscreen: "dark" },
+    "isbl-editor-dark": { theme: "isbl-editor-dark", url: "highlight/styles/isbl-editor-dark.css", fullscreen: "dark" },
+    "isbl-editor-light": { theme: "isbl-editor-light", url: "highlight/styles/isbl-editor-light.css", fullscreen: "light" },
+    "kimbie.dark": { theme: "kimbie.dark", url: "highlight/styles/kimbie.dark.css", fullscreen: "dark" },
+    "kimbie.light": { theme: "kimbie.light", url: "highlight/styles/kimbie.light.css", fullscreen: "light" },
+    "lightfair": { theme: "lightfair", url: "highlight/styles/lightfair.css", fullscreen: "light" },
+    "magula": { theme: "magula", url: "highlight/styles/magula.css", fullscreen: "light" },
+    "mono-blue": { theme: "mono-blue", url: "highlight/styles/mono-blue.css", fullscreen: "light" },
+    "monokai-sublime": { theme: "monokai-sublime", url: "highlight/styles/monokai-sublime.css", fullscreen: "dark" },
+    "monokai": { theme: "monokai", url: "highlight/styles/monokai.css", fullscreen: "dark" },
+    "nord": { theme: "nord", url: "highlight/styles/nord.css", fullscreen: "dark" },
+    "obsidian": { theme: "obsidian", url: "highlight/styles/obsidian.css", fullscreen: "dark" },
+    "ocean": { theme: "ocean", url: "highlight/styles/ocean.css", fullscreen: "dark" },
+    "paraiso-dark": { theme: "paraiso-dark", url: "highlight/styles/paraiso-dark.css", fullscreen: "dark" },
+    "paraiso-light": { theme: "paraiso-light", url: "highlight/styles/paraiso-light.css", fullscreen: "light" },
+    "pojoaque": { theme: "pojoaque", url: "highlight/styles/pojoaque.css", fullscreen: "dark" },
+    "purebasic": { theme: "purebasic", url: "highlight/styles/purebasic.css", fullscreen: "light" },
+    "qtcreator_dark": { theme: "qtcreator_dark", url: "highlight/styles/qtcreator_dark.css", fullscreen: "dark" },
+    "qtcreator_light": { theme: "qtcreator_light", url: "highlight/styles/qtcreator_light.css", fullscreen: "light" },
+    "railscasts": { theme: "railscasts", url: "highlight/styles/railscasts.css", fullscreen: "dark" },
+    "rainbow": { theme: "rainbow", url: "highlight/styles/rainbow.css", fullscreen: "dark" },
+    "routeros": { theme: "routeros", url: "highlight/styles/routeros.css", fullscreen: "light" },
+    "school-book": { theme: "school-book", url: "highlight/styles/school-book.css", fullscreen: "light" },
+    "shades-of-purple": { theme: "shades-of-purple", url: "highlight/styles/shades-of-purple.css", fullscreen: "light" },
+    "solarized-dark": { theme: "solarized-dark", url: "highlight/styles/solarized-dark.css", fullscreen: "dark" },
+    "solarized-light": { theme: "solarized-light", url: "highlight/styles/solarized-light.css", fullscreen: "light" },
+    "sunburst": { theme: "sunburst", url: "highlight/styles/sunburst.css", fullscreen: "dark" },
+    "tomorrow-night-blue": { theme: "tomorrow-night-blue", url: "highlight/styles/tomorrow-night-blue.css", fullscreen: "light" },
+    "tomorrow-night-bright": { theme: "tomorrow-night-bright", url: "highlight/styles/tomorrow-night-bright.css", fullscreen: "dark" },
+    "tomorrow-night-eighties": { theme: "tomorrow-night-eighties", url: "highlight/styles/tomorrow-night-eighties.css", fullscreen: "dark" },
+    "tomorrow-night": { theme: "tomorrow-night", url: "highlight/styles/tomorrow-night.css", fullscreen: "dark" },
+    "tomorrow": { theme: "tomorrow", url: "highlight/styles/tomorrow.css", fullscreen: "light" },
+    "vs": { theme: "vs", url: "highlight/styles/vs.css", fullscreen: "light" },
+    "vs2015": { theme: "vs2015", url: "highlight/styles/vs2015.css", fullscreen: "dark" },
+    "xcode": { theme: "xcode", url: "highlight/styles/xcode.css", fullscreen: "light" },
+    "xt256": { theme: "xt256", url: "highlight/styles/xt256.css", fullscreen: "dark" },
+    "zenburn": { theme: "zenburn", url: "highlight/styles/zenburn.css", fullscreen: "dark" }
+  };
+  var themeArray = ["a11y-dark", "a11y-light", "agate", "an-old-hope", "androidstudio", "arduino-light", "arta", "ascetic", "atelier-cave-dark",
+    "atelier-cave-light", "atelier-dune-dark", "atelier-dune-light", "atelier-estuary-dark", "atelier-estuary-light", "atelier-forest-dark",
+    "atelier-forest-light", "atelier-heath-dark", "atelier-heath-light", "atelier-lakeside-dark", "atelier-lakeside-light", "atelier-plateau-dark",
+    "atelier-plateau-light", "atelier-savanna-dark", "atelier-savanna-light", "atelier-seaside-dark", "atelier-seaside-light", "atelier-sulphurpool-dark",
+    "atelier-sulphurpool-light", "atom-one-dark-reasonable", "atom-one-dark", "atom-one-light", "brown-paper", "codepen-embed",
+    "color-brewer", "darcula", "dark", "darkula", "default", "docco", "dracula", "far", "foundation", "github-gist", "github", "gml", "googlecode",
+    "grayscale", "gruvbox-dark", "gruvbox-light", "hopscotch", "hybrid", "idea", "ir-black", "isbl-editor-dark", "isbl-editor-light", "kimbie.dark",
+    "kimbie.light", "lightfair", "magula", "mono-blue", "monokai-sublime", "monokai", "nord", "obsidian", "ocean", "paraiso-dark", "paraiso-light",
+    "pojoaque", "purebasic", "qtcreator_dark", "qtcreator_light", "railscasts", "rainbow", "routeros", "school-book",
+    "shades-of-purple", "solarized-dark", "solarized-light", "sunburst", "tomorrow-night-blue", "tomorrow-night-bright", "tomorrow-night-eighties",
+    "tomorrow-night", "tomorrow", "vs", "vs2015", "xcode", "xt256", "zenburn"
+  ];
+  // 设置编辑器主题
+  function setTheme(theme) {
+    if (themeArray.indexOf(theme) === -1) return;
+    // 动态加载 css
+    var themeOpt = themeUrlMap[theme];
+    // dark light
+    $(".fullscreen").attr("data-theme", themeOpt.fullscreen || "dark");
+    if (themeOpt.loaded !== true) {
+      var head = document.getElementsByTagName('head')[0];
+      var link = document.createElement('link');
+      link.type = 'text/css';
+      link.rel = 'stylesheet';
+      link.href = themeOpt.url;
+      head.appendChild(link);
+    }
+  }
 </script>
 
 </html>

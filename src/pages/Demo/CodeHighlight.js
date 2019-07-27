@@ -1,9 +1,9 @@
 
 import React, { PureComponent } from 'react';
-import { Card, Button } from 'antd';
+import { Card } from 'antd';
 // import lodash from 'lodash';
 // import moment from 'moment';
-import CodeMirror from '@/components/CodeMirror';
+import CodeHighlight from '@/components/CodeHighlight';
 import RemoteSelect from '@/components/RemoteSelect';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
@@ -66,19 +66,10 @@ public class RebateSale extends BaseSale {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <Button
-            onClick={() => {
-              this.setState({ count: count + 1 });
-              if (!this.codeMirror) return;
-              // eslint-disable-next-line no-console
-              console.log("getValue", this.codeMirror.getValue());
-            }}
-          >
-            {count}
-          </Button>
+          {count}
           <span style={{ display: "inline-block", width: 24 }} />
           <RemoteSelect
-            defaultLoadData={this.codeMirror ? this.codeMirror.getAllThemes() : []}
+            defaultLoadData={this.codeHighlight ? this.codeHighlight.getAllThemes() : []}
             defaultValue="darcula"
             selectProps={{
               allowClear: false,
@@ -86,26 +77,34 @@ public class RebateSale extends BaseSale {
               labelInValue: false,
             }}
             onChange={(newObject) => {
-              if (this.codeMirror) {
-                this.codeMirror.setTheme(newObject);
+              if (this.codeHighlight) {
+                this.codeHighlight.setTheme(newObject);
               }
             }}
           />
+          <span style={{ display: "inline-block", width: 24 }} />
+          <a
+            onClick={() => {
+              if (this.codeHighlight) {
+                this.codeHighlight.setTheme("atom-one-dark");
+              }
+            }}
+          >
+            atom-one-dark
+          </a>
           <br />
           <br />
           <br />
-          <CodeMirror
-            ref={codeMirror => {
-              this.codeMirror = codeMirror;
+          <CodeHighlight
+            ref={codeHighlight => {
+              this.codeHighlight = codeHighlight;
             }}
             width="calc(100% - 50px)"
             height={600}
             // height="100%"
-            codeMirrorProps={{
+            codeHighlightProps={{
               value,
-              theme: "darcula", // monokai eclipse darcula
-              mode: "text/x-java",
-              modeJs: "clike",
+              theme: "darcula", // darcula monokai-sublime atom-one-dark atom-one-light
             }}
             onInited={() => this.setState({ count: count + 1 })}
           />

@@ -8,7 +8,7 @@ import IFramePage from '@/components/IFramePage';
 // import classNames from 'classnames';
 // import styles from './index.less'
 
-class CodeMirror extends PureComponent {
+class CodeHighlight extends PureComponent {
 
   // // 构造器
   // constructor(props) {
@@ -38,7 +38,7 @@ class CodeMirror extends PureComponent {
     width,
     height,
     framePageProps,
-    codeMirrorProps,
+    codeHighlightProps,
     onInited,
   }) => {
     const { myFullscreen } = this.state;
@@ -56,8 +56,8 @@ class CodeMirror extends PureComponent {
     return (
       <IFramePage
         ref={frame => { this.frame = frame; }}
-        onload={() => this.handleInit(codeMirrorProps, onInited)}
-        src="/iframe-page/codemirror-standard.html"
+        onload={() => this.handleInit(codeHighlightProps, onInited)}
+        src="/iframe-page/highlight-standard.html"
         {...framePageProps}
         style={styleTmp}
       />
@@ -66,28 +66,20 @@ class CodeMirror extends PureComponent {
 
   // -------------------------------------------------------------------------------------------------------------- 事件处理
 
-  handleInit = (codeMirrorProps, onInited) => {
-    if (this.init === true) return true;
+  handleInit = (codeHighlightProps, onInited) => {
+    if (this.init === true) return false;
     if (this.frame && this.frame.getIFrameWindow) {
       this.init = true;
       this.frameWindow = this.frame.getIFrameWindow();
       this.frameElement = this.frame.getIFrameElement();
       // 初始化编辑器
-      this.frameWindow.initEditor(codeMirrorProps, (editor) => {
-        this.editor = editor;
-        this.frame.setLoading(false);
-        if (onInited instanceof Function) onInited(editor);
-      });
+      this.frameWindow.initEditor(codeHighlightProps);
+      if (onInited instanceof Function) onInited();
     }
-    return true;
+    return false;
   }
 
   // -------------------------------------------------------------------------------------------------------------- 对外暴露的方法
-
-  // 获取编辑器对象
-  getEditor = () => {
-    return this.editor;
-  }
 
   // 全屏/退出全屏
   fullscreen = (fullscreen) => {
@@ -113,13 +105,13 @@ class CodeMirror extends PureComponent {
       width = "100%",               // IFramePage 宽
       height = 300,                 // IFramePage 高
       framePageProps = {},          // IFramePage 组件属性
-      codeMirrorProps = {},         // editor.md 配置属性
-      onInited,                     // IFrame组件加载完成事件 (editor) => ()
+      codeHighlightProps = {},      // editor.md 配置属性
+      onInited,                     // IFrame组件加载完成事件 () => ()
     } = this.props;
-    if (width) codeMirrorProps.width = width;
-    if (height) codeMirrorProps.height = varTypeOf(height) === TypeEnum.number ? (height - 2) : height;
+    if (width) codeHighlightProps.width = width;
+    if (height) codeHighlightProps.height = varTypeOf(height) === TypeEnum.number ? (height - 2) : height;
     // 自定义全屏/退出全屏逻辑
-    codeMirrorProps.fullscreen = this.fullscreen;
+    codeHighlightProps.fullscreen = this.fullscreen;
     return (
       <Fragment>
         {
@@ -127,7 +119,7 @@ class CodeMirror extends PureComponent {
             width,
             height,
             framePageProps,
-            codeMirrorProps,
+            codeHighlightProps,
             onInited,
           })
         }
@@ -136,4 +128,4 @@ class CodeMirror extends PureComponent {
   }
 }
 
-export default CodeMirror;
+export default CodeHighlight;
