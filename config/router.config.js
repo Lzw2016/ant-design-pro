@@ -98,7 +98,6 @@ export default [
           { path: '/code-editor/monaco-editor', name: 'monaco-editor', icon: 'table', component: './Demo/MonacoEditor' },
           { path: '/code-editor/code-mirror-editor', name: 'code-mirror-editor', icon: 'table', component: './Demo/CodeMirror' },
           { path: '/code-editor/syntax-highlighter', name: 'syntax-highlighter', icon: 'table', component: './Demo/CodeHighlight' },
-          // { path: 'http://ant.msvc.top/iframe-page/highlight-standard.html', name: 'syntax-highlighter', icon: 'table', target: '_blank' },
         ],
       },
       // 其它

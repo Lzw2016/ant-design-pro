@@ -105,7 +105,7 @@ class CodeHighlight extends PureComponent {
       width = "100%",               // IFramePage 宽
       height = 300,                 // IFramePage 高
       framePageProps = {},          // IFramePage 组件属性
-      codeHighlightProps = {},      // editor.md 配置属性
+      codeHighlightProps = {},      // CodeMirror 配置属性
       onInited,                     // IFrame组件加载完成事件 () => ()
     } = this.props;
     if (width) codeHighlightProps.width = width;
