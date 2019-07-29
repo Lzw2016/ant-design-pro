@@ -4,8 +4,8 @@ import lodash from 'lodash';
 import jsonpath from "jsonpath";
 // import { formatMessage } from 'umi/locale';
 // import classNames from 'classnames';
-import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
-import { MapperObject } from "../_utils/mapper";
+import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
+import { MapperObject } from "@/utils/enum";
 // import styles from './index.less';
 
 class DetailForm extends PureComponent {

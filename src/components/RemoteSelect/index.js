@@ -3,7 +3,7 @@ import { Select, Empty, Spin, Icon } from 'antd';
 import lodash from 'lodash';
 import { stringify } from 'qs';
 // import { formatMessage } from 'umi/locale';
-import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
+import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
 // import classNames from 'classnames';
 // import styles from './Log.less'
 

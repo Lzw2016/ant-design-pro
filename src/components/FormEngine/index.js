@@ -2,10 +2,10 @@ import React, { PureComponent, Fragment } from 'react';
 import { Row, Col, Form, Button, Input } from 'antd';
 import lodash from 'lodash';
 // import classNames from 'classnames';
+import { TypeEnum, varTypeOf } from '@/utils/TypeOf';
 import InputEnum from './InputEnum';
 import DisplayEnum from './DisplayEnum';
 import RulesEnum from './RulesEnum';
-import { TypeEnum, varTypeOf } from '../_utils/varTypeOf';
 // import styles from './index.less';
 
 @Form.create({

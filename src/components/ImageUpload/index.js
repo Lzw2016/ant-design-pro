@@ -3,7 +3,7 @@ import { Modal, Upload, Icon, message, Alert } from 'antd';
 import jsonpath from "jsonpath";
 import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
-import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
+import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
 // import classNames from 'classnames';
 import styles from './index.less'
 

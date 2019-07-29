@@ -4,8 +4,8 @@ import { Modal } from 'antd';
 // import { formatMessage } from 'umi/locale';
 // import classNames from 'classnames';
 import DetailForm from '@/components/DetailForm';
-// import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
-// import { MapperObject } from "../_utils/mapper";
+// import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
+// import { MapperObject } from "@/utils/enum";
 // import styles from './index.less';
 
 class DetailModal extends PureComponent {

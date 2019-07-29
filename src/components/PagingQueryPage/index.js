@@ -8,8 +8,8 @@ import { parse, stringify } from 'qs';
 import { FormEngine } from '@/components/FormEngine';
 import PagingQueryTable from '@/components/PagingQueryTable';
 // import { formatMessage } from 'umi/locale';
-// import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
-// import { MapperObject } from "../_utils/mapper";
+// import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
+// import { MapperObject } from "@/utils/enum";
 // import classNames from 'classnames';
 import styles from './index.less';
 

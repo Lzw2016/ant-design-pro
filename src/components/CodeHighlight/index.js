@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 // import { Modal, Icon } from 'antd';
 // import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
-import { TypeEnum, varTypeOf } from '@/components/_utils/varTypeOf';
+import { TypeEnum, varTypeOf } from '@/utils/TypeOf';
 import IFramePage from '@/components/IFramePage';
 // import PagingQueryPage from "@/components/PagingQueryPage";
 // import classNames from 'classnames';

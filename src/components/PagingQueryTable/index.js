@@ -6,9 +6,9 @@ import jsonpath from "jsonpath";
 // import moment from 'moment';
 import { stringify } from 'qs';
 // import { formatMessage } from 'umi/locale';
-import { TypeEnum, varTypeOf } from "../_utils/varTypeOf";
-import { MapperObject } from "../_utils/mapper";
-import { cutOffStr } from "../_utils/utils";
+import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
+import { MapperObject } from "@/utils/enum";
+import { cutOffStr } from "@/utils/utils";
 // import classNames from 'classnames';
 // import styles from './index.less';
 

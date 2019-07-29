@@ -3,7 +3,7 @@ import { Modal, message } from 'antd';
 // import lodash from 'lodash';
 // import classNames from 'classnames';
 import { FormEngine } from '@/components/FormEngine';
-import { TypeEnum, varTypeOf } from '../_utils/varTypeOf';
+import { TypeEnum, varTypeOf } from '@/utils/TypeOf';
 // import RulesEnum from './RulesEnum';
 // import styles from './index.less';
 

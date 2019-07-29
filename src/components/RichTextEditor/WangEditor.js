@@ -5,7 +5,7 @@ import lodash from 'lodash';
 // import { formatMessage } from 'umi/locale';
 // import PagingQueryPage from "@/components/PagingQueryPage";
 import classNames from 'classnames';
-import { varTypeOf, TypeEnum } from "../_utils/varTypeOf";
+import { varTypeOf, TypeEnum } from "@/utils/TypeOf";
 import styles from './WangEditor.less'
 
 class WangEditor extends PureComponent {
