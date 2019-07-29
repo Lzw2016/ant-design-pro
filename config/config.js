@@ -87,10 +87,10 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/baidu': '' },
     },
-    '/api': {
+    '/security': {
       target: 'http://127.0.0.1:28081/',
       changeOrigin: true,
-      pathRewrite: { '^/': '' },
+      pathRewrite: { '^/security': '' },
     },
   },
   ignoreMomentLocale: true,

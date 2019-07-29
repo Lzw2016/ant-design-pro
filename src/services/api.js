@@ -32,7 +32,7 @@ export async function fakeAccountLogin(params) {
     "remember-me": "false"
   };
   console.log("data", data);
-  return request('/api/login.json', {
+  return request('/security/login.json', {
     method: 'POST',
     data,
   });
