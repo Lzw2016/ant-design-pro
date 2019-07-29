@@ -1,6 +1,6 @@
 OK  1. 菜单展开收起闪动 (antd最新版本3.16.3修复了这个bug)
 OK  2. 页面垂直滚动条问题
-    3. constant.js 中的配置迁移到 defaultSettings.js
+OK  3. constant.js 中的配置迁移到 config.js
     4. 接口 登录登出
     5. 接口 用户注册
     6. 接口 查询通知

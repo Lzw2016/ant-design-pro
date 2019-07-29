@@ -6,7 +6,7 @@ import router from 'umi/router';
 import TopNavHeader from './TopNavHeader';
 import styles from './Header.less';
 import Authorized from '@/utils/Authorized';
-import { LayoutConfig } from '../../utils/constant';
+import { LayoutConfig } from '@/config';
 
 class HeaderView extends PureComponent {
   state = {

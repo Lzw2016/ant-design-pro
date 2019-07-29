@@ -4,7 +4,7 @@ import Link from 'umi/link';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { urlToList } from '../_utils/pathTools';
 // import { menu } from '../../defaultSettings';
-import { SystemInfo } from '@/utils/constant';
+import { SystemInfo } from '@/config';
 
 const { menu } = SystemInfo;
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import qs from 'qs';
 import { notification } from 'antd';
-import { CodeMessage } from './constant';
+import { CodeMessage } from '@/config';
 
 // 全局请求配置
 axios.interceptors.request.use(

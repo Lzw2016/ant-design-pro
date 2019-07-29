@@ -1,7 +1,7 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 import { BaiduTranslateMD5 } from '@/utils/BaiduTranslateMD5';
-import { BaiduTranslate } from '@/utils/constant';
+import { BaiduTranslate } from '@/config';
 
 export async function queryProjectNotice() {
   // return request('/api/project/notice');

@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-import { CryptoConfig } from './constant';
+import { CryptoConfig } from '@/config';
 
 // 管理系统 AES密钥 , AES向量
 const { key: ManageAesKey, iv: ManageAesIv } = CryptoConfig.ManageAES;

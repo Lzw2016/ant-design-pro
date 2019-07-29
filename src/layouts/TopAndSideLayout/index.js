@@ -21,7 +21,7 @@ import Footer from '../Footer';
 import Header from './Header';
 import SecondaryMenu from './SecondaryMenu';
 import { conversionPath } from './utils';
-import { LayoutConfig, SystemInfo } from '../../utils/constant';
+import { LayoutConfig, SystemInfo } from '@/config';
 // import 'moment/locale/zh-cn';
 // import 'moment/locale/zh-tw';
 // import 'moment/locale/pt-br';
@@ -342,6 +342,7 @@ class CustomLayout extends React.PureComponent {
     // Do not render SettingDrawer in production
     // unless it is deployed in preview.pro.ant.design as demo
     const { rendering } = this.state;
+    // eslint-disable-next-line no-undef
     if ((rendering || process.env.NODE_ENV === 'production') && APP_TYPE !== 'site') {
       return null;
     }

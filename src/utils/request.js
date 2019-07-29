@@ -7,7 +7,7 @@ import React from 'react';
 import { notification } from 'antd';
 // import router from 'umi/router';
 import lodash from 'lodash';
-import { CodeMessage } from './constant';
+import { CodeMessage } from '@/config';
 
 /**
  * 异常处理程序

@@ -1,4 +1,4 @@
-// import { ModelInitState } from '../../../utils/constant';
+// import { ModelInitState } from '@/config';
 import { translateBaidu } from '@/services/api';
 
 export default {

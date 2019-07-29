@@ -4,7 +4,7 @@ import { Menu, Icon } from 'antd';
 import classNames from 'classnames';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { SystemInfo } from '../../utils/constant';
+import { SystemInfo } from '@/config';
 
 export default class SelectLang extends PureComponent {
   changeLang = ({ key }) => {

@@ -1,4 +1,4 @@
-import { SystemInfo } from '../utils/constant';
+import { SystemInfo } from '@/config';
 
 const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 

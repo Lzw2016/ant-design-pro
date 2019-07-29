@@ -11,7 +11,7 @@ import styles from './index.less';
 import NoticeSvg from '../../assets/notice.svg';
 import MessageSvg from '../../assets/message.svg';
 import ToDoListSvg from '../../assets/to-do-list.svg';
-import { LayoutConfig } from '../../utils/constant';
+import { LayoutConfig } from '@/config';
 
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {

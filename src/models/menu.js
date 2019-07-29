@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
 // import { menu } from '../defaultSettings';
-import { SystemInfo } from '@/utils/constant';
+import { SystemInfo } from '@/config';
 
 const { check } = Authorized;
 const { menu } = SystemInfo;

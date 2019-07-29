@@ -7,7 +7,7 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
-import { LayoutConfig } from '../utils/constant';
+import { LayoutConfig } from '@/config';
 
 const { Header } = Layout;
 

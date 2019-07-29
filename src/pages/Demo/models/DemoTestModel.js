@@ -1,4 +1,4 @@
-import { ModelInitState } from '../../../utils/constant';
+import { ModelInitState } from '@/config';
 // import { findUserLoginLog } from '../services/manage-by-query-controller';
 
 export default {

@@ -5,7 +5,7 @@ import Debounce from 'lodash-decorators/debounce';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import FirstLevelMenu from './FirstLevelMenu';
 import styles from './TopNavHeader.less';
-import { LayoutConfig, SystemInfo } from '../../utils/constant';
+import { LayoutConfig, SystemInfo } from '@/config';
 
 const logoWidth = LayoutConfig.siderMenuWidth;
 

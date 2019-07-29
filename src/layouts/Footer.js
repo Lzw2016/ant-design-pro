@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import GlobalFooter from '@/components/GlobalFooter';
-import { LayoutConfig } from '../utils/constant';
+import { LayoutConfig } from '@/config';
 
 const { Footer } = Layout;
 const FooterView = () =>

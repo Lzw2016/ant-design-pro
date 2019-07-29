@@ -9,7 +9,7 @@ import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.svg';
 import getPageTitle from '@/utils/getPageTitle';
-import { SystemInfo, LayoutConfig } from '../utils/constant';
+import { SystemInfo, LayoutConfig } from '@/config';
 
 // const links = [
 //   {
