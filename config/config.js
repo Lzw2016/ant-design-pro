@@ -29,20 +29,20 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false,
       ...(!TEST && os.platform() === 'darwin'
         ? {
-            dll: {
-              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-              exclude: ['@babel/runtime', 'netlify-lambda'],
-            },
-            hardSource: false,
-          }
+          dll: {
+            include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+            exclude: ['@babel/runtime', 'netlify-lambda'],
+          },
+          hardSource: false,
+        }
         : {}),
     },
   ],
@@ -88,7 +88,7 @@ export default {
       pathRewrite: { '^/baidu': '' },
     },
     '/api': {
-      target: 'http://127.0.0.1:18080/',
+      target: 'http://127.0.0.1:28081/',
       changeOrigin: true,
       pathRewrite: { '^/': '' },
     },

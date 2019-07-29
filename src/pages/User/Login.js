@@ -48,6 +48,7 @@ class LoginPage extends Component {
     const { type } = this.state;
     if (!err) {
       const { dispatch } = this.props;
+      console.log("handleSubmit");
       dispatch({
         type: 'login/login',
         payload: {
