@@ -6,6 +6,7 @@ import jsonpath from "jsonpath";
 // import classNames from 'classnames';
 import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
 import { MapperObject } from "@/utils/enum";
+import request from "@/utils/request";
 // import styles from './index.less';
 
 class DetailForm extends PureComponent {
@@ -339,9 +340,9 @@ class DetailForm extends PureComponent {
     }
     this.setState({ innerLoading: true });
     // console.log("fetchData --> ", fetchOptions)
-    fetch(fetchOptions.url, fetchOptions.options)
-      .then(async response => {
-        let resData = await response.json();
+    request(fetchOptions.url, { ...fetchOptions.options, getResponse: true })
+      .then(({ data, response }) => {
+        let resData = data;
         if (response.status < 200 || response.status >= 400) {
           if (requestError instanceof Function) resData = requestError(resData, response, undefined);
         } else if (requestSuccessful instanceof Function) {

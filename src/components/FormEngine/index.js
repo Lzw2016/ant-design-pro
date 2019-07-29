@@ -6,6 +6,7 @@ import { TypeEnum, varTypeOf } from '@/utils/TypeOf';
 import InputEnum from './InputEnum';
 import DisplayEnum from './DisplayEnum';
 import RulesEnum from './RulesEnum';
+import request from '@/utils/request';
 // import styles from './index.less';
 
 @Form.create({
@@ -410,7 +411,7 @@ class FormEngine extends PureComponent {
       if (!submitUrl) return;
       const fetchOptions = {
         url: submitUrl,
-        options: { method: submitMethod, body: formValues, headers: { "Content-Type": "application/json" } },
+        options: { method: submitMethod, data: formValues, headers: { "Content-Type": "application/json" } },
       };
       // 请求之前的拦截
       if (requestInterceptor instanceof Function) {
@@ -421,14 +422,10 @@ class FormEngine extends PureComponent {
       }
       // console.log("handleSubmit --> ", fetchOptions);
       this.setState({ submitLoading: true });
-      // 请求数据序列化
-      if (fetchOptions.options && fetchOptions.options.body && varTypeOf(fetchOptions.options.body) === TypeEnum.object) {
-        fetchOptions.options.body = JSON.stringify(fetchOptions.options.body)
-      }
-      fetch(fetchOptions.url, fetchOptions.options)
-        .then(async response => {
+      request(fetchOptions.url, { ...fetchOptions.options, getResponse: true })
+        .then(({ data, response }) => {
           this.setState({ submitLoading: false });
-          const resData = await response.json();
+          const resData = data;
           if (response.status < 200 || response.status >= 400) {
             if (submitFailure instanceof Function) submitFailure(resData, response);
             return;

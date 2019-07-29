@@ -3,14 +3,14 @@
  * 更详细的api文档: https://bigfish.alipay.com/doc/api#request
  */
 import React from 'react';
- import { extend } from 'umi-request';
+import { extend } from 'umi-request';
 import { notification } from 'antd';
 // import router from 'umi/router';
 import lodash from 'lodash';
 import { CodeMessage } from '@/config';
 
 /**
- * 异常处理程序
+ * 异常处理程序(有异常才会进来)
  */
 async function errorHandler(error) {
   const { response = null } = error;
@@ -51,7 +51,6 @@ async function errorHandler(error) {
   if (status === 401) {
     /* eslint-disable no-underscore-dangle */
     window.g_app._store.dispatch({ type: 'login/logout' });
-    // return;
   }
   // if (status === 403) {
   //   router.push('/exception/403');
@@ -75,7 +74,9 @@ const request = extend({
   // 默认请求是否带上cookie
   credentials: 'include',
   // 全局请求头
-  headers: {},
+  headers: {
+    testHeader: "test",
+  },
   // 全局url前缀
   prefix: lodash.trim(PROXY_PREFIX).length > 0 ? PROXY_PREFIX : '',
 });

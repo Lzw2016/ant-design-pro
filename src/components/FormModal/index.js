@@ -1,9 +1,9 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Modal, message } from 'antd';
+import { Modal } from 'antd';
 // import lodash from 'lodash';
 // import classNames from 'classnames';
 import { FormEngine } from '@/components/FormEngine';
-import { TypeEnum, varTypeOf } from '@/utils/TypeOf';
+import request from '@/utils/request';
 // import RulesEnum from './RulesEnum';
 // import styles from './index.less';
 
@@ -121,7 +121,7 @@ class FormModal extends PureComponent {
       if (!submitUrl) return;
       const fetchOptions = {
         url: submitUrl,
-        options: { method: submitMethod, body: formValues, headers: { "Content-Type": "application/json" } },
+        options: { method: submitMethod, data: formValues, headers: { "Content-Type": "application/json" } },
       };
       // 请求之前的拦截
       if (requestInterceptor instanceof Function) {
@@ -131,19 +131,12 @@ class FormModal extends PureComponent {
         if (tmp && tmp.options) fetchOptions.options = tmp.options;
       }
       this.setState({ submitLoading: true });
-      // 请求数据序列化
-      if (fetchOptions.options && fetchOptions.options.body && varTypeOf(fetchOptions.options.body) === TypeEnum.object) {
-        fetchOptions.options.body = JSON.stringify(fetchOptions.options.body)
-      }
-      fetch(fetchOptions.url, fetchOptions.options)
-        .then(async response => {
+      request(fetchOptions.url, { ...fetchOptions.options, getResponse: true })
+        .then(({ data, response }) => {
           this.setState({ submitLoading: false });
-          const resData = await response.json();
+          const resData = data;
           if (response.status < 200 || response.status >= 400) {
             if (submitFailure instanceof Function && submitFailure(resData, response) === false) return;
-            if (resData && (resData.message || resData.error)) {
-              message.warning(resData.message || resData.error);
-            }
             return;
           }
           // 提交成功

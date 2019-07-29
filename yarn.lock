@@ -16797,10 +16797,10 @@ umi-plugin-routes@1.4.4:
   resolved "https://registry.npm.taobao.org/umi-plugin-routes/download/umi-plugin-routes-1.4.4.tgz#be15bbf24c8bd1afd14ebce5701d0cb882225180"
   integrity sha1-vhW78kyL0a/RTrzlcB0MuIIiUYA=
 
-umi-request@^1.0.5:
+umi-request@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npm.taobao.org/umi-request/download/umi-request-1.1.0.tgz#09ddf8f8b012431441f08b4b33a1f6d03f5c369e"
-  integrity sha1-Cd34+LASQxRB8ItLM6H20D9cNp4=
+  resolved "https://registry.yarnpkg.com/umi-request/-/umi-request-1.1.0.tgz#09ddf8f8b012431441f08b4b33a1f6d03f5c369e"
+  integrity sha512-eFigydsyuDxxUh1N/GmslbskJz3D5lhUFcjVo3ohllstjC6RPlYnE8VKLVcpK77r8mhZGNWTTha8Co+ozhiLwQ==
   dependencies:
     query-string "^6.0.0"
     whatwg-fetch "^2.0.0"

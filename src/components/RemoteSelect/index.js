@@ -4,6 +4,7 @@ import lodash from 'lodash';
 import { stringify } from 'qs';
 // import { formatMessage } from 'umi/locale';
 import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
+import request from "@/utils/request";
 // import classNames from 'classnames';
 // import styles from './Log.less'
 
@@ -231,10 +232,10 @@ class RemoteSelect extends PureComponent {
     this.lastFetchCount++;
     const fetchCount = this.lastFetchCount;
     // console.log("fetchData --> ", fetchOptions)
-    fetch(fetchOptions.url, fetchOptions.options)
-      .then(async response => {
+    request(fetchOptions.url, { ...fetchOptions.options, getResponse: true })
+      .then(({ data, response }) => {
         if (fetchCount < this.lastFetchCount) return {};
-        let resData = await response.json();
+        let resData = data;
         if (response.status < 200 || response.status >= 400) {
           const { message, error } = resData;
           // error: "业务异常"

@@ -9,6 +9,7 @@ import { stringify } from 'qs';
 import { TypeEnum, varTypeOf } from "@/utils/TypeOf";
 import { MapperObject } from "@/utils/enum";
 import { cutOffStr } from "@/utils/utils";
+import request from '@/utils/request';
 // import classNames from 'classnames';
 // import styles from './index.less';
 
@@ -278,10 +279,10 @@ class PagingQueryTable extends PureComponent {
     this.lastFetchCount++;
     const fetchCount = this.lastFetchCount;
     // console.log("fetchData --> ", fetchOptions)
-    fetch(fetchOptions.url, fetchOptions.options)
-      .then(async response => {
+    request(fetchOptions.url, { ...fetchOptions.options, getResponse: true })
+      .then(({ data, response }) => {
         if (fetchCount < this.lastFetchCount) return {};
-        let resData = await response.json();
+        let resData = data;
         if (response.status < 200 || response.status >= 400) {
           if (requestError instanceof Function) return { resData: requestError(resData, response), response };
           return {};
