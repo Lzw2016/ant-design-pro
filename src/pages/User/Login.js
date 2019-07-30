@@ -7,7 +7,7 @@ import Login from '@/components/Login';
 import styles from './Login.less';
 import { LoginConfig } from '@/config';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { Tab, UserName, Password, Mobile, Captcha, ImgCaptcha, Submit } = Login;
 
 @connect(({ login, loading }) => ({
   login,
@@ -18,6 +18,11 @@ class LoginPage extends Component {
     type: LoginConfig.enableAccountLogin ? 'account' : (LoginConfig.enableTelephoneLogin ? 'mobile' : 'account'),
     autoLogin: true,
   };
+
+  // 加载完成
+  componentDidMount() {
+    // TODO 自动检测是否已经登录 - 已经登录成功就直接跳转到首页
+  }
 
   onTabChange = type => {
     this.setState({ type });
@@ -45,15 +50,16 @@ class LoginPage extends Component {
     });
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
+    const { type, autoLogin } = this.state;
     if (!err) {
-      const { dispatch } = this.props;
-      console.log("handleSubmit");
+      const { dispatch, login: { captchaDigest } } = this.props;
       dispatch({
         type: 'login/login',
         payload: {
           ...values,
           type,
+          autoLogin,
+          captchaDigest,
         },
       });
     }
@@ -68,6 +74,11 @@ class LoginPage extends Component {
   renderMessage = content => (
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
+
+  getImgCaptcha = () => {
+    const { dispatch } = this.props;
+    dispatch({ type: 'login/getImgCaptcha', payload: {} });
+  }
 
   render() {
     const { login, submitting } = this.props;
@@ -84,13 +95,15 @@ class LoginPage extends Component {
         >
           {LoginConfig.enableAccountLogin ? (
             <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}>
-              {login.status === 'error' &&
-                login.type === 'account' &&
-                !submitting &&
-                this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
+              {
+                login.status === 'error'
+                && login.type === 'account'
+                && !submitting
+                && this.renderMessage(login.message || formatMessage({ id: 'app.login.message-invalid-credentials' }))
+              }
               <UserName
                 name="userName"
-                placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin or user`}
+                placeholder={formatMessage({ id: 'app.login.userName' })}
                 rules={[
                   {
                     required: true,
@@ -100,7 +113,7 @@ class LoginPage extends Component {
               />
               <Password
                 name="password"
-                placeholder={`${formatMessage({ id: 'app.login.password' })}: ant.design`}
+                placeholder={formatMessage({ id: 'app.login.password' })}
                 rules={[
                   {
                     required: true,
@@ -112,16 +125,36 @@ class LoginPage extends Component {
                   this.loginForm.validateFields(this.handleSubmit);
                 }}
               />
+              {
+                login.needCaptcha === true &&
+                // TODO 国际化支持
+                <ImgCaptcha
+                  name="captcha"
+                  placeholder="验证码"
+                  imgProps={{
+                    src: login.imgCaptchaData,
+                    alt: "验证码",
+                    title: "验证码(点击刷新)",
+                    onClick: e => {
+                      e.preventDefault();
+                      this.getImgCaptcha();
+                    },
+                  }}
+                  rules={[
+                    { type: "string", required: true, whitespace: true, len: 4, message: '请输入4位验证码', },
+                  ]}
+                />
+              }
             </Tab>
           ) : ''}
           {LoginConfig.enableTelephoneLogin ? (
             <Tab key="mobile" tab={formatMessage({ id: 'app.login.tab-login-mobile' })}>
-              {login.status === 'error' &&
-                login.type === 'mobile' &&
-                !submitting &&
-                this.renderMessage(
-                  formatMessage({ id: 'app.login.message-invalid-verification-code' })
-                )}
+              {
+                login.status === 'error'
+                && login.type === 'mobile'
+                && !submitting
+                && this.renderMessage(login.message || formatMessage({ id: 'app.login.message-invalid-verification-code' }))
+              }
               <Mobile
                 name="mobile"
                 placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}

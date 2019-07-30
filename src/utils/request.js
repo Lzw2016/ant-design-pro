@@ -13,26 +13,22 @@ import { CodeMessage } from '@/config';
  * 异常处理程序(有异常才会进来)
  */
 async function errorHandler(error) {
-  const { response = null } = error;
-  if (response === null) throw error;
+  const { response, data } = error;
+  if (!response) throw error;
   // 成功，直接返回response
   // if (response.status >= 200 && response.status < 300) return response;
   // 失败，读取异常消息message
   let errortext;
-  let json;
-  try {
-    json = await response.json();
-    if (json && json.message) errortext = json.message;
-  } catch (err) {
-    errortext = undefined;
+  if (data && data.message) {
+    errortext = data.message;
   }
   if (!errortext) {
     errortext = CodeMessage(response.status) || response.statusText;
   }
   // 处理错误 - 显示
-  if (response.status === 400 && json && json.validMessageList && json.validMessageList instanceof Array) {
+  if (response.status === 400 && data && data.validMessageList && data.validMessageList instanceof Array) {
     const validMessageList = [];
-    lodash.forEach(json.validMessageList, (item, index) => {
+    lodash.forEach(data.validMessageList, (item, index) => {
       validMessageList.push({ index, lable: `${item.errorMessage}(${item.filed}=${item.value})` });
     })
     notification.error({

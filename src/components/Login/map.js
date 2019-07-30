@@ -62,4 +62,18 @@ export default {
       },
     ],
   },
+  ImgCaptcha: {
+    props: {
+      size: 'large',
+      placeholder: 'captcha',
+
+      imgProps: {
+        alt: "验证码",
+        title: "验证码(点击刷新)",
+      },
+    },
+    rules: [
+      { type: "string", required: true, whitespace: true, len: 4, message: '请输入4位验证码', },
+    ],
+  },
 };

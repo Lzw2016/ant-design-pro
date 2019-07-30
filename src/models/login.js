@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
+import { getFakeCaptcha } from '@/services/api';
+import { login, logout, getImgCaptcha } from '@/services/security-api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -10,12 +11,15 @@ export default {
 
   state: {
     status: undefined,
+    message: undefined,
+    needCaptcha: false,
+    captchaDigest: undefined,
+    imgCaptchaData: undefined,
   },
 
   effects: {
     *login({ payload }, { call, put }) {
-      console.log("payload", payload);
-      const response = yield call(fakeAccountLogin, payload);
+      const response = yield call(login, payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -40,20 +44,30 @@ export default {
             redirect = null;
           }
         }
+        yield put({ type: 'changeLoginStatus', payload: { captchaDigestL: undefined, imgCaptchaData: undefined } });
         yield put(routerRedux.replace(redirect || '/'));
+      } else if (response.needCaptcha === true) {
+        // 刷新图片验证码
+        yield put({ type: 'getImgCaptcha', payload: {} });
       }
+    },
+
+    *getImgCaptcha(_, { call, put }) {
+      const { captchaDigest, imgCaptchaData } = yield call(getImgCaptcha, {});
+      yield put({ type: 'changeLoginStatus', payload: { captchaDigest, imgCaptchaData } });
     },
 
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
 
-    *logout(_, { put }) {
+    *logout(_, { call, put }) {
+      yield call(logout, {});
       yield put({
         type: 'changeLoginStatus',
         payload: {
           status: false,
-          currentAuthority: 'guest',
+          currentAuthority: [],
         },
       });
       reloadAuthorized();
@@ -77,8 +91,11 @@ export default {
       setAuthority(payload.currentAuthority);
       return {
         ...state,
-        status: payload.status,
-        type: payload.type,
+        // status: payload.status,
+        // type: payload.type,
+        // message: payload.message,
+        // needCaptcha: payload.needCaptcha,
+        ...payload,
       };
     },
   },

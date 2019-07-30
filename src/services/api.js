@@ -2,7 +2,6 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import { BaiduTranslateMD5 } from '@/utils/BaiduTranslateMD5';
 import { BaiduTranslate } from '@/config';
-import { LoginEncrypt } from '@/utils/crypto';
 
 export async function queryProjectNotice() {
   // return request('/api/project/notice');
@@ -22,21 +21,8 @@ export async function queryProjectNotice() {
 
 // 用户登录
 export async function fakeAccountLogin(params) {
-  const { type, userName, password } = params;
-  console.log("fakeAccountLogin", params, type);
-  const data = {
-    username: userName,
-    password: LoginEncrypt(password),
-    captcha: "fhbs",
-    captchaDigest: "1eefef20e4fe21e1c1321475b35169f4ef308f53",
-    "remember-me": "false"
-  };
-  console.log("data", data);
-  return request('/security/login.json', {
-    method: 'POST',
-    data,
-  });
-  // return { status: "ok", type: "account", currentAuthority: "admin" };
+  console.log("fakeAccountLogin", params);
+  return { status: "ok", type: "account", currentAuthority: "admin" };
 }
 
 // 用户注册

@@ -6,16 +6,16 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 // 系统信息
 const SystemInfo = {
   // 系统名称
-  name: 'xxx MGR',
+  name: 'Antd',
   // 系统说明
-  description: 'Welcome To xxx MGR',
+  description: 'Welcome To Antd',
   // 系统菜单配置
   menu: {
     // 禁用菜单国际化
     disableLocal: false,
   },
   // 系统权限存储key
-  localStorageAuthorityKey: 'xxx-MGR',
+  localStorageAuthorityKey: 'authorities-Antd',
   languages: [
     { key: 'zh-CN', lang: '🇨🇳', label: '简体中文' },
     { key: 'zh-TW', lang: '🇭🇰', label: '繁体中文' },
@@ -143,4 +143,9 @@ const BaiduTranslate = {
   key: 'FP3FQIYZNhGbhSe1EtX70',
 }
 
-export { SystemInfo, LayoutConfig, LoginConfig, CodeMessage, ModelInitState, CryptoConfig, BaiduTranslate };
+// Url 前缀
+const UrlPrefix = {
+  security: "/security",
+}
+
+export { SystemInfo, LayoutConfig, LoginConfig, CodeMessage, ModelInitState, CryptoConfig, BaiduTranslate, UrlPrefix };

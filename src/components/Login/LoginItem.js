@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, Spin } from 'antd';
 import omit from 'omit.js';
 import styles from './index.less';
 import ItemMap from './map';
@@ -112,6 +112,52 @@ class WrapFormItem extends Component {
               >
                 {count ? `${count} ${getCaptchaSecondText}` : getCaptchaButtonText}
               </Button>
+            </Col>
+          </Row>
+        </FormItem>
+      );
+    }
+    if (type === 'ImgCaptcha') {
+      const { imgProps: customImgProps, ...customTmpProps } = customprops;
+      const { imgProps: otherimgProps, ...otherTmpProps } = otherProps;
+      const tmpImgProps = { ...(customImgProps || {}), ...(otherimgProps || {}) };
+      return (
+        <FormItem>
+          <Row gutter={8}>
+            <Col span={16}>
+              {getFieldDecorator(name, options)(<Input {...customTmpProps} {...otherTmpProps} />)}
+            </Col>
+            <Col span={8}>
+              {
+                tmpImgProps.src ?
+                  <img
+                    style={{
+                      display: "inline-block",
+                      height: 40,
+                      width: "100%",
+                      border: "1px solid #d9d9d9",
+                      borderRadius: 4,
+                      verticalAlign: "top",
+                      cursor: "pointer",
+                    }}
+                    alt="验证码"
+                    {...tmpImgProps}
+                  />
+                  :
+                  <Spin spinning={true} onClick={tmpImgProps.onClick}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        height: 40,
+                        width: "100%",
+                        border: "1px solid #d9d9d9",
+                        borderRadius: 4,
+                        verticalAlign: "top",
+                        backgroundColor: "#FFF"
+                      }}
+                    />
+                  </Spin>
+              }
             </Col>
           </Row>
         </FormItem>

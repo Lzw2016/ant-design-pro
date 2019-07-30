@@ -1,4 +1,4 @@
-import { queryCurrent } from '@/services/user';
+import { currentUser } from '@/services/security-api';
 
 export default {
   namespace: 'user',
@@ -10,7 +10,7 @@ export default {
 
   effects: {
     *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+      const response = yield call(currentUser);
       yield put({
         type: 'saveCurrentUser',
         payload: response,
