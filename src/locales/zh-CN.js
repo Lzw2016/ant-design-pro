@@ -8,8 +8,9 @@ import settings from './zh-CN/settings';
 import pwa from './zh-CN/pwa';
 import component from './zh-CN/component';
 import editor from './zh-CN/editor';
-import CustomMenu from './zh-CN/CustomMenu';
 import common from './zh-CN/common';
+import CustomMenu from './zh-CN/CustomMenu';
+import security from './zh-CN/security';
 
 export default {
   'navBar.lang': '语言',
@@ -30,6 +31,7 @@ export default {
   ...pwa,
   ...component,
   ...editor,
-  ...CustomMenu,
   ...common,
+  ...CustomMenu,
+  ...security,
 };

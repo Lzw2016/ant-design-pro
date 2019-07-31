@@ -1,8 +1,9 @@
 import { ModelInitState } from '@/config';
+import { DemoModel } from '@/ModelsNamespace';
 // import { findUserLoginLog } from '../services/manage-by-query-controller';
 
 export default {
-  namespace: 'Demo.TestModel',
+  namespace: DemoModel.TestModel,
 
   state: {
     queryParam: {

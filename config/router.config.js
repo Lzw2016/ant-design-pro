@@ -19,6 +19,25 @@ export default [
     routes: [
       // 跟路径跳转
       { path: '/', redirect: '/demo/test' },
+      // Security
+      {
+        path: '/security',
+        name: 'security',
+        icon: 'icon-anquanbaozhang',
+        routes: [
+          { path: '/security', redirect: '/security/user_manage' },
+          { path: '/security/user_manage', name: 'user_manage', icon: 'icon-yonghuguanli1', component: './Security/UserManage' },
+          { path: '/security/role_manage', name: 'role_manage', icon: 'icon-jiaoseguanli1', component: './Security/UserManage' },
+          { path: '/security/service_sys', name: 'service_sys', icon: 'icon-drxx11', component: './Security/UserManage' },
+          { path: '/security/permission_manage', name: 'permission_manage', icon: 'icon-quanxian', component: './Security/UserManage' },
+          { path: '/security/authorization', name: 'authorization', icon: 'icon-shouquanchenggong', component: './Security/UserManage' },
+          { path: '/security/login_log', name: 'login_log', icon: 'icon-log1', component: './Security/UserManage' },
+          { path: '/security/remember_me_token_manage', name: 'remember_me_token_manage', icon: 'icon-token1', component: './Security/UserManage' },
+          { path: '/security/jwt_token_manage', name: 'jwt_token_manage', icon: 'icon-token1', component: './Security/UserManage' },
+          { path: '/security/oauth_token_manage', name: 'oauth_token_manage', icon: 'icon-token1', component: './Security/UserManage' },
+          { path: '/security/cas_token_manage', name: 'cas_token_manage', icon: 'icon-token1', component: './Security/UserManage' },
+        ],
+      },
       // Demo 菜单
       {
         path: '/demo',
