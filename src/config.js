@@ -1,6 +1,8 @@
 // 全局常量
 import React, { Fragment } from 'react';
 import { Icon } from 'antd';
+// import 'emoji-mart/css/emoji-mart.css'
+import { Emoji } from 'emoji-mart'
 import { formatMessage, FormattedMessage } from 'umi/locale';
 
 // 系统信息
@@ -17,10 +19,10 @@ const SystemInfo = {
   // 系统权限存储key
   localStorageAuthorityKey: 'xxx-MGR',
   languages: [
-    { key: 'zh-CN', lang: '🇨🇳', label: '简体中文' },
-    { key: 'zh-TW', lang: '🇭🇰', label: '繁体中文' },
-    { key: 'en-US', lang: '🇬🇧', label: 'English' },
-    { key: 'pt-BR', lang: '🇵🇹', label: 'Português' },
+    { key: 'zh-CN', lang: <Emoji emoji='flag-cn' set='twitter' size={16} />, label: '简体中文' },
+    { key: 'zh-TW', lang: <Emoji emoji='flag-hk' set='twitter' size={16} />, label: '繁体中文' },
+    { key: 'en-US', lang: <Emoji emoji='flag-gb' set='twitter' size={16} />, label: 'English' },
+    { key: 'pt-BR', lang: <Emoji emoji='flag-pt' set='twitter' size={16} />, label: 'Português' },
   ],
 };
 
