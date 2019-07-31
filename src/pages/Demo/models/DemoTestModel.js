@@ -2,7 +2,7 @@ import { ModelInitState } from '@/config';
 // import { findUserLoginLog } from '../services/manage-by-query-controller';
 
 export default {
-  namespace: 'DemoTestModel',
+  namespace: 'Demo.TestModel',
 
   state: {
     queryParam: {

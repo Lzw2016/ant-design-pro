@@ -5,9 +5,9 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 // import classNames from 'classnames';
 // import styles from './Log.less'
 
-@connect(({ DemoTestModel, loading }) => ({
-  DemoTestModel,
-  loading: loading.effects['DemoTestModel/findByPage'],
+@connect(state => ({
+  DemoTestModel: state["Demo.TestModel"],
+  loading: state.loading.effects['Demo.TestModel/findByPage'],
 }))
 class DemoTest extends PureComponent {
   state = {
@@ -21,7 +21,7 @@ class DemoTest extends PureComponent {
       <PageHeaderWrapper title="测试">
         <Card bordered={false}>
           <p>{text}</p>
-          <Button type="primary" onClick={() => dispatch({ type: 'DemoTestModel/save', payload: { test: (test + 1) } })}>测试按钮</Button>
+          <Button type="primary" onClick={() => dispatch({ type: 'Demo.TestModel/save', payload: { test: (test + 1) } })}>测试按钮</Button>
           <div>{test}</div>
         </Card>
       </PageHeaderWrapper>
