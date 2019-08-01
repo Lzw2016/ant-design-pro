@@ -1,5 +1,5 @@
 module.exports = {
-  navTheme: 'dark', // theme for nav menu (dark / light)
+  navTheme: 'light', // theme for nav menu (dark / light)
   primaryColor: '#1890FF', // primary color of ant design
   layout: 'sidemenu', // nav menu position: sidemenu or topmenu
   contentWidth: 'Fluid', // layout of content: Fluid or Fixed, only works when layout is topmenu
@@ -14,7 +14,7 @@ module.exports = {
   // Your custom iconfont Symbol script Url
   // eg：//at.alicdn.com/t/font_1039637_btcrd5co4w.js
   // 注意：如果需要图标多色，Iconfont图标项目里要进行批量去色处理
-  iconfontUrl: '//at.alicdn.com/t/font_1326886_lt2alhsjzd.js',
+  iconfontUrl: '//at.alicdn.com/t/font_1326886_bbehrpsvyl.js',
 
   // 默认使用语言
   defaultLocale: 'zh-CN',

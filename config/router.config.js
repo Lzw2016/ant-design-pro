@@ -17,8 +17,8 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
-      // 跟路径跳转
-      { path: '/', redirect: '/demo/test' },
+      // 首页
+      { path: '/', redirect: '/security/user_manage' },
       // Security
       {
         path: '/security',
@@ -59,9 +59,9 @@ export default [
       {
         path: '/translate',
         name: 'translate',
-        icon: 'icon-transform',
+        icon: 'icon-fanyipingtai',
         routes: [
-          { path: '/translate/baidu', name: 'baidu', icon: 'icon-fanyi', component: './Translate/Baidu' },
+          { path: '/translate/baidu', name: 'baidu', icon: 'icon-fanyi1', component: './Translate/Baidu' },
         ],
       },
       // 文档
