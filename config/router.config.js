@@ -1,5 +1,5 @@
 export default [
-  // user
+  // 用户登录注册菜单
   {
     path: '/user',
     component: '../layouts/UserLayout',
@@ -10,7 +10,7 @@ export default [
       { path: '/user/register-result', name: 'register.result', component: './User/RegisterResult' },
     ],
   },
-  // Demo
+  // 系统功能菜单
   {
     path: '/',
     // component: '../layouts/TopAndSideLayout',
