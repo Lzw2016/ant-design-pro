@@ -6,6 +6,7 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
+    "build-oss": "cross-env ESLINT=none PROXY_PREFIX='/proxy/template' ENABLE_CND=true umi build",
     "build-proxy": "cross-env ESLINT=none PROXY_PREFIX='/proxy/template' umi build",
     "build-prod": "cross-env ESLINT=none PROXY_PREFIX='/proxy/template' umi build",
     "docker-hub:build": "docker build  -f Dockerfile.hub -t  ant-design-pro ./",
@@ -144,7 +145,8 @@
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
     "umi-plugin-ga": "^1.1.3",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "webpack-aliyun-oss": "^0.2.1"
   },
   "engines": {
     "node": ">=10.0.0"

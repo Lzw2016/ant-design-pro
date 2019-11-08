@@ -5,6 +5,8 @@ import AntDesignThemePlugin from 'antd-theme-webpack-plugin';
 import path from 'path';
 // import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 // import webpack from 'webpack';
+const WebpackAliyunOss = require('webpack-aliyun-oss');
+import aliOssConf from '../ali-oss-conf';
 
 function getModulePackageName(module) {
   if (!module.context) return null;
@@ -53,6 +55,24 @@ export default config => {
   //     "window.jQuery": "jquery",
   //   },
   // ]);
+  // 阿里云OSS支持
+  if (process.env.ENABLE_CND === "true" || process.env.ENABLE_CND === true) {
+    config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [{
+      timeout: 1000 * 60 * 10,
+      from: ['./dist/**', '!./dist/**/**/*.html', , '!./dist/iframe-page/monaco-editor/dev/**', '!./dist/iframe-page/**'],
+      dist: `/${aliOssConf.appVersion}/`,
+      region: aliOssConf.region,
+      accessKeyId: aliOssConf.accessKeyId,
+      accessKeySecret: aliOssConf.accessKeySecret,
+      bucket: aliOssConf.bucket,
+      // setOssPath(filePath) {
+      //   return filePath;
+      // },
+      setHeaders(filePath) {
+        return { 'Cache-Control': 'max-age=31536000' };
+      }
+    }]);
+  }
   // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
   if (
     process.env.ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ||

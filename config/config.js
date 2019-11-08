@@ -1,13 +1,14 @@
 // https://umijs.org/config/
 import os from 'os';
+import slash from 'slash2';
 import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
-import slash from 'slash2';
+import aliOssConf from '../ali-oss-conf';
 
 const { pwa, primaryColor, defaultLocale, enableBaseNavigator } = defaultSettings;
 // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, TEST } = process.env;
+const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, TEST, ENABLE_CND } = process.env;
 
 const plugins = [
   [
@@ -29,20 +30,20 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false,
       ...(!TEST && os.platform() === 'darwin'
         ? {
-            dll: {
-              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-              exclude: ['@babel/runtime', 'netlify-lambda'],
-            },
-            hardSource: false,
-          }
+          dll: {
+            include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+            exclude: ['@babel/runtime', 'netlify-lambda'],
+          },
+          hardSource: false,
+        }
         : {}),
     },
   ],
@@ -60,6 +61,8 @@ if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
 }
 
 export default {
+  publicPath: (ENABLE_CND === true || ENABLE_CND === 'true') ? `${aliOssConf.ossUrl}/${aliOssConf.appVersion}/` : '',
+  // runtimePublicPath: true,
   hash: true,
   history: 'hash',
   // add for transfer to umi
