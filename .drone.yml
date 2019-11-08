@@ -39,7 +39,7 @@ steps:
       # - rm -rf dist/
       # - cd ../
       # dev打包
-      - npm run build-proxy
+      - npm run build-oss
       - mv dist/ server/
       - cd server
       - npm install --prefer-offline
