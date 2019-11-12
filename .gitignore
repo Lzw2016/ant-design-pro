@@ -43,7 +43,7 @@ webpack-config.json
 .temp
 server/yarn.lock
 server/node_modules
-# server/dist/**
+server/dist/**
 !server/dist/*.html
 !server/dist/**/*.html
 server/yarn.lock
