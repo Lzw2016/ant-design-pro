@@ -69,7 +69,18 @@ export default config => {
       //   return filePath;
       // },
       setHeaders(filePath) {
-        return { 'Cache-Control': 'max-age=31536000' };
+        const headers = {
+          // 缓存时间
+          'Cache-Control': 'max-age=31536000'
+        };
+        if (filePath.endsWith(".html")) {
+          // 指定允许其他域名访问 //一般用法（*，指定域，动态设置），*不允许携带认证头和cookies
+          headers['Access-Control-Allow-Origin'] = "ant.msvc.top";
+          // 是否允许后续请求携带认证信息（cookies）,该值只能是true,否则不返回
+          headers['Access-Control-Allow-Credentials'] = "true";
+          console.log("配置跨域 --> ", headers);
+        }
+        return headers;
       }
     }]);
   }
