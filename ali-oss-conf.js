@@ -11,6 +11,6 @@ const aliOssConf = {
 };
 
 module.exports = {
-  appVersion: 'v1.0.1',
+  appVersion: 'v1.0.2',
   ...aliOssConf,
 };

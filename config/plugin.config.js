@@ -6,6 +6,7 @@ import path from 'path';
 // import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 // import webpack from 'webpack';
 const WebpackAliyunOss = require('webpack-aliyun-oss');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 import aliOssConf from '../ali-oss-conf';
 
 function getModulePackageName(module) {
@@ -57,6 +58,7 @@ export default config => {
   // ]);
   // 阿里云OSS支持
   if (process.env.ENABLE_CND === "true" || process.env.ENABLE_CND === true) {
+    // 上传文件到阿里OSS
     config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [{
       timeout: 1000 * 60 * 10,
       from: ['./dist/**', '!./dist/*.html', '!./dist/**/*.map', '!./dist/iframe-page/codemirror/**/*.html', '!./dist/iframe-page/monaco-editor/dev/**'],
@@ -73,16 +75,17 @@ export default config => {
           // 缓存时间
           'Cache-Control': 'max-age=31536000'
         };
-        if (filePath.endsWith(".html")) {
-          // 指定允许其他域名访问 //一般用法（*，指定域，动态设置），*不允许携带认证头和cookies
-          headers['Access-Control-Allow-Origin'] = "ant.msvc.top";
-          // 是否允许后续请求携带认证信息（cookies）,该值只能是true,否则不返回
-          headers['Access-Control-Allow-Credentials'] = "true";
-          console.log("配置跨域 --> ", headers);
-        }
         return headers;
       }
     }]);
+    // 复制所有html文件到 ./server/dist/ 下面 TODO 需要自己实现
+    // config.plugin('copy-webpack-plugin').use(CopyWebpackPlugin, [[
+    //   {
+    //     from: 'D:/SourceCode/react/ant-design-pro/public/**/*.html',
+    //     to: 'D:/SourceCode/react/ant-design-pro/server/dist',
+    //     flatten: true,
+    //   }
+    // ]]);
   }
   // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
   if (
