@@ -3,7 +3,7 @@ import { Spin } from 'antd';
 import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
-import { ossUrl, appVersion } from "@/../ali-oss-conf";
+import { cdnUrl, appVersion } from "@/../ali-oss-conf";
 // import classNames from 'classnames';
 import styles from './index.less'
 
@@ -49,7 +49,7 @@ class IFramePage extends PureComponent {
     const { iframeID } = this.state;
     let srcUrl = src;
     if (srcUrl && !srcUrl.startsWith("http://") && !srcUrl.startsWith("https://") && enableCnd) {
-      srcUrl = `${ossUrl}/${appVersion}${src.startsWith("/") ? '' : '/'}${src}`;
+      srcUrl = `${cdnUrl}/${appVersion}${src.startsWith("/") ? '' : '/'}${src}`;
     }
     const iframe = (
       <iframe

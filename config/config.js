@@ -61,7 +61,7 @@ if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
 }
 
 export default {
-  publicPath: (ENABLE_CND === true || ENABLE_CND === 'true') ? `${aliOssConf.ossUrl}/${aliOssConf.appVersion}/` : '',
+  publicPath: (ENABLE_CND === true || ENABLE_CND === 'true') ? `${aliOssConf.cdnUrl}/${aliOssConf.appVersion}/` : '',
   // runtimePublicPath: true,
   hash: true,
   history: 'hash',
