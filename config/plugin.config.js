@@ -6,7 +6,6 @@ import path from 'path';
 // import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 // import webpack from 'webpack';
 const WebpackAliyunOss = require('webpack-aliyun-oss');
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
 import aliOssConf from '../ali-oss-conf';
 
 function getModulePackageName(module) {
