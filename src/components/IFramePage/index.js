@@ -3,8 +3,11 @@ import { Spin } from 'antd';
 import lodash from 'lodash';
 // import moment from 'moment';
 // import { connect } from 'dva';
+import { ossUrl, appVersion } from "@/../ali-oss-conf";
 // import classNames from 'classnames';
 import styles from './index.less'
+
+const enableCnd = ENABLE_CND;
 
 class IFramePage extends PureComponent {
 
@@ -44,13 +47,17 @@ class IFramePage extends PureComponent {
     iframeStyle,
   }) => {
     const { iframeID } = this.state;
+    let srcUrl = src;
+    if (srcUrl && !srcUrl.startsWith("http://") && !srcUrl.startsWith("https://") && enableCnd) {
+      srcUrl = `${ossUrl}/${appVersion}${src.startsWith("/") ? '' : '/'}${src}`;
+    }
     const iframe = (
       <iframe
         id={iframeID}
         name={iframeID}
         key={iframeID}
         title="iframe"
-        src={src}
+        src={srcUrl}
         className={iframeClassName}
         style={{ border: 0, width: "100%", height: "100%", ...iframeStyle }}
         {...iframeProps}

@@ -59,7 +59,7 @@ export default config => {
   if (process.env.ENABLE_CND === "true" || process.env.ENABLE_CND === true) {
     config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [{
       timeout: 1000 * 60 * 10,
-      from: ['./dist/**', '!./dist/**/**/*.html', , '!./dist/iframe-page/monaco-editor/dev/**', '!./dist/iframe-page/**'],
+      from: ['./dist/**', '!./dist/**/**/*.html', , '!./dist/iframe-page/monaco-editor/dev/**'],
       dist: `/${aliOssConf.appVersion}/`,
       region: aliOssConf.region,
       accessKeyId: aliOssConf.accessKeyId,
