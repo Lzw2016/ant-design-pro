@@ -60,7 +60,7 @@ export default config => {
     config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [{
       timeout: 1000 * 60 * 10,
       from: ['./dist/**', '!./dist/*.html', '!./dist/**/*.map', '!./dist/iframe-page/codemirror/**/*.html', '!./dist/iframe-page/monaco-editor/dev/**'],
-      dist: `/${aliOssConf.appVersion}/`,
+      dist: `${aliOssConf.appVersion}/`,
       region: aliOssConf.region,
       accessKeyId: aliOssConf.accessKeyId,
       accessKeySecret: aliOssConf.accessKeySecret,
