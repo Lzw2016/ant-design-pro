@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>CodeMirror</title>
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/lib/codemirror.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/theme/monokai.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/addon/dialog/dialog.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/addon/fold/foldgutter.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/addon/scroll/simplescrollbars.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/codemirror/5.49.2/addon/search/matchesonscrollbar.css" />
+  <style>
+    .code-mirror-editor {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .fullscreen[data-theme=dark] {
+      z-index: 5;
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      padding: 5px;
+      color: #999;
+    }
+
+    .fullscreen[data-theme=dark]:hover {
+      cursor: pointer;
+      color: #ddd;
+    }
+
+    .active[data-theme=dark] {
+      color: #fff !important;
+      font-size: 18px;
+    }
+
+    .fullscreen[data-theme=light] {
+      z-index: 5;
+      position: absolute;
+      top: 8px;
+      right: 24px;
+      padding: 5px;
+      color: #888;
+    }
+
+    .fullscreen[data-theme=light]:hover {
+      cursor: pointer;
+      color: #555;
+    }
+
+    .active[data-theme=light] {
+      color: #111 !important;
+      font-size: 18px;
+    }
+
+    .CodeMirror {
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 19px;
+      letter-spacing: 0px;
+    }
+
+    .CodeMirror pre {
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 19px;
+      letter-spacing: 0px;
+    }
+
+    .CodeMirror pre {
+      padding: 0 4px 0 8px;
+    }
+
+    .CodeMirror-linenumber {
+      padding: 0 5px 0 5px;
+    }
+
+    .CodeMirror-gutters {
+      border-right: 1px solid #999 !important;
+    }
+
+    .CodeMirror pre.CodeMirror-placeholder {
+      color: #888;
+    }
+  </style>
+</head>
+
+<body style="margin: 0;">
+  <i title="全屏/取消全屏" class="fa fa-arrows-alt fullscreen" data-theme="dark"></i>
+  <div id="code-editor" class="code-mirror-editor"></div>
+</body>
+
+<script type="text/javascript" src="http://cdn.static.msvc.top/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/lib/codemirror.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/comment/comment.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/dialog/dialog.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/display/placeholder.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/display/autorefresh.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/edit/matchbrackets.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/edit/closebrackets.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/edit/matchtags.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/edit/trailingspace.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/edit/closetag.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/fold/foldcode.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/fold/brace-fold.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/scroll/simplescrollbars.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/scroll/annotatescrollbar.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/search/search.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/search/jump-to-line.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/search/matchesonscrollbar.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/search/searchcursor.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/selection/active-line.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/selection/selection-pointer.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/addon/wrap/hardwrap.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/codemirror/5.49.2/keymap/sublime.js"></script>
+<script type="text/javascript">
+  var editor;
+  var fullscreenFunc;
+  // 全屏/取消全屏
+  function fullscreen(full) {
+    var node = $(".fullscreen");
+    if (full === true) {
+      node.addClass("active");
+    } else if (full === false) {
+      node.removeClass("active");
+    } else {
+      node.toggleClass("active");
+    }
+  }
+
+  // 全屏事件
+  $(".fullscreen").on("click", function () {
+    if (fullscreenFunc) {
+      fullscreen();
+      fullscreenFunc();
+    }
+  });
+
+  // 初始化编辑器
+  function initEditor(config, setEditorFunc) {
+    if (config) {
+      fullscreenFunc = config.fullscreen;
+    }
+    var options = {
+      lineNumbers: true,
+      matchBrackets: true,
+      styleActiveLine: true,
+      indentUnit: 2,
+      smartIndent: true,
+      autoCloseBrackets: true,
+      readOnly: false,
+      placeholder: "输入代码...",
+      value: "",
+      scrollbarStyle: "overlay",
+      selectionPointer: true,
+      keyMap: "sublime"
+      // continueLineComment: true,
+      // theme: "monokai",
+      // mode: codeTypeMap.JavaScript.mode,
+      // modeJs: codeTypeMap.JavaScript.js,
+    };
+    options = $.extend(true, options, config);
+    editor = CodeMirror(document.getElementById('code-editor'), options);
+    editor.setSize("100%", "100%");
+    if (setEditorFunc) setEditorFunc(editor);
+    // 设置主题
+    setTheme(options.theme || "monokai", true);
+    // 设置模式(代码语言)
+    setMode(options.mode || codeTypeMap.JavaScript.mode, options.modeJs || codeTypeMap.JavaScript.js);
+    return editor;
+  }
+
+  var themeUrlMap = {
+    "3024-day": { theme: "3024-day", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/3024-day.css", fullscreen: "light" },
+    "3024-night": { theme: "3024-night", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/3024-night.css", fullscreen: "dark" },
+    "abcdef": { theme: "abcdef", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/abcdef.css", fullscreen: "dark" },
+    "ambiance-mobile": { theme: "ambiance-mobile", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/ambiance-mobile.css", fullscreen: "dark" },
+    "ambiance": { theme: "ambiance", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/ambiance.css", fullscreen: "dark" },
+    "base16-dark": { theme: "base16-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/base16-dark.css", fullscreen: "dark" },
+    "base16-light": { theme: "base16-light", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/base16-light.css", fullscreen: "light" },
+    "bespin": { theme: "bespin", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/bespin.css", fullscreen: "dark" },
+    "blackboard": { theme: "blackboard", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/blackboard.css", fullscreen: "dark" },
+    "cobalt": { theme: "cobalt", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/cobalt.css", fullscreen: "dark" },
+    "colorforth": { theme: "colorforth", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/colorforth.css", fullscreen: "dark" },
+    "darcula": { theme: "darcula", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/darcula.css", fullscreen: "dark" },
+    "dracula": { theme: "dracula", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/dracula.css", fullscreen: "dark" },
+    "duotone-dark": { theme: "duotone-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/duotone-dark.css", fullscreen: "dark" },
+    "duotone-light": { theme: "duotone-light", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/duotone-light.css", fullscreen: "light" },
+    "eclipse": { theme: "eclipse", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/eclipse.css", fullscreen: "light", },
+    "elegant": { theme: "elegant", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/elegant.css", fullscreen: "light" },
+    "erlang-dark": { theme: "erlang-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/erlang-dark.css", fullscreen: "dark" },
+    "gruvbox-dark": { theme: "gruvbox-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/gruvbox-dark.css", fullscreen: "dark" },
+    "hopscotch": { theme: "hopscotch", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/hopscotch.css", fullscreen: "dark" },
+    "icecoder": { theme: "icecoder", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/icecoder.css", fullscreen: "dark" },
+    "idea": { theme: "idea", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/idea.css", fullscreen: "light" },
+    "isotope": { theme: "isotope", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/isotope.css", fullscreen: "dark" },
+    "lesser-dark": { theme: "lesser-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/lesser-dark.css", fullscreen: "dark" },
+    "liquibyte": { theme: "liquibyte", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/liquibyte.css", fullscreen: "dark" },
+    "lucario": { theme: "lucario", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/lucario.css", fullscreen: "dark" },
+    "material": { theme: "material", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/material.css", fullscreen: "dark" },
+    "mbo": { theme: "mbo", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/mbo.css", fullscreen: "dark" },
+    "mdn-like": { theme: "mdn-like", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/mdn-like.css", fullscreen: "light" },
+    "midnight": { theme: "midnight", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/midnight.css", fullscreen: "dark" },
+    "monokai": { theme: "monokai", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/monokai.css", loaded: true, fullscreen: "dark" },
+    "neat": { theme: "neat", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/neat.css", fullscreen: "light" },
+    "neo": { theme: "neo", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/neo.css", fullscreen: "light" },
+    "night": { theme: "night", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/night.css", fullscreen: "dark" },
+    "nord": { theme: "nord", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/nord.css", fullscreen: "dark" },
+    "oceanic-next": { theme: "oceanic-next", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/oceanic-next.css", fullscreen: "dark" },
+    "panda-syntax": { theme: "panda-syntax", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/panda-syntax.css", fullscreen: "dark" },
+    "paraiso-dark": { theme: "paraiso-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/paraiso-dark.css", fullscreen: "dark" },
+    "paraiso-light": { theme: "paraiso-light", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/paraiso-light.css", fullscreen: "light" },
+    "pastel-on-dark": { theme: "pastel-on-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/pastel-on-dark.css", fullscreen: "dark" },
+    "railscasts": { theme: "railscasts", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/railscasts.css", fullscreen: "dark" },
+    "rubyblue": { theme: "rubyblue", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/rubyblue.css", fullscreen: "dark" },
+    "seti": { theme: "seti", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/seti.css", fullscreen: "dark" },
+    "shadowfox": { theme: "shadowfox", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/shadowfox.css", fullscreen: "dark" },
+    "solarized": { theme: "solarized", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/solarized.css", fullscreen: "light" },
+    "ssms": { theme: "ssms", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/ssms.css", fullscreen: "light" },
+    "the-matrix": { theme: "the-matrix", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/the-matrix.css", fullscreen: "dark" },
+    "tomorrow-night-bright": { theme: "tomorrow-night-bright", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/tomorrow-night-bright.css", fullscreen: "dark" },
+    "tomorrow-night-eighties": { theme: "tomorrow-night-eighties", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/tomorrow-night-eighties.css", fullscreen: "dark" },
+    "ttcn": { theme: "ttcn", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/ttcn.css", fullscreen: "light" },
+    "twilight": { theme: "twilight", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/twilight.css", fullscreen: "dark" },
+    "vibrant-ink": { theme: "vibrant-ink", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/vibrant-ink.css", fullscreen: "dark" },
+    "xq-dark": { theme: "xq-dark", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/xq-dark.css", fullscreen: "dark" },
+    "xq-light": { theme: "xq-light", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/xq-light.css", fullscreen: "light" },
+    "yeti": { theme: "yeti", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/yeti.css", fullscreen: "light" },
+    "yonce": { theme: "yonce", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/yonce.css", fullscreen: "dark" },
+    "zenburn": { theme: "zenburn", url: "http://cdn.static.msvc.top/codemirror/5.49.2/theme/zenburn.css", fullscreen: "dark" }
+  };
+  var themeArray = [
+    "3024-day", "3024-night", "abcdef", "ambiance-mobile", "ambiance", "base16-dark", "base16-light", "bespin", "blackboard", "cobalt", "colorforth",
+    "darcula", "dracula", "duotone-dark", "duotone-light", "eclipse", "elegant", "erlang-dark", "gruvbox-dark", "hopscotch", "icecoder", "idea",
+    "isotope", "lesser-dark", "liquibyte", "lucario", "material", "mbo", "mdn-like", "midnight", "monokai", "neat", "neo", "night", "nord", "oceanic-next",
+    "panda-syntax", "paraiso-dark", "paraiso-light", "pastel-on-dark", "railscasts", "rubyblue", "seti", "shadowfox", "solarized", "ssms", "the-matrix",
+    "tomorrow-night-bright", "tomorrow-night-eighties", "ttcn", "twilight", "vibrant-ink", "xq-dark", "xq-light", "yeti", "yonce", "zenburn"
+  ];
+  // 设置编辑器主题
+  function setTheme(theme, force) {
+    if (themeArray.indexOf(theme) === -1) return;
+    var oldTheme = editor.getOption("theme");
+    if (theme === oldTheme && force !== true) return;
+    // 动态加载 css
+    var themeOpt = themeUrlMap[theme];
+    // dark light
+    $(".fullscreen").attr("data-theme", themeOpt.fullscreen || "dark");
+    if (themeOpt.loaded !== true) {
+      themeOpt.loaded = true;
+      var head = document.getElementsByTagName('head')[0];
+      var link = document.createElement('link');
+      link.type = 'text/css';
+      link.rel = 'stylesheet';
+      link.href = themeOpt.url;
+      head.appendChild(link);
+    }
+    // 设置主题
+    editor.setOption("theme", theme);
+  };
+
+  var codeTypeMap = {
+    C: { mode: "text/x-csrc", js: "clike" },
+    "C++": { mode: "text/x-c++src", js: "clike" },
+    "C#": { mode: "text/x-csharp", js: "clike" },
+    Java: { mode: "text/x-java", js: "clike" },
+    "Objective-C": { mode: "text/x-objectivec", js: "clike" },
+    Scala: { mode: "text/x-scala", js: "clike" },
+    Squirrel: { mode: "text/x-squirrel", js: "clike" },
+    Ceylon: { mode: "text/x-ceylon", js: "clike" },
+    Kotlin: { mode: "text/x-kotlin", js: "clike" },
+    CSS: { mode: "text/css", js: "css" },
+    SCSS: { mode: "text/x-scss", js: "css" },
+    Less: { mode: "text/x-less", js: "css" },
+    Django: { mode: "text/x-django", js: "django" },
+    Erlang: { mode: "text/x-erlang", js: "erlang" },
+    Go: { mode: "text/x-go", js: "go" },
+    Groovy: { mode: "text/x-groovy", js: "groovy" },
+    "ASP.NET": { mode: "application/x-aspx", js: "htmlembedded" },
+    EJS: { mode: "application/x-ejs", js: "htmlembedded" },
+    JSP: { mode: "application/x-jsp", js: "htmlembedded" },
+    ERB: { mode: "application/x-erb", js: "htmlembedded" },
+    "HTML-CSS-JS": { mode: "text/html", js: "htmlmixed" },
+    HTTP: { mode: "message/http", js: "http" },
+    JavaScript: { mode: "text/javascript", js: "javascript" },
+    Json: { mode: "application/json", js: "javascript" },
+    TypeScript: { mode: "text/typescript", js: "javascript" },
+    Lua: { mode: "text/x-lua", js: "lua" },
+    Markdown: { mode: "text/x-markdown", js: "markdown" },
+    Nginx: { mode: "text/x-nginx-conf", js: "nginx" },
+    "HTML-PHP": { mode: "application/x-httpd-php", js: "php" },
+    PHP: { mode: "text/x-php", js: "php" },
+    PowerShell: { mode: "application/x-powershell", js: "powershell" },
+    Protobuf: { mode: "text/x-protobuf", js: "protobuf" },
+    Python: { mode: "text/x-python", js: "python" },
+    Cython: { mode: "text/x-cython", js: "python" },
+    R: { mode: "text/x-rsrc", js: "r" },
+    Ruby: { mode: "text/x-ruby", js: "ruby" },
+    Rust: { mode: "text/x-rustsrc", js: "rust" },
+    Sass: { mode: "text/x-sass", js: "sass" },
+    Shell: { mode: "text/x-sh", js: "shell" },
+    Solr: { mode: "text/x-solr", js: "solr" },
+    SQL: { mode: "text/x-sql", js: "sql" },
+    MySql: { mode: "text/x-mysql", js: "sql" },
+    MariaDB: { mode: "text/x-mariadb", js: "sql" },
+    Cassandra: { mode: "text/x-cassandra", js: "sql" },
+    PLSQL: { mode: "text/x-plsql", js: "sql" },
+    MSSql: { mode: "text/x-mssql", js: "sql" },
+    PGSql: { mode: "text/x-pgsql", js: "sql" },
+    HIVE: { mode: "text/x-hive", js: "sql" },
+    GQL: { mode: "text/x-gql", js: "sql" },
+    GPSql: { mode: "text/x-gpsql", js: "sql" },
+    Esper: { mode: "text/x-esper", js: "sql" },
+    Swift: { mode: "text/x-swift", js: "swift" },
+    "VB.NET": { mode: "text/x-vb", js: "vb" },
+    Velocity: { mode: "text/velocity", js: "velocity" },
+    Vue: { mode: "text/x-vue", js: "vue" },
+    XML: { mode: "application/xml", js: "xml" },
+    HTML: { mode: "text/html", js: "xml" },
+    YAML: { mode: "text/x-yaml", js: "yaml" }
+    // 不全，根据官网添加 https://codemirror.net/mode/index.html
+  };
+  var modeJsUrlMap = {
+    "apl": { mode: "apl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/apl/apl.js" },
+    "asciiarmor": { mode: "asciiarmor", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/asciiarmor/asciiarmor.js" },
+    "asn.1": { mode: "asn.1", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/asn.1/asn.1.js" },
+    "asterisk": { mode: "asterisk", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/asterisk/asterisk.js" },
+    "brainfuck": { mode: "brainfuck", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/brainfuck/brainfuck.js" },
+    "clike": { mode: "clike", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/clike/clike.js" },
+    "clojure": { mode: "clojure", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/clojure/clojure.js" },
+    "cmake": { mode: "cmake", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/cmake/cmake.js" },
+    "cobol": { mode: "cobol", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/cobol/cobol.js" },
+    "coffeescript": { mode: "coffeescript", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/coffeescript/coffeescript.js" },
+    "commonlisp": { mode: "commonlisp", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/commonlisp/commonlisp.js" },
+    "crystal": { mode: "crystal", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/crystal/crystal.js" },
+    "css": { mode: "css", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/css/css.js" },
+    "cypher": { mode: "cypher", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/cypher/cypher.js" },
+    "d": { mode: "d", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/d/d.js" },
+    "dart": { mode: "dart", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/dart/dart.js" },
+    "diff": { mode: "diff", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/diff/diff.js" },
+    "django": { mode: "django", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/django/django.js" },
+    "dockerfile": { mode: "dockerfile", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/dockerfile/dockerfile.js" },
+    "dtd": { mode: "dtd", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/dtd/dtd.js" },
+    "dylan": { mode: "dylan", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/dylan/dylan.js" },
+    "ebnf": { mode: "ebnf", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ebnf/ebnf.js" },
+    "ecl": { mode: "ecl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ecl/ecl.js" },
+    "eiffel": { mode: "eiffel", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/eiffel/eiffel.js" },
+    "elm": { mode: "elm", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/elm/elm.js" },
+    "erlang": { mode: "erlang", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/erlang/erlang.js" },
+    "factor": { mode: "factor", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/factor/factor.js" },
+    "fcl": { mode: "fcl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/fcl/fcl.js" },
+    "forth": { mode: "forth", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/forth/forth.js" },
+    "fortran": { mode: "fortran", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/fortran/fortran.js" },
+    "gas": { mode: "gas", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/gas/gas.js" },
+    "gfm": { mode: "gfm", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/gfm/gfm.js" },
+    "gherkin": { mode: "gherkin", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/gherkin/gherkin.js" },
+    "go": { mode: "go", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/go/go.js" },
+    "groovy": { mode: "groovy", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/groovy/groovy.js" },
+    "haml": { mode: "haml", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/haml/haml.js" },
+    "handlebars": { mode: "handlebars", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/handlebars/handlebars.js" },
+    "haskell": { mode: "haskell", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/haskell/haskell.js" },
+    "haskell-literate": { mode: "haskell-literate", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/haskell-literate/haskell-literate.js" },
+    "haxe": { mode: "haxe", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/haxe/haxe.js" },
+    "htmlembedded": { mode: "htmlembedded", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/htmlembedded/htmlembedded.js" },
+    "htmlmixed": { mode: "htmlmixed", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/htmlmixed/htmlmixed.js" },
+    "http": { mode: "http", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/http/http.js" },
+    "idl": { mode: "idl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/idl/idl.js" },
+    "index.html": { mode: "index.html", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/index.html/index.html.js" },
+    "javascript": { mode: "javascript", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/javascript/javascript.js" },
+    "jinja2": { mode: "jinja2", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/jinja2/jinja2.js" },
+    "jsx": { mode: "jsx", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/jsx/jsx.js" },
+    "julia": { mode: "julia", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/julia/julia.js" },
+    "livescript": { mode: "livescript", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/livescript/livescript.js" },
+    "lua": { mode: "lua", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/lua/lua.js" },
+    "markdown": { mode: "markdown", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/markdown/markdown.js" },
+    "mathematica": { mode: "mathematica", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mathematica/mathematica.js" },
+    "mbox": { mode: "mbox", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mbox/mbox.js" },
+    "meta.js": { mode: "meta.js", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/meta.js/meta.js.js" },
+    "mirc": { mode: "mirc", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mirc/mirc.js" },
+    "mllike": { mode: "mllike", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mllike/mllike.js" },
+    "modelica": { mode: "modelica", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/modelica/modelica.js" },
+    "mscgen": { mode: "mscgen", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mscgen/mscgen.js" },
+    "mumps": { mode: "mumps", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/mumps/mumps.js" },
+    "nginx": { mode: "nginx", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/nginx/nginx.js" },
+    "nsis": { mode: "nsis", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/nsis/nsis.js" },
+    "ntriples": { mode: "ntriples", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ntriples/ntriples.js" },
+    "octave": { mode: "octave", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/octave/octave.js" },
+    "oz": { mode: "oz", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/oz/oz.js" },
+    "pascal": { mode: "pascal", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/pascal/pascal.js" },
+    "pegjs": { mode: "pegjs", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/pegjs/pegjs.js" },
+    "perl": { mode: "perl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/perl/perl.js" },
+    "php": { mode: "php", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/php/php.js" },
+    "pig": { mode: "pig", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/pig/pig.js" },
+    "powershell": { mode: "powershell", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/powershell/powershell.js" },
+    "properties": { mode: "properties", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/properties/properties.js" },
+    "protobuf": { mode: "protobuf", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/protobuf/protobuf.js" },
+    "pug": { mode: "pug", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/pug/pug.js" },
+    "puppet": { mode: "puppet", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/puppet/puppet.js" },
+    "python": { mode: "python", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/python/python.js" },
+    "q": { mode: "q", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/q/q.js" },
+    "r": { mode: "r", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/r/r.js" },
+    "rpm": { mode: "rpm", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/rpm/rpm.js" },
+    "rst": { mode: "rst", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/rst/rst.js" },
+    "ruby": { mode: "ruby", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ruby/ruby.js" },
+    "rust": { mode: "rust", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/rust/rust.js" },
+    "sas": { mode: "sas", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/sas/sas.js" },
+    "sass": { mode: "sass", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/sass/sass.js" },
+    "scheme": { mode: "scheme", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/scheme/scheme.js" },
+    "shell": { mode: "shell", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/shell/shell.js" },
+    "sieve": { mode: "sieve", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/sieve/sieve.js" },
+    "slim": { mode: "slim", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/slim/slim.js" },
+    "smalltalk": { mode: "smalltalk", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/smalltalk/smalltalk.js" },
+    "smarty": { mode: "smarty", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/smarty/smarty.js" },
+    "solr": { mode: "solr", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/solr/solr.js" },
+    "soy": { mode: "soy", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/soy/soy.js" },
+    "sparql": { mode: "sparql", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/sparql/sparql.js" },
+    "spreadsheet": { mode: "spreadsheet", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/spreadsheet/spreadsheet.js" },
+    "sql": { mode: "sql", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/sql/sql.js" },
+    "stex": { mode: "stex", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/stex/stex.js" },
+    "stylus": { mode: "stylus", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/stylus/stylus.js" },
+    "swift": { mode: "swift", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/swift/swift.js" },
+    "tcl": { mode: "tcl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/tcl/tcl.js" },
+    "textile": { mode: "textile", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/textile/textile.js" },
+    "tiddlywiki": { mode: "tiddlywiki", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/tiddlywiki/tiddlywiki.js" },
+    "tiki": { mode: "tiki", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/tiki/tiki.js" },
+    "toml": { mode: "toml", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/toml/toml.js" },
+    "tornado": { mode: "tornado", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/tornado/tornado.js" },
+    "troff": { mode: "troff", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/troff/troff.js" },
+    "ttcn": { mode: "ttcn", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ttcn/ttcn.js" },
+    "ttcn-cfg": { mode: "ttcn-cfg", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/ttcn-cfg/ttcn-cfg.js" },
+    "turtle": { mode: "turtle", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/turtle/turtle.js" },
+    "twig": { mode: "twig", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/twig/twig.js" },
+    "vb": { mode: "vb", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/vb/vb.js" },
+    "vbscript": { mode: "vbscript", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/vbscript/vbscript.js" },
+    "velocity": { mode: "velocity", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/velocity/velocity.js" },
+    "verilog": { mode: "verilog", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/verilog/verilog.js" },
+    "vhdl": { mode: "vhdl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/vhdl/vhdl.js" },
+    "vue": { mode: "vue", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/vue/vue.js" },
+    "webidl": { mode: "webidl", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/webidl/webidl.js" },
+    "xml": { mode: "xml", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/xml/xml.js" },
+    "xquery": { mode: "xquery", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/xquery/xquery.js" },
+    "yacas": { mode: "yacas", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/yacas/yacas.js" },
+    "yaml": { mode: "yaml", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/yaml/yaml.js" },
+    "yaml-frontmatter": { mode: "yaml-frontmatter", url: "codemirror/mode/yaml-frontmatter/yaml-frontmatter.js" },
+    "z80": { mode: "z80", url: "http://cdn.static.msvc.top/codemirror/5.49.2/mode/z80/z80.js" }
+  };
+  var modeArray = [
+    "apl", "asciiarmor", "asn.1", "asterisk", "brainfuck", "clike", "clojure", "cmake", "cobol", "coffeescript", "commonlisp", "crystal", "css", "cypher",
+    "d", "dart", "diff", "django", "dockerfile", "dtd", "dylan", "ebnf", "ecl", "eiffel", "elm", "erlang", "factor", "fcl", "forth", "fortran", "gas",
+    "gfm", "gherkin", "go", "groovy", "haml", "handlebars", "haskell", "haskell-literate", "haxe", "htmlembedded", "htmlmixed", "http", "idl", "index.html",
+    "javascript", "jinja2", "jsx", "julia", "livescript", "lua", "markdown", "mathematica", "mbox", "meta.js", "mirc", "mllike", "modelica", "mscgen",
+    "mumps", "nginx", "nsis", "ntriples", "octave", "oz", "pascal", "pegjs", "perl", "php", "pig", "powershell", "properties", "protobuf", "pug", "puppet",
+    "python", "q", "r", "rpm", "rst", "ruby", "rust", "sas", "sass", "scheme", "shell", "sieve", "slim", "smalltalk", "smarty", "solr", "soy", "sparql",
+    "spreadsheet", "sql", "stex", "stylus", "swift", "tcl", "textile", "tiddlywiki", "tiki", "toml", "tornado", "troff", "ttcn", "ttcn-cfg", "turtle",
+    "twig", "vb", "vbscript", "velocity", "verilog", "vhdl", "vue", "webidl", "xml", "xquery", "yacas", "yaml", "yaml-frontmatter", "z80"
+  ];
+  // 设置编辑器代码语言
+  function setMode(mode, js) {
+    if (modeArray.indexOf(js) === -1) return;
+    // 动态加载 js
+    var modeOpt = modeJsUrlMap[js];
+    if (modeOpt.loaded !== true) {
+      modeOpt.loaded = true;
+      var head = document.getElementsByTagName('head')[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = modeOpt.url;
+      script.onload = script.onreadystatechange = function () {
+        if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+          script.onload = script.onreadystatechange = null;
+          // 设置模式
+          editor.setOption("mode", mode);
+        }
+      };
+      head.appendChild(script);
+    }
+  };
+
+  // 设置code内容
+  function setValue(value) {
+    editor.setValue(value || "");
+  }
+
+  // 读取code内容
+  function getValue() {
+    return editor.getValue();
+  }
+</script>
+
+</html>

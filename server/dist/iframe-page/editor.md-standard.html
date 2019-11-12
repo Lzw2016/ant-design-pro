@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>editor.md</title>
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/editor.md/v1.5.0/css/editormd.min.css" />
+  <style>
+    .editormd {
+      border: none;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body style="margin: 0;">
+  <div id="editormd"></div>
+</body>
+
+<script type="text/javascript" src="http://cdn.static.msvc.top/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+<!-- <script type="text/javascript" src="lodash/lodash.min.js"></script> -->
+<script type="text/javascript" src="http://cdn.static.msvc.top/editor.md/v1.5.0/editormd.min.js"></script>
+<script type="text/javascript">
+  // Emoji's 图片地址
+  var emojiPath = "http://cdn.static.msvc.top/image/emoji/";
+  // Twitter Emoji 图片地址
+  var twemojiPath = "http://cdn.static.msvc.top/image/twemoji/72x72/";
+  // katexJsUrl
+  var katexJsUrl = "http://cdn.static.msvc.top/katex/v0.11.1/katex.min";
+  // katexCssUrl
+  var katexCssUrl = "http://cdn.static.msvc.top/katex/v0.11.1/katex.min";
+  // You can custom Emoji's graphics files url path
+  editormd.emoji = { path: emojiPath, ext: ".png" };
+  // Twitter Emoji (Twemoji)  graphics files url path
+  editormd.twemoji = { path: twemojiPath, ext: ".png" };
+  // KaTeX
+  editormd.katexURL = { js: katexJsUrl, css: katexCssUrl };
+
+  // 设置工具栏按钮
+  editormd.toolbarModes = {
+    full: [
+      "undo", "redo", "|",
+      "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+      "list-ul", "list-ol", "hr", "|",
+      "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
+      "goto-line", "watch", "preview", "myFullscreen", "clear", "search", "|",
+      "help", "info"
+    ],
+    simple: [
+      "undo", "redo", "|",
+      "bold", "del", "italic", "quote", "uppercase", "lowercase", "|",
+      "h1", "h2", "h3", "h4", "h5", "h6", "|",
+      "list-ul", "list-ol", "hr", "|",
+      "watch", "preview", "myFullscreen", "|",
+      "help", "info"
+    ],
+    mini: [
+      "undo", "redo", "|",
+      "watch", "preview", "|",
+      "help", "info"
+    ]
+  };
+
+  // 重写全屏功能
+  var innerFullscreen = editormd.fn.fullscreen;
+  editormd.prototype.innerFullscreen = innerFullscreen;
+  editormd.fn.innerFullscreen = innerFullscreen;
+  editormd.fn.fullscreen = function () {
+    var _this = this;
+    var state = this.state;
+    var editor = this.editor;
+    var preview = this.preview;
+    var toolbar = this.toolbar;
+    var settings = this.settings;
+    var fullscreenClass = this.classPrefix + "fullscreen";
+    if (toolbar) {
+      toolbar.find(".fa[name=fullscreen]").parent().toggleClass("active");
+    }
+    if (!editor.hasClass(fullscreenClass)) {
+      state.fullscreen = true;
+      $("html,body").css("overflow", "hidden");
+      editor.css({
+        // width: $(window).width(),
+        // height: $(window).height()
+        width: "100%",
+        height: "100%"
+      }).addClass(fullscreenClass);
+      this.resize();
+      $.proxy(settings.onfullscreen, this)();
+    }
+    return this;
+  }
+  editormd.prototype.fullscreen = editormd.fn.fullscreen;
+
+  var editorId = "editormd";
+  var editor;
+  // 初始化编辑器
+  function initEditor(config) {
+    // 默认配置
+    var defaultConfig = {
+      mode: "gfm",                        // gfm or markdown
+      name: "",                           // Form element name
+      value: "",                          // value for CodeMirror, if mode not gfm/markdown
+      theme: "",                          // 编辑器顶部工具栏主题 "" | dark
+      editorTheme: "default",             // 编辑器主题 default | pastel-on-dark | ...
+      previewTheme: "",                   // 预览主题 "" | dark
+      markdown: "",                       // Markdown文本内容
+      appendMarkdown: "",                 // if in init textarea value not empty, append markdown to textarea
+      width: "100%",                      // 组件宽度
+      height: 300,                        // 组件高度
+      // 依赖静态文件地址
+      path: 'http://cdn.static.msvc.top/editor.md/v1.5.0/lib/',
+      pluginPath: "",                     // If this empty, default use settings.path + "../plugins/"
+      delay: 300,                         // 延时解析markdown到html,单位: ms
+      autoLoadModules: true,              // 自动加载相关模块文件
+      watch: true,                        // 预览属性
+      placeholder: "",                    // 输入框 placeholder 属性
+      gotoLine: true,                     // 支持跳行
+      codeFold: false,                    // 支持代码折叠
+      autoHeight: false,                  // 自动高度
+      autoFocus: true,                    // 自动获取焦点
+      autoCloseTags: true,                // 支持自动关闭标签
+      searchReplace: true,                // 支持搜索替换
+      syncScrolling: true,                // 滚动配置 true | false | "single", default true
+      readOnly: false,                    // 是否只读
+      tabSize: 4,                         // tab转空格数量
+      indentUnit: 4,                      // 缩进空格数量
+      lineNumbers: true,                  // 显示行号
+      lineWrapping: false,                // 是否自动换行
+      autoCloseBrackets: true,            // 自动关闭括号
+      showTrailingSpace: true,            // 显示行尾空格
+      matchBrackets: true,                // 括号匹配
+      indentWithTabs: true,               // 缩进和制表符
+      styleSelectedText: true,            // 选择文本样式
+      matchWordHighlight: true,           // 匹配单词高亮显示 true | false | "onselected"
+      styleActiveLine: true,              // 高亮当前行
+      dialogLockScreen: true,             // 对话框锁屏
+      dialogShowMask: true,               // 对话框遮罩
+      dialogDraggable: true,              // 对话框支持拖动
+      dialogMaskBgColor: "#fff",          // 对话框遮罩颜色
+      dialogMaskOpacity: 0.1,             // 对话框遮罩透明值
+      fontSize: "13px",                   // 字体大小
+      saveHTMLToTextarea: false,          // save HTML To Textarea
+      disabledKeyMaps: [],                // 禁用快捷键
+
+      onload: function () { },            // onload
+      onresize: function () { },          // onresize
+      onchange: function () { },          // onchange
+      onwatch: null,                      // onwatch
+      onunwatch: null,                    // onunwatch
+      onpreviewing: function () { },      // onpreviewing
+      onpreviewed: function () { },       // onpreviewed
+      onfullscreen: function () { },      // onfullscreen
+      onfullscreenExit: function () { },  // onfullscreenExit
+      onscroll: function () { },          // onscroll
+      onpreviewscroll: function () { },   // onpreviewscroll
+
+      imageUpload: true,                 // 支持上传图片
+      imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+      imageUploadURL: "",               // 图片上传服务端地址
+      crossDomainUpload: false,         // 支持跨域上传
+      uploadCallbackURL: "",            // 上传回调地址
+
+      toc: true,                        // Table of contents
+      tocm: false,                      // Using [TOCM], auto create ToC dropdown menu
+      tocTitle: "",                     // for ToC dropdown menu btn
+      tocDropdown: false,               // tocDropdown
+      tocContainer: "",                 // tocContainer
+      tocStartLevel: 1,                 // Said from H1 to create ToC
+      htmlDecode: false,                // Open the HTML tag identification
+      pageBreak: true,                  // Enable parse page break [========]
+      atLink: true,                     // for @link
+      emailLink: true,                  // for email address auto link
+      taskList: false,                  // Enable Github Flavored Markdown task lists
+      emoji: true,                      // :emoji: , Support Github emoji, Twitter Emoji (Twemoji);
+      // Support FontAwesome icon emoji :fa-xxx: > Using fontAwesome icon web fonts;
+      // Support Editor.md logo icon emoji :editormd-logo: :editormd-logo-1x: > 1~8x;
+      tex: false,                       // TeX(LaTeX), based on KaTeX
+      flowChart: false,                 // flowChart.js only support IE9+
+      sequenceDiagram: false,           // sequenceDiagram.js only support IE9+
+      previewCodeHighlight: true,       // 预览支持代码高亮
+
+      toolbar: true,                    // 显示或者隐藏工具栏
+      toolbarAutoFixed: true,           // 在窗口滚动自动定位
+      toolbarIcons: "full",             // 工具栏按钮数量 "full" | "simple" | "mini"
+      toolbarTitles: {},                // toolbarTitles
+      toolbarHandlers: {
+        myFullscreen: function (cm, icon, cursor, selection) {
+          // cm         CodeMirror对象
+          // icon       图标按钮jQuery元素对象
+          // cursor     CodeMirror的光标对象，可获取光标所在行和位置
+          // selection  编辑器选中的文本
+          var fullscreen = !icon.parent().hasClass("active");
+          if (config.fullscreen) {
+            var escHandle = function (event) {
+              if (!event.shiftKey && event.keyCode === 27 && fullscreen === true) {
+                $(window).unbind("keyup", escHandle);
+                config.fullscreen(false);
+              }
+            };
+            config.fullscreen(fullscreen);
+            if (fullscreen === true) {
+              $(window).bind("keyup", escHandle);
+            } else {
+              $(window).unbind("keyup", escHandle);
+            }
+          }
+        }
+      },
+      // toolbarCustomIcons: {},
+      toolbarIconsClass: {
+        myFullscreen: "fa-arrows-alt",
+      },
+      toolbarIconTexts: {
+      },
+      lang: {
+        toolbar: {
+          myFullscreen: "全屏（按ESC还原）"
+        }
+      }
+    };
+    editor = editormd(editorId, $.extend(true, defaultConfig, config));
+  }
+
+  // 获得编辑器对象
+  function getEditor() {
+    return editor;
+  }
+
+  // // 大小发生变化 - 需要优化
+  // window.addEventListener(
+  //   'resize',
+  //   _.debounce(
+  //     function () {
+  //       if (!editor) return;
+  //       if (editor.state && editor.state.fullscreen === true) {
+  //         editor.innerFullscreen().innerFullscreen();
+  //       }
+  //     },
+  //     100,
+  //     { maxWait: 350 }
+  //   )
+  // );
+</script>
+
+</html>

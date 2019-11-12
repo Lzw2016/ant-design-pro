@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>neditor</title>
+  <link rel="icon" href="/favicon.png" type="image/x-icon">
+  <style>
+    .edui-for-myfullscreen .edui-icon:before {
+      content: "\e656";
+    }
+
+    .edui-notadd .edui-toolbar .edui-for-myfullscreen {
+      float: right;
+    }
+  </style>
+</head>
+
+<body style="margin: 0;">
+  <div id="editor"></div>
+</body>
+
+<script type="text/javascript" charset="utf-8" src="http://cdn.static.msvc.top/neditor/2.1.18/neditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.static.msvc.top/neditor/2.1.18/neditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.static.msvc.top/neditor/2.1.18/neditor.service.js"></script>
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="http://cdn.static.msvc.top/neditor/2.1.18/i18n/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/neditor/2.1.18/third-party/browser-md5-file.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/neditor/2.1.18/third-party/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+  // 重写全屏功能
+  var fullscreenFunc;
+  var fullscreenIcon = [
+    '<svg class="edui-iconfont">',
+    '  <svg id="edui-for-myfullscreen" viewBox="0 0 1024 1024">',
+    '    <path d="M960 0H64a64 64 0 0 0-64 64v704a64 64 0 0 0 64 64h320v128H288a32 32 0 0 0 0 64h448a32 32 0 0 0 0-64H640v-128h320a64 64 0 0 0 64-64V64a64 64 0 0 0-64-64zM576 960H448v-128h128z m384-256a64 64 0 0 1-64 64H128a64 64 0 0 1-64-64V128a64 64 0 0 1 64-64h768a64 64 0 0 1 64 64z" fill="#666666"></path>',
+    '  </svg>',
+    '</svg>'
+  ];
+  UE.registerUI(
+    'myfullscreen',
+    function (editor, uiName) {
+      var button = new UE.ui.Button({
+        name: uiName,
+        title: "全屏/退出全屏",
+        // cssRules: "background-position: -220px 0;",
+        onclick: function () {
+          if (!button.target || !fullscreenFunc) return;
+          if ($(button.target).attr("data-myfullscreen") === "true") {
+            $(button.target).attr("data-myfullscreen", "false")
+            fullscreenFunc(false);
+            button.setChecked(false);
+          } else {
+            $(button.target).attr("data-myfullscreen", "true")
+            fullscreenFunc(true);
+            button.setChecked(true);
+          }
+        }
+      });
+      return button;
+    }
+  );
+  var defaultToolbars = [
+    [
+      "myfullscreen",
+      "source",
+      "|",
+      "undo",
+      "redo",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "fontborder",
+      "strikethrough",
+      "superscript",
+      "subscript",
+      "removeformat",
+      "formatmatch",
+      "autotypeset",
+      "blockquote",
+      "pasteplain",
+      "|",
+      "forecolor",
+      "backcolor",
+      "insertorderedlist",
+      "insertunorderedlist",
+      "selectall",
+      "cleardoc",
+      "|",
+      "rowspacingtop",
+      "rowspacingbottom",
+      "lineheight",
+      "|",
+      "customstyle",
+      "paragraph",
+      "fontfamily",
+      "fontsize",
+      "|",
+      "directionalityltr",
+      "directionalityrtl",
+      "indent",
+      "|",
+      "justifyleft",
+      "justifycenter",
+      "justifyright",
+      "justifyjustify",
+      "|",
+      "touppercase",
+      "tolowercase",
+      "|",
+      "link",
+      "unlink",
+      "anchor",
+      "|",
+      "imagenone",
+      "imageleft",
+      "imageright",
+      "imagecenter",
+      "|",
+      // "simpleupload",
+      "insertimage",
+      "emotion",
+      "scrawl",
+      "insertvideo",
+      "music",
+      "attachment",
+      "map",
+      "gmap",
+      "insertframe",
+      // "webapp",
+      "pagebreak",
+      "template",
+      "background",
+      "|",
+      "insertcode",
+      "horizontal",
+      "date",
+      "time",
+      "spechars",
+      "snapscreen",
+      "wordimage",
+      "|",
+      "inserttable",
+      "deletetable",
+      "insertparagraphbeforetable",
+      "insertrow",
+      "deleterow",
+      "insertcol",
+      "deletecol",
+      "mergecells",
+      "mergeright",
+      "mergedown",
+      "splittocells",
+      "splittorows",
+      "splittocols",
+      "charts",
+      "|",
+      "print",
+      "preview",
+      "searchreplace",
+      "drafts",
+      "help"
+    ]
+  ];
+  // 开始定义编辑器
+  var editorId = "editor";
+  var editor;
+  // 初始化编辑器
+  function initEditor(config) {
+    if (config) {
+      fullscreenFunc = config.fullscreenFunc || null;
+    }
+    if (editor) {
+      editor.destroy();
+    }
+    var defaultConfig = {
+      fullscreen: true,
+      autoHeightEnabled: false,
+      initialFrameWidth: "100%",
+      initialFrameHeight: 300,
+      elementPathEnabled: true,
+      focus: true,
+      readonly: false,
+      wordCount: true,
+      maximumWords: 50000,
+      maxUndoCount: 20,
+      initialContent: "",
+      emotionLocalization: true,
+      toolbars: defaultToolbars,
+    };
+    defaultConfig = $.extend(true, defaultConfig, config || {});
+    editor = UE.getEditor(editorId, defaultConfig);
+    if (config && config.placeholder) {
+      editor.setPlaceholder(config.placeholder);
+    }
+    $(".edui-for-myfullscreen .edui-icon").html(fullscreenIcon.join(""));
+    return editor;
+  }
+
+  // ---------------------------------------------------------------------------
+
+  function isFocus() {
+    return editor.isFocus()
+  }
+
+  function setblur() {
+    editor.blur();
+  }
+
+  function insertHtml(value) {
+    editor.execCommand('insertHtml', value)
+  }
+
+  // 获得整个html的内容
+  function getAllHtml() {
+    return editor.getAllHtml();
+  }
+
+  // 获取编辑器html内容
+  function getContent() {
+    return editor.getContent();
+  }
+
+  // 获取保留格式的文本内容
+  function getPlainTxt() {
+    return editor.getPlainTxt();
+  }
+
+  // 获取选中文本
+  function getText() {
+    var range = editor.selection.getRange();
+    range.select();
+    return editor.selection.getText();
+  }
+
+  // 获取纯文本内容
+  function getContentTxt() {
+    return editor.getContentTxt();
+  }
+
+  // 写入内容
+  function setContent(content, isAppendTo) {
+    editor.setContent(content, isAppendTo);
+  }
+
+  // 不可编辑
+  function setDisabled() {
+    editor.setDisabled('fullscreen');
+    disableBtn("enable");
+  }
+
+  // 可以编辑
+  function setEnabled() {
+    editor.setEnabled();
+    enableBtn();
+  }
+
+  function enableBtn() {
+    var div = document.getElementById('btns');
+    var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+    for (var i = 0, btn; btn = btns[i++];) {
+      UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+    }
+  }
+
+  // 判断是否有内容
+  function hasContent() {
+    return editor.hasContents();
+  }
+
+  function setFocus() {
+    editor.focus();
+  }
+
+  // 销毁编辑器
+  function deleteEditor() {
+    disableBtn();
+    editor.destroy();
+  }
+
+  function disableBtn(str) {
+    var div = document.getElementById('btns');
+    var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+    for (var i = 0, btn; btn = btns[i++];) {
+      if (btn.id == str) {
+        UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+      } else {
+        btn.setAttribute("disabled", "true");
+      }
+    }
+  }
+
+  // 获取草稿箱内容
+  function getLocalData() {
+    return editor.execCommand("getlocaldata");
+  }
+
+  // 清空草稿箱
+  function clearLocalData() {
+    editor.execCommand("clearlocaldata");
+  }
+</script>
+
+</html>
