@@ -42,7 +42,7 @@ class TextAreaLimit extends PureComponent {
     value,
     maxLength,
     preventInput,
-    autosize,
+    autoSize,
     onChange,
     onLimit,
     wrapClassName,
@@ -67,7 +67,7 @@ class TextAreaLimit extends PureComponent {
         <Input.TextArea
           className={textAreaClassName || undefined}
           {...valueProp}
-          autosize={autosize}
+          autoSize={autoSize}
           onChange={e => this.handleChange(e, maxLength, preventInput, value, onChange, onLimit)}
           style={textAreaStyle}
           {...textAreaProps}
@@ -124,7 +124,7 @@ class TextAreaLimit extends PureComponent {
       value,                        // 输入框内容
       maxLength,                    // 输入框输入最大长度
       preventInput = true,          // 输入框输入操过最大长度是否阻止输入
-      autosize = false,             // 自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }
+      autoSize = false,             // 自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }
       onChange,                     // 输入框内容变化时的回调 (e) => ()
       onLimit,                      // 输入超限 (value, e) => ()
       wrapClassName,                // 最外层包装元素的className
@@ -141,7 +141,7 @@ class TextAreaLimit extends PureComponent {
             value,
             maxLength,
             preventInput,
-            autosize,
+            autoSize,
             onChange,
             onLimit,
             wrapClassName,

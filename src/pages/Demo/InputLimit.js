@@ -161,18 +161,18 @@ class DemoTest extends PureComponent {
                 maxLength={10}
                 textAreaStyle={{ width: 350 }}
                 preventInput={true}
-                autosize={false}
+                autoSize={false}
                 textAreaProps={{
-                  placeholder: "autosize={false}",
+                  placeholder: "autoSize={false}",
                 }}
               />
             </Col>
             <Col span={8}>
               <TextAreaLimit
                 maxLength={56}
-                autosize={true}
+                autoSize={true}
                 textAreaProps={{
-                  placeholder: "autosize={true}",
+                  placeholder: "autoSize={true}",
                 }}
               />
             </Col>
@@ -180,9 +180,9 @@ class DemoTest extends PureComponent {
               <TextAreaLimit
                 maxLength={56}
                 textAreaStyle={{ width: 350 }}
-                autosize={{ minRows: 2, maxRows: 6 }}
+                autoSize={{ minRows: 2, maxRows: 6 }}
                 textAreaProps={{
-                  placeholder: "autosize={{ minRows: 2, maxRows: 6 }}",
+                  placeholder: "autoSize={{ minRows: 2, maxRows: 6 }}",
                 }}
               />
             </Col>

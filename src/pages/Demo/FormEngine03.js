@@ -175,7 +175,7 @@ class Demo1 extends PureComponent {
                   inputProp: {
                     maxLength: 25,
                     preventInput: true,
-                    autosize: { minRows: 3, maxRows: 6 },
+                    autoSize: { minRows: 3, maxRows: 6 },
                     inputProps: {
                       placeholder: "字数限制提示文本输入框(多行输入)",
                     },

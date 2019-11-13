@@ -143,7 +143,7 @@ class Demo1 extends PureComponent {
                 label: "多行输入",
                 InputComponent: InputEnum.InputTextArea,
                 inputProp: {
-                  autosize: { minRows: 3, maxRows: 6 },
+                  autoSize: { minRows: 3, maxRows: 6 },
                 },
               },
             }}

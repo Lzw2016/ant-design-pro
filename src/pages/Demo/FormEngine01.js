@@ -204,7 +204,7 @@ class Demo1 extends PureComponent {
                   InputComponent: InputEnum.InputTextArea,
                   inputProp: {
                     placeholder: "多行文本输入",
-                    autosize: { minRows: 3, maxRows: 3 },
+                    autoSize: { minRows: 3, maxRows: 3 },
                   },
                 },
                 fieldName12: {
@@ -382,7 +382,7 @@ class Demo1 extends PureComponent {
                   inputProp: {
                     maxLength: 25,
                     preventInput: true,
-                    autosize: { minRows: 2, maxRows: 2 },
+                    autoSize: { minRows: 2, maxRows: 2 },
                     inputProps: {
                       placeholder: "字数限制提示文本输入框(多行输入)",
                     },
