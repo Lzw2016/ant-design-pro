@@ -732,7 +732,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-syntax-dynamic-import@7.2.0", "@babel/plugin-syntax-dynamic-import@^7.0.0-beta.39", "@babel/plugin-syntax-dynamic-import@^7.2.0":
+"@babel/plugin-syntax-dynamic-import@7.2.0", "@babel/plugin-syntax-dynamic-import@^7.2.0":
   version "7.2.0"
   resolved "https://registry.npm.taobao.org/@babel/plugin-syntax-dynamic-import/download/@babel/plugin-syntax-dynamic-import-7.2.0.tgz#69c159ffaf4998122161ad8ebc5e6d1f55df8612"
   integrity sha1-acFZ/69JmBIhYa2OvF5tH1XfhhI=
@@ -3198,24 +3198,10 @@ babel-loader@8.0.6, babel-loader@^8.0.0:
     mkdirp "^0.5.1"
     pify "^4.0.1"
 
-babel-plugin-add-module-exports@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.npm.taobao.org/babel-plugin-add-module-exports/download/babel-plugin-add-module-exports-1.0.2.tgz#96cd610d089af664f016467fc4567c099cce2d9c"
-  integrity sha1-ls1hDQia9mTwFkZ/xFZ8CZzOLZw=
-  optionalDependencies:
-    chokidar "^2.0.4"
-
 babel-plugin-dva-hmr@0.4.2:
   version "0.4.2"
   resolved "https://registry.npm.taobao.org/babel-plugin-dva-hmr/download/babel-plugin-dva-hmr-0.4.2.tgz#56cf3d49cc366fb191cd883e27ca42bddfd12735"
   integrity sha1-Vs89Scw2b7GRzYg+J8pCvd/RJzU=
-
-babel-plugin-dynamic-import-node-sync@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npm.taobao.org/babel-plugin-dynamic-import-node-sync/download/babel-plugin-dynamic-import-node-sync-2.0.1.tgz#698be7a91ffcdab2986027ed6575b162560d4384"
-  integrity sha1-aYvnqR/82rKYYCftZXWxYlYNQ4Q=
-  dependencies:
-    "@babel/plugin-syntax-dynamic-import" "^7.0.0-beta.39"
 
 babel-plugin-dynamic-import-node@2.2.0:
   version "2.2.0"
@@ -11729,22 +11715,18 @@ merge-stream@^2.0.0:
   resolved "https://registry.npm.taobao.org/merge-stream/download/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha1-UoI2KaFN0AyXcPtq1H3GMQ8sH2A=
 
-merge-umi-mock-data@^1.0.4:
-  version "1.0.5"
-  resolved "https://registry.npm.taobao.org/merge-umi-mock-data/download/merge-umi-mock-data-1.0.5.tgz#8301c6da3a4d0e58b881965907bdd2603745a47c"
-  integrity sha1-gwHG2jpNDli4gZZZB73SYDdFpHw=
+merge-umi-mock-data@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.npm.taobao.org/merge-umi-mock-data/download/merge-umi-mock-data-2.0.6.tgz#0a48b222da86e55aefdc112ef20d1bbf90fa2cdb"
+  integrity sha1-CkiyItqG5Vrv3BEu8g0bv5D6LNs=
   dependencies:
-    "@babel/core" "^7.0.0-rc.2"
-    "@babel/plugin-transform-modules-commonjs" "^7.0.0-rc.2"
+    "@babel/core" "^7.4.0"
     "@babel/preset-env" "^7.2.3"
-    "@babel/register" "^7.0.0-rc.2"
-    "@babel/runtime" "^7.0.0-rc.2"
-    babel-plugin-add-module-exports "^1.0.0"
-    babel-plugin-dynamic-import-node-sync "^2.0.1"
+    "@babel/preset-typescript" "^7.3.3"
     chalk "^2.4.2"
     mockjs "^1.0.1-beta3"
     moment "^2.22.2"
-    rollup "^1.0.2"
+    rollup "^1.12.2"
     rollup-plugin-babel "^4.2.0"
     rollup-plugin-commonjs "^9.2.0"
     rollup-plugin-json "^3.1.0"
@@ -11752,6 +11734,7 @@ merge-umi-mock-data@^1.0.4:
     rollup-plugin-node-builtins "^2.1.2"
     rollup-plugin-node-resolve "^4.0.0"
     rollup-plugin-replace "^2.0.0"
+    slash2 "^2.0.0"
     standard-version "^4.4.0"
 
 merge2@^1.2.3, merge2@^1.3.0:
