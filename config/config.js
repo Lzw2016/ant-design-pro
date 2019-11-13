@@ -1,13 +1,14 @@
 // https://umijs.org/config/
 import os from 'os';
+import slash from 'slash2';
 import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
-import slash from 'slash2';
+import aliOssConf from '../ali-oss-conf';
 
 const { pwa, primaryColor, defaultLocale, enableBaseNavigator } = defaultSettings;
 // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-const { TEST } = process.env;
+const { TEST, ENABLE_CND } = process.env;
 
 const plugins = [
   [
@@ -49,6 +50,8 @@ const plugins = [
 ];
 
 export default {
+  publicPath: (ENABLE_CND === true || ENABLE_CND === 'true') ? `${aliOssConf.cdnUrl}/${aliOssConf.appVersion}/` : '',
+  // runtimePublicPath: true,
   hash: true,
   history: 'hash',
   // add for transfer to umi
@@ -56,6 +59,8 @@ export default {
   define: {
     // 注入api请求全局前缀 request.js 使用
     PROXY_PREFIX: process.env.PROXY_PREFIX || '',
+    // 是否启用CDN
+    ENABLE_CND: ENABLE_CND === true || ENABLE_CND === 'true'
   },
   treeShaking: true,
   targets: {

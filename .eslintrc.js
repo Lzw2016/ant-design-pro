@@ -12,6 +12,7 @@ module.exports = {
   globals: {
     page: true,
     PROXY_PREFIX: true,
+    ENABLE_CND: true,
   },
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js'] }],

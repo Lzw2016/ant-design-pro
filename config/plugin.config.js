@@ -5,6 +5,8 @@ import AntDesignThemePlugin from 'antd-theme-webpack-plugin';
 import path from 'path';
 // import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 // import webpack from 'webpack';
+const WebpackAliyunOss = require('webpack-aliyun-oss');
+import aliOssConf from '../ali-oss-conf';
 
 function getModulePackageName(module) {
   if (!module.context) return null;
@@ -53,6 +55,37 @@ export default config => {
   //     "window.jQuery": "jquery",
   //   },
   // ]);
+  // 阿里云OSS支持
+  if (process.env.ENABLE_CND === "true" || process.env.ENABLE_CND === true) {
+    // 上传文件到阿里OSS
+    config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [{
+      timeout: 1000 * 60 * 10,
+      from: ['./dist/**', '!./dist/*.html', '!./dist/**/*.map', '!./dist/iframe-page/codemirror/**/*.html', '!./dist/iframe-page/monaco-editor/dev/**'],
+      dist: `${aliOssConf.appVersion}/`,
+      region: aliOssConf.region,
+      accessKeyId: aliOssConf.accessKeyId,
+      accessKeySecret: aliOssConf.accessKeySecret,
+      bucket: aliOssConf.bucket,
+      // setOssPath(filePath) {
+      //   return filePath;
+      // },
+      setHeaders(filePath) {
+        const headers = {
+          // 缓存时间
+          'Cache-Control': 'max-age=31536000'
+        };
+        return headers;
+      }
+    }]);
+    // 复制所有html文件到 ./server/dist/ 下面 TODO 需要自己实现
+    // config.plugin('copy-webpack-plugin').use(CopyWebpackPlugin, [[
+    //   {
+    //     from: 'D:/SourceCode/react/ant-design-pro/public/**/*.html',
+    //     to: 'D:/SourceCode/react/ant-design-pro/server/dist',
+    //     flatten: true,
+    //   }
+    // ]]);
+  }
   // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
   if ( process.env.NODE_ENV !== 'production' ) {
     // 将所有 less 合并为一个供 themePlugin使用

@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   <title>monaco-editor</title>
   <link rel="icon" href="/favicon.png" type="image/x-icon">
-  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/font-awesome/4.7.0/css/font-awesome.min.css" />
   <style>
     .monaco-editor {
       width: 100%;
@@ -61,13 +61,13 @@
   <div id="container" class="monaco-editor"></div>
 </body>
 
-<script type="text/javascript" src="jquery/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="lodash/lodash.min.js"></script>
-<script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/jquery/3.4.1/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/lodash/4.17.11/lodash.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/monaco-editor/0.18.1/min/vs/loader.js"></script>
 <script type="text/javascript">
   // 初始化配置
   require.config({
-    paths: { 'vs': 'monaco-editor/min/vs' },
+    paths: { 'vs': 'http://cdn.static.msvc.top/monaco-editor/0.18.1/min/vs' },
     'vs/nls': {
       availableLanguages: {
         '*': 'zh-cn'

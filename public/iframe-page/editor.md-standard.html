@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>editor.md</title>
   <link rel="icon" href="/favicon.png" type="image/x-icon">
-  <link rel="stylesheet" href="editor.md/css/editormd.min.css" />
+  <link rel="stylesheet" href="http://cdn.static.msvc.top/editor.md/v1.5.0/css/editormd.min.css" />
   <style>
     .editormd {
       border: none;
@@ -18,18 +18,18 @@
   <div id="editormd"></div>
 </body>
 
-<script type="text/javascript" src="jquery/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/jquery/3.4.1/jquery-3.4.1.min.js"></script>
 <!-- <script type="text/javascript" src="lodash/lodash.min.js"></script> -->
-<script type="text/javascript" src="editor.md/editormd.min.js"></script>
+<script type="text/javascript" src="http://cdn.static.msvc.top/editor.md/v1.5.0/editormd.min.js"></script>
 <script type="text/javascript">
   // Emoji's 图片地址
-  var emojiPath = "../image/emoji/";
+  var emojiPath = "http://cdn.static.msvc.top/image/emoji/";
   // Twitter Emoji 图片地址
-  var twemojiPath = "../image/twemoji/72x72/";
+  var twemojiPath = "http://cdn.static.msvc.top/image/twemoji/72x72/";
   // katexJsUrl
-  var katexJsUrl = "katex/katex.min";
+  var katexJsUrl = "http://cdn.static.msvc.top/katex/v0.11.1/katex.min";
   // katexCssUrl
-  var katexCssUrl = "katex/katex.min";
+  var katexCssUrl = "http://cdn.static.msvc.top/katex/v0.11.1/katex.min";
   // You can custom Emoji's graphics files url path
   editormd.emoji = { path: emojiPath, ext: ".png" };
   // Twitter Emoji (Twemoji)  graphics files url path
@@ -110,7 +110,8 @@
       appendMarkdown: "",                 // if in init textarea value not empty, append markdown to textarea
       width: "100%",                      // 组件宽度
       height: 300,                        // 组件高度
-      path: 'editor.md/lib/',             // 依赖静态文件地址
+      // 依赖静态文件地址
+      path: 'http://cdn.static.msvc.top/editor.md/v1.5.0/lib/',
       pluginPath: "",                     // If this empty, default use settings.path + "../plugins/"
       delay: 300,                         // 延时解析markdown到html,单位: ms
       autoLoadModules: true,              // 自动加载相关模块文件

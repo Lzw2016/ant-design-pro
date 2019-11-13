@@ -102,7 +102,7 @@ class Baidu extends PureComponent {
                   value={q}
                   onChange={({ target: { value } }) => this.setState({ "q": value })}
                   placeholder="粘贴“src/locales/***.js”中的内容，完整的JS"
-                  autosize={{ minRows: 30, maxRows: 30 }}
+                  autoSize={{ minRows: 30, maxRows: 30 }}
                   style={{ marginTop: 8 }}
                 />
               </Col>
@@ -110,7 +110,7 @@ class Baidu extends PureComponent {
                 <Input.TextArea
                   value={(taskLoading || !!translateLoading) ? '正在翻译...' : this.parseTrans(trans)}
                   placeholder="翻译完成的内容"
-                  autosize={{ minRows: 30, maxRows: 30 }}
+                  autoSize={{ minRows: 30, maxRows: 30 }}
                   style={{ marginTop: 80 }}
                 />
               </Col>
