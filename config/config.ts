@@ -1,18 +1,14 @@
 import { IConfig, IPlugin } from 'umi-types';
+import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 
-import defaultSettings from './defaultSettings';
-// https://umijs.org/config/
 import slash from 'slash2';
 import webpackPlugin from './plugin.config';
-
 const { pwa, primaryColor } = defaultSettings;
 
 // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
-
 const isAntDesignProPreview = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site';
-
 const plugins: IPlugin[] = [
   [
     'umi-plugin-react',
@@ -29,11 +25,11 @@ const plugins: IPlugin[] = [
         // default true, when it is true, will use `navigator.language` overwrite default
         baseNavigator: true,
       },
-      dynamicImport: {
-        loadingComponent: './components/PageLoading/index',
-        webpackChunkName: true,
-        level: 3,
-      },
+      // dynamicImport: {
+      //   loadingComponent: './components/PageLoading/index',
+      //   webpackChunkName: true,
+      //   level: 3,
+      // },
       pwa: pwa
         ? {
             workboxPluginMode: 'InjectManifest',
@@ -59,9 +55,8 @@ const plugins: IPlugin[] = [
       autoAddMenu: true,
     },
   ],
-];
+]; // 针对 preview.pro.ant.design 的 GA 统计代码
 
-// 针对 preview.pro.ant.design 的 GA 统计代码
 if (isAntDesignProPreview) {
   plugins.push([
     'umi-plugin-ga',
@@ -69,17 +64,13 @@ if (isAntDesignProPreview) {
       code: 'UA-72788897-6',
     },
   ]);
-  plugins.push([
-    'umi-plugin-pro',
-    {
-      serverUrl: 'https://ant-design-pro.netlify.com',
-    },
-  ]);
 }
 
 export default {
   plugins,
   block: {
+    // 国内用户可以使用码云
+    // defaultGitUrl: 'https://gitee.com/ant-design/pro-blocks',
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
   hash: true,
@@ -90,22 +81,53 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
+      path: '/user',
+      component: '../layouts/UserLayout',
+      routes: [
+        {
+          name: 'login',
+          path: '/user/login',
+          component: './user/login',
+        },
+      ],
+    },
+    {
       path: '/',
-      component: '../layouts/BasicLayout',
-      Routes: ['src/pages/Authorized'],
-      authority: ['admin', 'user'],
+      component: '../layouts/SecurityLayout',
       routes: [
         {
           path: '/',
-          name: 'welcome',
-          icon: 'smile',
-          component: './Welcome',
+          component: '../layouts/BasicLayout',
+          authority: ['admin', 'user'],
+          routes: [
+            {
+              path: '/',
+              redirect: '/welcome',
+            },
+            {
+              path: '/welcome',
+              name: 'welcome',
+              icon: 'smile',
+              component: './Welcome',
+            },
+            {
+              path: '/admin',
+              name: 'admin',
+              icon: 'crown',
+              component: './Admin',
+              authority: ['admin'],
+            },
+            {
+              component: './404',
+            },
+          ],
         },
         {
           component: './404',
         },
       ],
     },
+
     {
       component: './404',
     },
