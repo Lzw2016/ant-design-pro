@@ -269,7 +269,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@>=7.2.2", "@babel/core@^7.0.0", "@babel/core@^7.0.0-rc.2", "@babel/core@^7.1.0", "@babel/core@^7.4.5", "@babel/core@^7.5.4":
+"@babel/core@>=7.2.2", "@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.4.0", "@babel/core@^7.4.5", "@babel/core@^7.5.4":
   version "7.7.2"
   resolved "https://registry.npm.taobao.org/@babel/core/download/@babel/core-7.7.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fcore%2Fdownload%2F%40babel%2Fcore-7.7.2.tgz#ea5b99693bcfc058116f42fa1dd54da412b29d91"
   integrity sha1-6luZaTvPwFgRb0L6HdVNpBKynZE=
@@ -950,7 +950,7 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     babel-plugin-dynamic-import-node "^2.3.0"
 
-"@babel/plugin-transform-modules-commonjs@^7.0.0-rc.2", "@babel/plugin-transform-modules-commonjs@^7.4.4", "@babel/plugin-transform-modules-commonjs@^7.7.0":
+"@babel/plugin-transform-modules-commonjs@^7.4.4", "@babel/plugin-transform-modules-commonjs@^7.7.0":
   version "7.7.0"
   resolved "https://registry.npm.taobao.org/@babel/plugin-transform-modules-commonjs/download/@babel/plugin-transform-modules-commonjs-7.7.0.tgz#3e5ffb4fd8c947feede69cbe24c9554ab4113fe3"
   integrity sha1-Pl/7T9jJR/7t5py+JMlVSrQRP+M=
@@ -1290,17 +1290,6 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
-"@babel/register@^7.0.0-rc.2":
-  version "7.7.0"
-  resolved "https://registry.npm.taobao.org/@babel/register/download/@babel/register-7.7.0.tgz#4e23ecf840296ef79c605baaa5c89e1a2426314b"
-  integrity sha1-TiPs+EApbvecYFuqpcieGiQmMUs=
-  dependencies:
-    find-cache-dir "^2.0.0"
-    lodash "^4.17.13"
-    make-dir "^2.1.0"
-    pirates "^4.0.0"
-    source-map-support "^0.5.16"
-
 "@babel/runtime-corejs2@^7.2.0":
   version "7.7.2"
   resolved "https://registry.npm.taobao.org/@babel/runtime-corejs2/download/@babel/runtime-corejs2-7.7.2.tgz#5a8c4e2f8688ce58adc9eb1d8320b6e7341f96ce"
@@ -1324,7 +1313,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.0.0-rc.2", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.0", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.0", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5":
   version "7.7.2"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.7.2.tgz?cache=0&sync_timestamp=1573083187206&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.7.2.tgz#111a78002a5c25fc8e3361bedc9529c696b85a6a"
   integrity sha1-ERp4ACpcJfyOM2G+3JUpxpa4Wmo=
@@ -16042,7 +16031,7 @@ rollup@^0.25.8:
     minimist "^1.2.0"
     source-map-support "^0.3.2"
 
-rollup@^1.0.2:
+rollup@^1.12.2:
   version "1.27.0"
   resolved "https://registry.npm.taobao.org/rollup/download/rollup-1.27.0.tgz#7afe0da89c967cec5ccea7e919da6c89a1a68666"
   integrity sha1-ev4NqJyWfOxczqfpGdpsiaGmhmY=
@@ -16687,7 +16676,7 @@ source-map-support@^0.3.2:
   dependencies:
     source-map "0.1.32"
 
-source-map-support@^0.5.16, source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.12:
+source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.12:
   version "0.5.16"
   resolved "https://registry.npm.taobao.org/source-map-support/download/source-map-support-0.5.16.tgz?cache=0&sync_timestamp=1572390065703&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsource-map-support%2Fdownload%2Fsource-map-support-0.5.16.tgz#0ae069e7fe3ba7538c64c98515e35339eac5a042"
   integrity sha1-CuBp5/47p1OMZMmFFeNTOerFoEI=
