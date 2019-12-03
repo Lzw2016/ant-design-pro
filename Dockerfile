@@ -3,3 +3,5 @@ ADD ./server /app
 WORKDIR /app
 ENTRYPOINT ["node", "server.js", "--port", "9066"]
 EXPOSE 9066
+
+# 目前只需要dev
