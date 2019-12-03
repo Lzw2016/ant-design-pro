@@ -31,11 +31,17 @@ steps:
 
   - name: 构建镜像[Docker]
     image: plugins/docker
+    volumes:
+      - name: docker-daemon
+        path: /etc/docker
     settings:
       registry: '172.18.1.1:15000'
       repo: '172.18.1.1:15000/nodejs-service/ant-design-pro'
-      # bip: true
-      insecure: true
+      username:
+        from_secret: harborUsername
+      password:
+        from_secret: harborPassword
+      # insecure: true
       dockerfile: ./Dockerfile
       target: dev
       tags: ['0.0.1-SNAPSHOT']
@@ -103,5 +109,9 @@ volumes:
   - name: package-nodejs
     host:
       path: /home/lizw/Desktop/docker-opt/package/nodejs
+  # docker-daemon 配置
+  - name: docker-daemon
+    host:
+      path: /etc/docker
 
 # -------------------------------------------------------------------------------------------------------------
